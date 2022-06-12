@@ -3,7 +3,8 @@ require('dotenv').config();
 
 // On importe express
 const express = require('express');
-
+// On importe helmet 
+const helmet = require("helmet");
 // On creer l'application à l'aide d'express
 const app = express();
 
@@ -19,7 +20,7 @@ const path = require('path');
 
 
 // import les routes à l'aide du routeur exporté dans les fichiers routes
-const sauceRoutes = require('./routes/sauce');
+const postRoutes = require('./routes/post');
 const userRoutes = require('./routes/user');
 
 // Connexion base de donnée MONGODB à l'aide du fichier .env (voir .env.sample pour plus d'info) 
@@ -30,7 +31,8 @@ mongoose.connect(process.env.DATABASE_URI,
   })
   .then(() => console.log('Connexion à MongoDB réussie !'))
   .catch(() => console.log('Connexion à MongoDB échouée !'));
-
+//Middleware : intercepte pour la sécurité
+app.use(helmet());
 // Middleware  : réponse pour n'importe quelle requête
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -54,8 +56,8 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 //User
 app.use('/api/auth', userRoutes);
-//Sauce
-app.use('/api/sauces', sauceRoutes);
+//post
+app.use('/api/posts', postRoutes);
 
 
 // on exporte l'app pour y accéder depuis les autres fichier du projet
