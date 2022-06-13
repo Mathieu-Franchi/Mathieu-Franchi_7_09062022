@@ -20,8 +20,8 @@ const path = require('path');
 
 
 // import les routes à l'aide du routeur exporté dans les fichiers routes
-const postRoutes = require('./routes/post');
-const userRoutes = require('./routes/user');
+const postRoutes = require('./routes/post.route');
+const userRoutes = require('./routes/user.route');
 
 // Connexion base de donnée MONGODB à l'aide du fichier .env (voir .env.sample pour plus d'info) 
 mongoose.connect(process.env.DATABASE_URI,
