@@ -1,5 +1,7 @@
 //import json.web.token
 const jwt = require('jsonwebtoken');
+// pour utiliser le fichier .env pour cacher le compte de la base de donnée
+require('dotenv').config();
 
 module.exports = (req, res, next) => {
     try { //methode split creer un tableau sur une chaine de caractère et sépare les elements entre les espaces

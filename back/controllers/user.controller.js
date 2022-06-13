@@ -1,3 +1,5 @@
+// pour utiliser le fichier .env pour cacher le compte de la base de donnée
+require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
