@@ -3,14 +3,18 @@ const fs = require('fs');
 /*---------------- CRUD -----------------*/
 //post
 exports.createPost = (req, res, next) => {
-    const postObject = JSON.parse(req.body.post);
+  const postObject = req.file ?
+    {
+        ...JSON.parse(req.body.post),
+        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    } : {...req.body};
     
     //delete le faux _id envoyé par le front-end
     delete postObject._id;
-    //creer un nouveau post par rapport aux champs recupérer dans le corps de la requète
+    //creer une nouvelle post par rapport aux champs recupérer dans le corps de la requète
     const post = new Post({
         ...postObject,
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`,
+        
         likes:  0 ,
         dislikes:  0 
     });
@@ -66,7 +70,7 @@ exports.likePosts = (req, res, next) => {
     Post.findOne({ _id: postId })
     .then(function (post) {
       switch (like) {
-        // L'utilisateur aime le post 
+        
         case 1:
           //verifie si l'user n'est pas déjà dans le tableau des users ayant liké
           if (!post.usersLiked.includes(userId) && like === 1) {
