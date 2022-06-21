@@ -28,9 +28,6 @@
 
 </script>
 <style scoped lang="scss">
-
-
-
 @import '../variables';
 
 
@@ -49,7 +46,7 @@ header {
 }
 // nav {
    
-//     width: 40%;
+//     width: 50%;
     
 // }
 .logo__h1{
