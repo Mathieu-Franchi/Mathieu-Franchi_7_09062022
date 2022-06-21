@@ -1,43 +1,49 @@
 <template>
-    <div class="card">
-        <h1 class="logo__h1"><img class ="logo__img" alt="Groupomania logo" src="../assets/logos/icon-left-font.png"></h1>
-        <h2 class="card__title" v-if="mode == 'login'">Connexion</h2>
-        <h2 class="card__title" v-else>Inscription</h2>
-        <p class="card__subtitle" v-if="mode == 'login'">Tu n'as pas encore de compte ? <span class="card__action"
-                @click="switchToCreateAccount()">Créer un compte</span></p>
-        <p class="card__subtitle" v-else>Tu as déjà un compte ? <span class="card__action" @click="switchToLogin()">Se
-                connecter</span></p>
-        <div class="form-row">
-            <input v-model="email" class="form-row__input" type="text" placeholder="Adresse mail" />
-        </div>
-        <div class="form-row" v-if="mode == 'create'">
+    <div id="body">
+        <div class="card">
+            <h1 class="logo__h1"><img class="logo__img" alt="Groupomania logo"
+                    src="../assets/logos/icon-left-font-modif.png"></h1>
+            <h2 class="card__title" v-if="mode == 'login'">Connexion</h2>
+            <h2 class="card__title" v-else>Inscription</h2>
+            <p class="card__subtitle" v-if="mode == 'login'">Tu n'as pas encore de compte ? <span class="card__action"
+                    @click="switchToCreateAccount()">Créer un compte</span></p>
+            <p class="card__subtitle" v-else>Tu as déjà un compte ? <span class="card__action"
+                    @click="switchToLogin()">Se
+                    connecter</span></p>
+            <div class="form-row">
+                <input v-model="email" class="form-row__input" type="text" placeholder="Adresse mail" />
+            </div>
+            <div class="form-row" v-if="mode == 'create'">
 
-            <input v-model="nom" class="form-row__input" type="text" placeholder="Nom" />
-        </div>
-        <div class="form-row">
-            <input v-model="password" class="form-row__input" type="password" placeholder="Mot de passe" />
-        </div>
-        <div class="form-row" v-if="mode == 'login' && status == 'error_login'">
-            Adresse mail et/ou mot de passe invalide
-        </div>
-        <div class="form-row" v-if="mode == 'create' && status == 'error_create'">
-            Adresse mail déjà utilisée
-        </div>
-        <div class="form-row">
-            <button @click="login()" class="button" :class="{ 'button--disabled': !validatedFields }"
-                v-if="mode == 'login'">
-                <span v-if="status == 'loading'">Connexion en cours...</span>
-                <span v-else>Connexion</span>
-            </button>
-            <button @click="createAccount()" class="button" :class="{ 'button--disabled': !validatedFields }" v-else>
-                <span v-if="status == 'loading'">Création en cours...</span>
-                <span v-else>Créer mon compte</span>
-            </button>
+                <input v-model="nom" class="form-row__input" type="text" placeholder="Nom" />
+            </div>
+            <div class="form-row">
+                <input v-model="password" class="form-row__input" type="password" placeholder="Mot de passe" />
+            </div>
+            <div class="form-row" v-if="mode == 'login' && status == 'error_login'">
+                Adresse mail et/ou mot de passe invalide
+            </div>
+            <div class="form-row" v-if="mode == 'create' && status == 'error_create'">
+                Adresse mail déjà utilisée
+            </div>
+            <div class="form-row">
+                <button @click="login()" class="button" :class="{ 'button--disabled': !validatedFields }"
+                    v-if="mode == 'login'">
+                    <span v-if="status == 'loading'">Connexion en cours...</span>
+                    <span v-else>Connexion</span>
+                </button>
+                <button @click="createAccount()" class="button" :class="{ 'button--disabled': !validatedFields }"
+                    v-else>
+                    <span v-if="status == 'loading'">Création en cours...</span>
+                    <span v-else>Créer mon compte</span>
+                </button>
+            </div>
         </div>
     </div>
 </template>
       
       <script>
+
 import { mapState } from 'vuex'
 export default {
     name: 'LoginRegister',
@@ -57,20 +63,24 @@ export default {
     },
     computed: {
         validatedFields: function () {
+            
             if (this.mode == 'create') {
                 if (this.email != "" && this.nom != "" && this.password != "") {
                     return true;
                 } else {
+                    
                     return false;
                 }
             } else {
                 if (this.email != "" && this.password != "") {
                     return true;
                 } else {
+                    
                     return false;
                 }
             }
         },
+        
         ...mapState(['status'])
     },
     methods: {
@@ -79,8 +89,10 @@ export default {
         },
         switchToLogin: function () {
             this.mode = 'login';
+            
         },
         login: function () {
+            
             const self = this;
             this.$store.dispatch('login', {
                 email: this.email,
@@ -103,6 +115,15 @@ export default {
                 console.log(error);
             })
         },
+        test: function () {
+        if (localStorage === undefined || localStorage.length === 0) {
+            
+            return true;
+        }
+        else {
+          return false;
+        }
+    },
     }
 }
 </script>
@@ -110,17 +131,9 @@ export default {
 <style lang="scss">
 @import '../variables';
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
-* {
-    font-family: 'Lato', sans-serif;
-  margin:0;
-  padding: 0;
-  box-sizing: border-box;
-}
-#app {
-    max-width: 100%;
-}
-body {
-  background-image: linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%);
+
+#body {
+  background-image: linear-gradient(62deg, $primary-color 0%, $secondary-color 20%, $third-color 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -137,20 +150,25 @@ body {
     flex-wrap: wrap;
 }
 .logo__h1 {
-    max-width: 100%;
-    width: 476px;
-    height: 200px;
+    
+    
+    width: 100%;
+    height: 100px;
     display: flex;
-    flex-direction: column;
+    
+    justify-content: flex-start;
+    
     align-items: center;
     
 }
 .logo__img {
-    max-width: 476px;
     width: 100%;
+    max-width: 405px;
+    min-width: 255px;
     height: 100%;
     
-    object-fit: cover;
+    
+    object-fit:contain;
     
 }
 .form-row__input {
@@ -187,7 +205,7 @@ body {
   font-weight: 500;
 }
   .button {
-    background: #2196F3;
+    background: $primary-color;
     color:white;
     border-radius: 8px;
     font-weight: 800;
@@ -206,7 +224,7 @@ body {
   }
   .button:hover {
     cursor:pointer;
-    background: #1976D2;
+    background: $secondary-color;
   }
   .button--disabled {
     background:#cecece;
@@ -215,6 +233,20 @@ body {
   .button--disabled:hover {
     cursor:not-allowed;
     background:#cecece;
+  }
+  @media all and (max-width: 540px){
+    .logo__h1 {
+    
+    
+    width: 100%;
+    height: 100px;
+    display: flex;
+    
+    justify-content: center;
+    
+    align-items: center;
+    
+}
   }
 
 </style>
