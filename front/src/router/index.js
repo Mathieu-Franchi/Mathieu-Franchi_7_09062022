@@ -20,7 +20,9 @@ const routes = [
     path: '/login',
     name: 'loginRegister',
     component: LoginRegisterView,
-    
+    meta: {
+      title:"Groupomania | Connexion"
+    }
      
   },
   {

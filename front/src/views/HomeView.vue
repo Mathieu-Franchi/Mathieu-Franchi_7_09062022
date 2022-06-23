@@ -1,20 +1,20 @@
 <template>
   
     <HeaderHomeComponent  />
-    <LoginRegister  />
+    <PostHomeComponent  />
 </template>
 
 <script>
 
 import HeaderHomeComponent from '@/components/HeaderHomeComponent.vue'
-import LoginRegister from '@/components/LoginRegister.vue'
+import PostHomeComponent from '@/components/PostHomeComponent.vue'
 
 export default {
   name: 'HomeView',
   
    
   components: {
-    HeaderHomeComponent, LoginRegister
+    HeaderHomeComponent, PostHomeComponent
   }
 }
 </script>
