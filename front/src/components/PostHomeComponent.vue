@@ -4,7 +4,7 @@
     <form>
       <label for="post__title"></label>
       <input type="text" class="post__title" name="post__title"  placeholder= "Quoi de neuf ?" >
-    <p class="burger"><FontAwesome :icon="{prefix:'fas',iconName: 'bars'}"/></p>
+    
     </form>
     
       <label for="image__post">Choisir une image</label>

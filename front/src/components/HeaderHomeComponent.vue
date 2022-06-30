@@ -4,7 +4,7 @@
         <h1 class="logo__h1__header"><img class="logo__img" alt="Groupomania logo" src="../assets/logos/icon-left-font.png">
         </h1>
         <nav id="nav__header">
-            
+            <p class="burger"><FontAwesome class="fa_burger" :icon="{prefix:'fas',iconName: 'bars'}"/></p>
             <ul class="nav__list">
                 <li class="nav__li"><router-link class="nav__a" to="/">Accueil</router-link></li>
                 <li class="nav__li"><router-link class="nav__a" to="/profil">Profil</router-link></li>
@@ -50,14 +50,7 @@ header {
     
     background-color: white;
 }
- #nav__header {
-   
-    width: 100%;
-    flex-shrink: 1;
-    display: flex;
-    justify-content: flex-end;
-    
- }
+ 
 .logo__h1__header{
     height: 70px;
     width: 100%;
@@ -71,7 +64,7 @@ header {
 .nav__list {
     width: 100%;
     display: flex;
-     justify-content: flex-end;
+    margin-right: 20px;
     
 
     .nav__li {
@@ -85,6 +78,22 @@ header {
         color: black;
         font-size: 20px;
         text-decoration: none;
+        position: relative;
+    }
+    .nav__a:after {
+        content: '';
+        background-color: $secondary-color;
+        height: 2px;
+        width: 0;
+        position: absolute;
+        bottom: -5px;
+        right: 0;
+        transition: 0.2s all ease-in-out;
+
+    }
+    .nav__a:hover:after {
+        width: 100%;
+        left: 0;
     }
 
     
@@ -93,14 +102,33 @@ header {
         
     }
 }
-@media all and (max-width: 640px) {
+.burger {
+    width: 0;
+    height: 0;
+    visibility: hidden;
+    display: none;
+}
+@media all and (max-width: 768px) {
     #nav__header {
-
-        display: none;
-
-
+        width: 100%;
     }
+    .nav__list {
     
+            width: 0;
+            height: 0;
+            visibility: hidden;
+            display: none;
+    
+        }
+    .burger {
+        width: 300px;
+        height: auto;
+        visibility: visible;
+        display: block;
+    }
+    .fa_burger {
+        width: 100%;
+    }
 }
 
 </style>
