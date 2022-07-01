@@ -5,8 +5,6 @@
 
 </template>
 <script>
-
-
 </script>
 
 <style  lang="scss">
@@ -21,6 +19,5 @@
 }
 #app {
   max-width: 100%;
-
 }
 </style>
