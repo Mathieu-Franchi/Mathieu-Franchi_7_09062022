@@ -8,9 +8,7 @@
 </template>
 
 <script>
-
 import LoginRegister from '@/components/LoginRegister.vue'
-
 export default {
   name: 'LoginRegisterView',
   components: {

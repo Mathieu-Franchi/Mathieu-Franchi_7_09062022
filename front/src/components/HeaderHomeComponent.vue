@@ -17,24 +17,16 @@
 
 </template>
 <script>
-
     export default {
     name: 'HeaderHomeComponent',
     
     
 }
-
 </script>
 <style scoped lang="scss">
-
 @import '../variables';
-
-
-
 header {
-
     
-
     display: flex;
     width: 100%;
    
@@ -58,7 +50,6 @@ header {
     .logo__img {
         object-fit: cover;
         min-width: 320px;
-
     }
 }
 .nav__list {
@@ -66,7 +57,6 @@ header {
     display: flex;
     margin-right: 20px;
     
-
     .nav__li {
         display: inline-block;
         width: 120px;
@@ -89,13 +79,11 @@ header {
         bottom: -5px;
         right: 0;
         transition: 0.2s all ease-in-out;
-
     }
     .nav__a:hover:after {
         width: 100%;
         left: 0;
     }
-
     
     .nav__a:hover {
         color: $primary-color;
@@ -130,5 +118,4 @@ header {
         width: 100%;
     }
 }
-
 </style>
