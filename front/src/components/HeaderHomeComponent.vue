@@ -1,29 +1,43 @@
 <template>
-
     <header>
-        <h1 class="logo__h1__header"><img class="logo__img" alt="Groupomania logo" src="../assets/logos/icon-left-font.png">
+
+
+        <h1 class="logo__h1__header">
+            <router-link to="/"><img class="logo__img" alt="Groupomania logo" src="../assets/logos/icon-left-font.png">
+            </router-link>
         </h1>
+
         <nav id="nav__header">
-            <p class="burger"><FontAwesome class="fa_burger" :icon="{prefix:'fas',iconName: 'bars'}"/></p>
+            <button class="burger" @click="nav()">
+                <FontAwesome class="fa_burger" :icon="{ prefix: 'fas', iconName: 'bars' }" />
+            </button>
             <ul class="nav__list">
-                <li class="nav__li"><router-link class="nav__a" to="/">Accueil</router-link></li>
-                <li class="nav__li"><router-link class="nav__a" to="/profil">Profil</router-link></li>
-                <li class="nav__li"><router-link class="nav__a" to="/">Déconnexion</router-link></li>
+                <li class="nav__li">
+                    <router-link class="nav__a" to="/">Accueil</router-link>
+                </li>
+                <li class="nav__li">
+                    <router-link class="nav__a" to="/profil">Profil</router-link>
+                </li>
+                <li class="nav__li">
+                    <router-link class="nav__a" to="/">Déconnexion</router-link>
+                </li>
             </ul>
         </nav>
     </header>
-    
-
-
 </template>
 <script>
     export default {
     name: 'HeaderHomeComponent',
-    
+    date: {
+        function (){
+
+        }
+    }
     
 }
 </script>
 <style scoped lang="scss">
+
 @import '../variables';
 header {
     
@@ -44,12 +58,13 @@ header {
 }
  
 .logo__h1__header{
+    
     height: 70px;
     width: 100%;
     
     .logo__img {
         object-fit: cover;
-        min-width: 320px;
+        
     }
 }
 .nav__list {
@@ -109,13 +124,27 @@ header {
     
         }
     .burger {
-        width: 300px;
+        width: 40px;
         height: auto;
         visibility: visible;
-        display: block;
+        display: inline-block;
+        outline: none;
+        border: none;
+        background: none;
+        cursor: pointer;
     }
     .fa_burger {
-        width: 100%;
+       font-size: 32px;
+       
+
     }
+    #nav__header {
+        width: auto;
+        margin-right: 15px;
+    }
+        .logo__h1__header {
+            margin-right: 30px;
+        }
+   
 }
 </style>

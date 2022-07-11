@@ -1,22 +1,18 @@
 <template>
-<div id="posts">
-  <article class="post">
-    <form>
-      <label for="post__title"></label>
-      <input type="text" class="post__title" name="post__title"  placeholder= "Quoi de neuf ?" >
-    
-    </form>
-    
+  <div id="posts">
+    <article class="post">
+      <form>
+        <label for="post__title"></label>
+        <input type="text" class="post__title" name="post__title" placeholder="Quoi de neuf ?">
+
+
       <label for="image__post">Choisir une image</label>
 
-      <input type="file" class="image__post" name="image__post" accept="image/png, image/jpeg, image/gif, image/jpg" placeholder="Choisis mtn">
-  </article>
-  
-  
-</div>
-
-
-
+      <input type="file" class="image__post" name="image__post" accept="image/png, image/jpeg, image/gif, image/jpg"
+        placeholder="Choisis mtn">
+      </form>
+    </article>
+  </div>
 </template>
 <script>
 
@@ -41,7 +37,7 @@ export default {
 }
 #posts
 {
-  width: auto;
+  width: 100%;
   height: 100vh;
   
   display: flex;
@@ -56,16 +52,7 @@ export default {
   
 }
 
-// #restaurants h2
-// {
-//   width: 100%;
-  
-//   margin-bottom: 25px;
-  
-//   max-width: 768px;
-  
-//   font-size: 30px;
-// }
+
 .post
 {
   width: 100%;
@@ -79,34 +66,15 @@ export default {
   
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
   
   border-radius: 15px 15px 15px 15px;
   background-color: white;
   
  }
-// #restaurants img 
-// {
-//   width: 100%;
-//   height: 200px;
-  
-//   object-fit: cover;
-  
-//   border-radius: 15px 15px 0px 0px;
-    
-// }
-// #restaurants h3
-// {
-//   width: 155px;
-  
-//   margin: 20px 0px 5px 10px;
-// }
-// #restaurants p 
-// {
-//   width: 120px;
-  
-//   margin-left: 10px;
-// }
-
-
+ .post__title{
+  width: 100%;
+ }
 
 </style>
