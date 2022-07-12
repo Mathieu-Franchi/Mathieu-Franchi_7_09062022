@@ -8,8 +8,8 @@
         </h1>
 
         <nav id="nav__header">
-            <button class="burger" @click="nav()">
-                <FontAwesome class="fa_burger" :icon="{ prefix: 'fas', iconName: 'bars' }" />
+            <button class="burger__btn" @click="nav()">
+                <FontAwesome class="fa__burger" :icon="{ prefix: 'fas', iconName: 'bars' }" />
             </button>
             <ul class="nav__list">
                 <li class="nav__li">
@@ -37,26 +37,29 @@
 }
 </script>
 <style scoped lang="scss">
-
 @import '../variables';
 header {
-    
+
     display: flex;
     width: 100%;
-   
+
     height: 80px;
     flex-direction: row;
     justify-content: flex-end;
     align-items: center;
     box-shadow: 0px 2px 5px rgb(201, 201, 201);
-     position: sticky;
-     top:0;
-   
-   
+    position: sticky;
+    top: 0;
     
-    background-color: white;
+
+
+    
 }
- 
+ #nav__header {
+    flex-shrink: 0;
+    width: 400px;
+    
+ }
 .logo__h1__header{
     
     height: 70px;
@@ -64,19 +67,19 @@ header {
     
     .logo__img {
         object-fit: cover;
-        
+        width: 100%;
+        max-width: 405px;
+        min-width: 255px;
+        height: 100%;
     }
 }
 .nav__list {
-    width: 100%;
+    
     display: flex;
-    margin-right: 20px;
+    justify-content: space-around;
     
     .nav__li {
         display: inline-block;
-        width: 120px;
-        
-        
     }
     .nav__a {
         transition: all 0.2s ease 0s;
@@ -105,13 +108,15 @@ header {
         
     }
 }
-.burger {
+.burger__btn {
     width: 0;
     height: 0;
     visibility: hidden;
     display: none;
 }
-@media all and (max-width: 768px) {
+
+//MEDIA QUERIES 
+@media all and (max-width: 900px) {
     #nav__header {
         width: 100%;
     }
@@ -123,7 +128,7 @@ header {
             display: none;
     
         }
-    .burger {
+    .burger__btn {
         width: 40px;
         height: auto;
         visibility: visible;
@@ -133,7 +138,7 @@ header {
         background: none;
         cursor: pointer;
     }
-    .fa_burger {
+    .fa__burger {
        font-size: 32px;
        
 

@@ -128,7 +128,7 @@ export default {
 }
 </script>
       
-<style lang="scss">
+<style scoped lang="scss">
 @import '../variables';
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 

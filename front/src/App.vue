@@ -1,14 +1,13 @@
 <template>
-
   <router-view></router-view>
-
-
 </template>
+
 <script>
 </script>
 
-<style  lang="scss">
+<style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+@import 'variables';
 * {
   font-family: 'Lato', sans-serif;
   margin:0;
