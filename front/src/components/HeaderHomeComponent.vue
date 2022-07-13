@@ -8,7 +8,7 @@
         </h1>
 
         <nav id="nav__header">
-            <button type="button" aria-label="Toggle navigation" class="burger__btn" @click="NavToggle()">
+            <button type="button" aria-label="Toggle navigation" aria-expanded="false" class="burger__btn" @click="NavToggle()">
                 <FontAwesome class="fa__burger" :icon="{ prefix: 'fas', iconName: 'bars' }" />
             </button>
             <ul class="nav__list" :class="{ 'list--disabled': NavToggle }">
@@ -22,14 +22,14 @@
                     <router-link class="nav__a" to="/">Déconnexion</router-link>
                 </li>
             </ul>
-            <!-- <NavComponent v-show="NavToggle" /> -->
+            <NavComponent class="NavComponent" v-show="NavToggle" /> 
 
         </nav>
     </header>
 </template>
 
 <script>
-// import NavComponent from './NavComponent.vue';
+ import NavComponent from './NavComponent.vue';
     export default {
     name: "HeaderHomeComponent",
     data: function () {
@@ -37,18 +37,48 @@
             revele: false
         }
     },
+    components: { NavComponent },
+    
     methods: {
         NavToggle: function () {
             this.revele = !this.revele
         },
     },
-    // components: { NavComponent }
+    mounted: function () {
+        const hamburgerToggler = document.querySelector(".burger__btn")
+        const navLinksContainer = document.querySelector(".NavComponent");
+
+        const toggleNav = () => {
+            hamburgerToggler.classList.toggle("open")
+
+            const ariaToggle = hamburgerToggler.getAttribute("aria-expanded") === "true" ? "false" : "true";
+            hamburgerToggler.setAttribute("aria-expanded", ariaToggle)
+
+            navLinksContainer.classList.toggle("open")
+        }
+        hamburgerToggler.addEventListener("click", toggleNav)
+
+        new ResizeObserver(entries => {
+            
+            if (entries[0].contentRect.width <= 900) {
+                navLinksContainer.style.transition = "transform 0.3s ease-out"
+            } else {
+                navLinksContainer.style.transition = "none"
+            }
+        }).observe(document.body)
+
+    },
 }
 </script>
 <style scoped lang="scss">
-
-
 @import '../variables';
+.NavComponent{
+    width: 20%;
+    position: fixed;
+    top: 80px;
+    right: 0px;
+    
+}
 header {
 
     display: flex;
@@ -164,13 +194,28 @@ header {
     .logo__h1__header {
         margin-right: 30px;
     }
-
-    .list--disabled {
-        display: block;
-        width: 100%;
-        height: 100vh;
-        visibility: visible;
-    }
+    .NavComponent {
+    // display: flex;
+    // flex-direction: column;
+    // align-items: flex-start;
+    // position: absolute;
+    // background: #ffffff;
+    // top: 100%;
+    // left: 0;
+    // height: 100vh;
+    // padding: 15px 50px 15px 20px;
+    border-left: 1px solid $third-color;
+    transform: translate(100%);
+  }
+  .open {
+    transform: translate(0%);
+  }
+    // .list--disabled {
+    //     display: block;
+    //     width: 100%;
+    //     height: 100vh;
+    //     visibility: visible;
+    // }
 
 }
 </style>

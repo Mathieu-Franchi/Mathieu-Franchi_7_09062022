@@ -47,7 +47,7 @@ export default {
         hamburgerToggler.addEventListener("click", toggleNav)
 
         new ResizeObserver(entries => {
-            console.log(entries)
+            
             if (entries[0].contentRect.width <= 900) {
                 navLinksContainer.style.transition = "transform 0.3s ease-out"
             } else {
@@ -60,14 +60,17 @@ export default {
 
 </script>
 <style scoped lang="scss">
+
 @import '../variables';
+
 nav {
     position: fixed;
     width: 100%;
     display: flex;
+    justify-content: center;
     align-items: center;
-
-    /* padding: 15px 25px; */
+    
+    
     padding-top: 15px;
     padding-right: 25px;
     padding-bottom: 15px;
@@ -79,12 +82,7 @@ nav {
 .main-navlinks{
     flex-shrink: 0;
 }
-.nav-icon {
-  display: flex;
-  align-items: center;
-  text-decoration: none;
-  margin-right: 20px;
-}
+
 .logo__h1{
     
     height: 49px;
@@ -112,25 +110,16 @@ nav {
   position: relative;
 }
 .navlinks-container a::after {
-//   content: "";
-//   display: block;
-//   position: absolute;
-//   bottom: -3px;
-//   width: 100%;
-//   height: 1px;
-//   transform: scaleX(0);
-//   transform-origin: left;
-//   background: #333;
-//   transition: transform 0.3s ease-out;
-content: '';
 
-        background-color: $secondary-color;
-        height: 2px;
-        width: 0;
-        position: absolute;
-        bottom: -5px;
-        right: 0;
-        transition: 0.2s all ease-in-out;
+    content: '';
+
+    background-color: $secondary-color;
+    height: 2px;
+    width: 0;
+    position: absolute;
+    bottom: -5px;
+    right: 0;
+    transition: 0.2s all ease-in-out;
 }
 
 .navlinks-container a:hover::after {
@@ -154,9 +143,6 @@ width: 100%;
     font-size: 22px;
   }
 
-  .main-navlinks {
-    order: 1;
-  }
   /* Hamburger */
   .hamburger {
     width: 20px;

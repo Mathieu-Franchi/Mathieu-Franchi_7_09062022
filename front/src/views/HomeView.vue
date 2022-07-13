@@ -1,15 +1,13 @@
 <template>
-  
-    <!-- <HeaderHomeComponent  /> -->
-    <HeaderHomeBurgerComponent />
-    <PostHomeComponent />
-    <LoginRegister />
-    <FooterComponent />
+  <HeaderHomeComponent />
+  <PostHomeComponent />
+  <LoginRegister />
+  <FooterComponent />
 </template>
 
 <script>
-// import HeaderHomeComponent from '@/components/HeaderHomeComponent.vue'
-import HeaderHomeBurgerComponent from '@/components/HeaderHomeBurgerComponent.vue'
+
+import HeaderHomeComponent from '@/components/HeaderHomeComponent.vue'
 import PostHomeComponent from '@/components/PostHomeComponent.vue'
 import LoginRegister from '@/components/LoginRegister.vue'
 import FooterComponent from '@/components/FooterComponent.vue'
@@ -18,7 +16,7 @@ export default {
   
    
   components: {
-    HeaderHomeBurgerComponent, PostHomeComponent, LoginRegister, FooterComponent
+    HeaderHomeComponent, PostHomeComponent, LoginRegister, FooterComponent
   }
 }
 </script>
