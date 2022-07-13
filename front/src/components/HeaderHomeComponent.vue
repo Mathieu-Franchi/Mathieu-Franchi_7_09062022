@@ -8,10 +8,10 @@
         </h1>
 
         <nav id="nav__header">
-            <button class="burger__btn" @click="nav()">
+            <button type="button" aria-label="Toggle navigation" class="burger__btn" @click="NavToggle()">
                 <FontAwesome class="fa__burger" :icon="{ prefix: 'fas', iconName: 'bars' }" />
             </button>
-            <ul class="nav__list">
+            <ul class="nav__list" :class="{ 'list--disabled': NavToggle }">
                 <li class="nav__li">
                     <router-link class="nav__a" to="/">Accueil</router-link>
                 </li>
@@ -22,21 +22,32 @@
                     <router-link class="nav__a" to="/">Déconnexion</router-link>
                 </li>
             </ul>
+            <!-- <NavComponent v-show="NavToggle" /> -->
+
         </nav>
     </header>
 </template>
-<script>
-    export default {
-    name: 'HeaderHomeComponent',
-    date: {
-        function (){
 
+<script>
+// import NavComponent from './NavComponent.vue';
+    export default {
+    name: "HeaderHomeComponent",
+    data: function () {
+        return {
+            revele: false
         }
-    }
-    
+    },
+    methods: {
+        NavToggle: function () {
+            this.revele = !this.revele
+        },
+    },
+    // components: { NavComponent }
 }
 </script>
 <style scoped lang="scss">
+
+
 @import '../variables';
 header {
 
@@ -45,14 +56,12 @@ header {
 
     height: 80px;
     flex-direction: row;
-    justify-content: flex-end;
+    
     align-items: center;
-    box-shadow: 0px 2px 5px rgb(201, 201, 201);
+    box-shadow: 0px 2px 3px $secondary-color;
     position: sticky;
     top: 0;
-    
-
-
+    background-color: white;
     
 }
  #nav__header {
@@ -120,14 +129,16 @@ header {
     #nav__header {
         width: 100%;
     }
+
     .nav__list {
-    
-            width: 0;
-            height: 0;
-            visibility: hidden;
-            display: none;
-    
-        }
+
+        width: 0;
+        height: 0;
+        visibility: hidden;
+        display: none;
+
+    }
+
     .burger__btn {
         width: 40px;
         height: auto;
@@ -138,18 +149,28 @@ header {
         background: none;
         cursor: pointer;
     }
+
     .fa__burger {
-       font-size: 32px;
-       
+        font-size: 32px;
+
 
     }
+
     #nav__header {
         width: auto;
         margin-right: 15px;
     }
-        .logo__h1__header {
-            margin-right: 30px;
-        }
-   
+
+    .logo__h1__header {
+        margin-right: 30px;
+    }
+
+    .list--disabled {
+        display: block;
+        width: 100%;
+        height: 100vh;
+        visibility: visible;
+    }
+
 }
 </style>

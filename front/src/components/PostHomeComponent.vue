@@ -1,5 +1,5 @@
 <template>
-  <div id="posts">
+  <div id="post">
     <article class="post">
       <form>
         <label for="post__title"></label>
@@ -30,21 +30,17 @@ export default {
 </script>
 <style scoped lang="scss">
 @import '../variables';
-.burger{
-  width: 30px;
-  height: 30px;
-  font-size: large;
-}
-#posts
+
+#post
 {
   width: 100%;
-  height: 100vh;
+  height: 70px;
   
   display: flex;
   flex-direction: column;
   align-items: center;
-  
-  padding: 50px 25px 50px 25px;
+  //padding for the header position fixed
+  padding: calc(79px + 50px) 25px 50px 25px;
   
   margin: auto;
   
@@ -76,5 +72,10 @@ export default {
  .post__title{
   width: 100%;
  }
-
+//MEDIA QUERIES 
+@media all and (max-width: 900px) {
+  #post {
+    padding-top: 50px;
+  }
+}
 </style>
