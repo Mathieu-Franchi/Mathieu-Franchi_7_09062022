@@ -71,24 +71,19 @@
 }
 </script>
 <style scoped lang="scss">
+
 @import '../variables';
-.NavComponent{
-    width: 20%;
-    position: fixed;
-    top: 80px;
-    right: 0px;
-    
-}
+
 header {
 
     display: flex;
-    width: 100%;
+    width: auto;
 
     height: 80px;
     flex-direction: row;
     
     align-items: center;
-    box-shadow: 0px 2px 3px $secondary-color;
+    box-shadow: inset 0px -1px 0px $primary-color;
     position: sticky;
     top: 0;
     background-color: white;
@@ -97,6 +92,7 @@ header {
  #nav__header {
     flex-shrink: 0;
     width: 400px;
+    
     
  }
 .logo__h1__header{
@@ -194,28 +190,11 @@ header {
     .logo__h1__header {
         margin-right: 30px;
     }
-    .NavComponent {
-    // display: flex;
-    // flex-direction: column;
-    // align-items: flex-start;
-    // position: absolute;
-    // background: #ffffff;
-    // top: 100%;
-    // left: 0;
-    // height: 100vh;
-    // padding: 15px 50px 15px 20px;
-    border-left: 1px solid $third-color;
-    transform: translate(100%);
-  }
+        
   .open {
     transform: translate(0%);
   }
-    // .list--disabled {
-    //     display: block;
-    //     width: 100%;
-    //     height: 100vh;
-    //     visibility: visible;
-    // }
+    
 
 }
 </style>
