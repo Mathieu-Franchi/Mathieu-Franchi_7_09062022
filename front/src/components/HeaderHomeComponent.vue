@@ -8,13 +8,13 @@
         </h1>
 
         <nav id="nav__header">
-            <button type="button" aria-label="Toggle navigation" aria-expanded="false" class="burger__btn" @click="NavToggle()">
+            <button type="button" aria-label="Toggle navigation" aria-expanded="false" class="burger__btn">
                 <!-- <FontAwesome class="fa__burger" :icon="{ prefix: 'fas', iconName: 'bars' }" /> -->
                 <span></span>
-                    <span></span>
-                    <span></span>
+                <span></span>
+                <span></span>
             </button>
-            <ul class="nav__list" :class="{ 'list--disabled': NavToggle }">
+            <ul class="nav__list">
                 <li class="nav__li">
                     <router-link class="nav__a" to="/">Accueil</router-link>
                 </li>
@@ -25,7 +25,7 @@
                     <router-link class="nav__a" to="/">Déconnexion</router-link>
                 </li>
             </ul>
-            <NavComponent class="NavComponent" /> 
+            <NavComponent class="NavComponent" />
 
         </nav>
     </header>
@@ -37,15 +37,13 @@
     name: "HeaderHomeComponent",
     data: function () {
         return {
-            revele: false
+            
         }
     },
     components: { NavComponent },
     
     methods: {
-        NavToggle: function () {
-            this.revele = !this.revele
-        },
+        
     },
     mounted: function () {
         const hamburgerToggler = document.querySelector(".burger__btn")
@@ -76,12 +74,15 @@
 <style scoped lang="scss">
 
 @import '../variables';
+.NavComponent {
+    display: none;
+}
 
 header {
 
     display: flex;
     width: auto;
-
+    
     height: 80px;
     flex-direction: row;
     
@@ -106,7 +107,7 @@ header {
     .logo__img {
         object-fit: cover;
         width: 100%;
-        max-width: 405px;
+        max-width: 350px;
         min-width: 255px;
         height: 100%;
     }
@@ -153,7 +154,7 @@ header {
     display: none;
 }
 
-//MEDIA QUERIES 
+//MEDIA QUERIES 900PX
 @media all and (max-width: 900px) {
     #nav__header {
         width: 100%;
@@ -199,12 +200,14 @@ header {
     right: 15px;
   }      
   .open {
-    transform: translate(0%);
+    // transform: translate(0%);
+    display: flex;
+    transition: all 0.2s ease;
     
   }
   .burger__btn {
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     cursor: pointer;
     border: none;
     display: flex;
@@ -215,7 +218,7 @@ header {
   .burger__btn span {
     display: block;
     width: 100%;
-    height: 2px;
+    height: 9%;
     background: #333;
     position: absolute;
     pointer-events: none;
@@ -241,8 +244,6 @@ header {
   .burger__btn.open span:nth-child(3) {
     transform: translate(0) rotate(-135deg);
   }
-  
-    
-
 }
+
 </style>

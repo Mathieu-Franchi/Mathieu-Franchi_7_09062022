@@ -37,7 +37,7 @@ export default {
         border-top: none;
         border-radius: 0px 0px 10px 10px;
         background-color: white;
-        transform: translateX(100%);
+        // transform: translateX(100%);
 
     .nav__burger__a{
         text-decoration: none;
