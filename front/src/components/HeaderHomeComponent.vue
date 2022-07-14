@@ -9,7 +9,10 @@
 
         <nav id="nav__header">
             <button type="button" aria-label="Toggle navigation" aria-expanded="false" class="burger__btn" @click="NavToggle()">
-                <FontAwesome class="fa__burger" :icon="{ prefix: 'fas', iconName: 'bars' }" />
+                <!-- <FontAwesome class="fa__burger" :icon="{ prefix: 'fas', iconName: 'bars' }" /> -->
+                <span></span>
+                    <span></span>
+                    <span></span>
             </button>
             <ul class="nav__list" :class="{ 'list--disabled': NavToggle }">
                 <li class="nav__li">
@@ -22,7 +25,7 @@
                     <router-link class="nav__a" to="/">Déconnexion</router-link>
                 </li>
             </ul>
-            <NavComponent class="NavComponent" v-show="NavToggle" /> 
+            <NavComponent class="NavComponent" /> 
 
         </nav>
     </header>
@@ -154,6 +157,7 @@ header {
 @media all and (max-width: 900px) {
     #nav__header {
         width: 100%;
+        
     }
 
     .nav__list {
@@ -174,6 +178,7 @@ header {
         border: none;
         background: none;
         cursor: pointer;
+        
     }
 
     .fa__burger {
@@ -190,10 +195,53 @@ header {
     .logo__h1__header {
         margin-right: 30px;
     }
-        
+  .open.NavComponent {
+    right: 15px;
+  }      
   .open {
     transform: translate(0%);
+    
   }
+  .burger__btn {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    border: none;
+    display: flex;
+    background: #ffffff;
+    align-items: center;
+    position: relative;
+  }
+  .burger__btn span {
+    display: block;
+    width: 100%;
+    height: 2px;
+    background: #333;
+    position: absolute;
+    pointer-events: none;
+    transition: opacity 0.3s 0.15s ease-out;
+  }
+  .burger__btn span:nth-child(1),
+  .burger__btn span:nth-child(3) {
+    transition: transform 0.3s ease-out;
+  }
+  .burger__btn span:nth-child(1) {
+    transform: translateY(7px);
+  }
+  .burger__btn span:nth-child(3) {
+    transform: translateY(-7px);
+  }
+  .burger__btn.open span:nth-child(1) {
+    transform: translate(0) rotate(135deg);
+  }
+  .burger__btn.open span:nth-child(2) {
+    opacity: 0;
+    transition: opacity 0s ease-out;
+  }
+  .burger__btn.open span:nth-child(3) {
+    transform: translate(0) rotate(-135deg);
+  }
+  
     
 
 }

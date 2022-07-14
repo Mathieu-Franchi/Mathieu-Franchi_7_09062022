@@ -40,7 +40,7 @@ export default {
   flex-direction: column;
   align-items: center;
   //padding for the header position fixed
-  padding: calc(79px + 50px) 25px 50px 25px;
+  padding: 50px 25px 50px 25px;
   
   margin: auto;
   
@@ -73,9 +73,5 @@ export default {
   width: 100%;
  }
 //MEDIA QUERIES 
-@media all and (max-width: 900px) {
-  #post {
-    padding-top: 50px;
-  }
-}
+
 </style>
