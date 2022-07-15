@@ -18,7 +18,11 @@
                 <input v-model="nom" class="form-row__input" type="text" placeholder="Nom" />
             </div>
             <div class="form-row">
-                <input v-model="password" class="form-row__input" type="password" placeholder="Mot de passe" />
+                <input v-model="password" class="form-row__input password__type" type="password" aria-label="Password" placeholder="Mot de passe" />
+                <button @click="toggleMaskPassword" class="eye__button" type="button">
+                    <FontAwesome class="fa__eye" aria-hidden="true" icon="fa-solid fa-eye" />
+                    <FontAwesome class="fa__eye__mask" aria-hidden="true" icon="fa-solid fa-eye-slash" />
+                </button>
             </div>
             <div class="form-row" v-if="mode == 'login' && status == 'error_login'">
                 Adresse mail et/ou mot de passe invalide
@@ -41,8 +45,8 @@
         </div>
     </div>
 </template>
-      
-      <script>
+
+<script>
 
 import { mapState } from 'vuex'
 export default {
@@ -53,6 +57,7 @@ export default {
             email: '',
             nom: '',
             password: '',
+            toggleMask: false,//For toggle mask password text
         }
     },
     mounted: function () {
@@ -89,10 +94,10 @@ export default {
         },
         switchToLogin: function () {
             this.mode = 'login';
-            
+
         },
         login: function () {
-            
+
             const self = this;
             this.$store.dispatch('login', {
                 email: this.email,
@@ -115,15 +120,28 @@ export default {
                 console.log(error);
             })
         },
-        test: function () {
-        if (localStorage === undefined || localStorage.length === 0) {
-            
-            return true;
-        }
-        else {
-          return false;
-        }
-    },
+        toggleMaskPassword: function () {
+            //Unmask and mask text password + icone eye change
+            const eye = document.querySelector(".fa__eye");
+            const eyeMask = document.querySelector(".fa__eye__mask");
+            const passwordField = document.querySelector(".password__type")
+            if (this.toggleMask === false) {
+
+                eye.style.display = "none";
+                eyeMask.style.display = "inline-block";
+                passwordField.type = "text"
+                this.toggleMask = true;
+
+            }
+            else {
+
+                eyeMask.style.display = "none";
+                eye.style.display = "inline-block";
+                passwordField.type = "password"
+                
+                this.toggleMask = false;
+            }
+        },
     }
 }
 </script>
@@ -148,6 +166,7 @@ export default {
     margin: 16px 0px;
     gap: 16px;
     flex-wrap: wrap;
+    position: relative;
 }
 .logo__h1 {
     
@@ -166,8 +185,6 @@ export default {
     max-width: 405px;
     min-width: 255px;
     height: 100%;
-    
-    
     object-fit:contain;
     
 }
@@ -182,6 +199,31 @@ export default {
     flex: 1;
     min-width: 100px;
     color: black;
+    
+}
+.eye__button{
+    position: absolute;
+    display: block;
+    outline: none;
+    border: none;
+    border-radius: 0px 8px 8px 0px;
+    height: 32px;
+    width: 70px;
+    background-color: rgb(242, 242, 242);
+    right: 1px;
+    cursor: pointer;
+}
+.fa__eye {
+    color: $third-color;
+    font-size: 20px;
+}
+.fa__eye__mask {
+    display: none;
+    color: $third-color;
+    font-size: 20px;
+}
+.form-row__input:focus{
+    outline-color: $secondary-color;
 }
     
 .form-row__input::placeholder {

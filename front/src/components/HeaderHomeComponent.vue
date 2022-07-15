@@ -3,7 +3,7 @@
 
 
         <h1 class="logo__h1__header">
-            <router-link to="/"><img class="logo__img" alt="Groupomania logo" src="../assets/logos/icon-left-font.png">
+            <router-link to="/" @click="ScrollTop"><img class="logo__img" alt="Groupomania logo" src="../assets/logos/icon-left-font.png">
             </router-link>
         </h1>
 
@@ -16,7 +16,7 @@
             </button>
             <ul class="nav__list">
                 <li class="nav__li">
-                    <router-link class="nav__a" to="/">Accueil</router-link>
+                    <router-link class="nav__a" to="/" @click="ScrollTop">Accueil</router-link>
                 </li>
                 <li class="nav__li">
                     <router-link class="nav__a" to="/profil">Profil</router-link>
@@ -43,6 +43,12 @@
     components: { NavComponent },
     
     methods: {
+        ScrollTop: function(){
+            window.scrollTo({
+                top:0,
+                left: 0,
+            })
+        }
         
     },
     mounted: function () {
@@ -93,7 +99,7 @@ header {
     position: sticky;
     top: 0;
     background-color: white;
-    
+    z-index: 10;
 }
  #nav__header {
     flex-shrink: 0;
@@ -103,7 +109,7 @@ header {
  }
 .logo__h1__header{
     
-    height: 70px;
+    height: 78px;
     width: 100%;
     
     .logo__img {
@@ -158,10 +164,7 @@ header {
 
 //MEDIA QUERIES 900PX
 @media all and (max-width: 900px) {
-    #nav__header {
-        width: 100%;
-        
-    }
+    
 
     .nav__list {
 
@@ -192,9 +195,9 @@ header {
 
     #nav__header {
     
-        width: 100px;
+        width: 120px;
         display: flex;
-        height: 70px;
+        height: 78px;
         justify-content: center;
         align-items: center;
         flex-shrink: 1;

@@ -16,6 +16,9 @@
   list-style: none;
   
 }
+html {
+  scroll-behavior: smooth;
+}
 #app {
   max-width: 100%;
 }

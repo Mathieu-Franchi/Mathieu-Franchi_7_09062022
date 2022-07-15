@@ -1,5 +1,5 @@
 <template>
-  <div id="post">
+  <section id="post">
     <article class="post">
       <form>
         <label for="post__title"></label>
@@ -12,7 +12,7 @@
         placeholder="Choisis mtn">
       </form>
     </article>
-  </div>
+  </section>
 </template>
 <script>
 
