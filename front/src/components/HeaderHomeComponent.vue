@@ -73,6 +73,8 @@
 </script>
 <style scoped lang="scss">
 
+
+
 @import '../variables';
 .NavComponent {
     display: none;
@@ -189,36 +191,41 @@ header {
     }
 
     #nav__header {
-        width: auto;
-        margin-right: 15px;
+    
+        width: 100px;
+        display: flex;
+        height: 70px;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 1;
     }
 
-    .logo__h1__header {
-        margin-right: 30px;
-    }
+    
   .open.NavComponent {
     right: 15px;
   }      
   .open {
     // transform: translate(0%);
     display: flex;
-    transition: all 0.2s ease;
+    
     
   }
   .burger__btn {
-    width: 25px;
-    height: 25px;
+    width: 100%;
+    height: 100%;
     cursor: pointer;
     border: none;
     display: flex;
+        
+    justify-content: center;
     background: #ffffff;
     align-items: center;
     position: relative;
   }
   .burger__btn span {
     display: block;
-    width: 100%;
-    height: 9%;
+    width: 30px;
+    height: 2.4px;
     background: #333;
     position: absolute;
     pointer-events: none;
