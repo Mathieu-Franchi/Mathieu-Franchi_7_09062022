@@ -20,8 +20,8 @@
             <div class="form-row">
                 <input v-model="password" class="form-row__input password__type" type="password" aria-label="Password" placeholder="Mot de passe" />
                 <button @click="toggleMaskPassword" class="eye__button" type="button">
-                    <FontAwesome class="fa__eye" aria-hidden="true" icon="fa-solid fa-eye" />
-                    <FontAwesome class="fa__eye__mask" aria-hidden="true" icon="fa-solid fa-eye-slash" />
+                    <FontAwesome v-if="toggleMask"  class="fa__eye__mask" aria-hidden="true" icon="fa-solid fa-eye-slash" />
+                    <FontAwesome v-else  class="fa__eye" aria-hidden="true" icon="fa-solid fa-eye" />
                 </button>
             </div>
             <div class="form-row" v-if="mode == 'login' && status == 'error_login'">
@@ -121,24 +121,18 @@ export default {
             })
         },
         toggleMaskPassword: function () {
-            //Unmask and mask text password + icone eye change
-            const eye = document.querySelector(".fa__eye");
-            const eyeMask = document.querySelector(".fa__eye__mask");
+            //Boolean Unmask and mask text password
             const passwordField = document.querySelector(".password__type")
             if (this.toggleMask === false) {
 
-                eye.style.display = "none";
-                eyeMask.style.display = "inline-block";
                 passwordField.type = "text"
                 this.toggleMask = true;
 
             }
             else {
 
-                eyeMask.style.display = "none";
-                eye.style.display = "inline-block";
+
                 passwordField.type = "password"
-                
                 this.toggleMask = false;
             }
         },
@@ -203,7 +197,7 @@ export default {
 }
 .eye__button{
     position: absolute;
-    display: block;
+    display: inline-block;
     outline: none;
     border: none;
     border-radius: 0px 8px 8px 0px;
@@ -218,7 +212,7 @@ export default {
     font-size: 20px;
 }
 .fa__eye__mask {
-    display: none;
+    display: inline-block;
     color: $third-color;
     font-size: 20px;
 }

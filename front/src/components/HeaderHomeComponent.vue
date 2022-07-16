@@ -3,13 +3,13 @@
 
 
         <h1 class="logo__h1__header">
-            <router-link to="/" @click="ScrollTop"><img class="logo__img" alt="Groupomania logo" src="../assets/logos/icon-left-font.png">
+            <router-link class="logo__link" to="/" @click="ScrollTop"><img class="logo__img" alt="Groupomania logo" src="../assets/logos/icon-left-font.png">
             </router-link>
         </h1>
 
         <nav id="nav__header">
             <button type="button" aria-label="Toggle navigation" aria-expanded="false" class="burger__btn">
-                <!-- <FontAwesome class="fa__burger" :icon="{ prefix: 'fas', iconName: 'bars' }" /> -->
+                
                 <span></span>
                 <span></span>
                 <span></span>
@@ -112,12 +112,16 @@ header {
     height: 78px;
     width: 100%;
     
+    .logo__link{
+        outline: none;
+    }
     .logo__img {
         object-fit: cover;
         width: 100%;
         max-width: 350px;
         min-width: 255px;
         height: 100%;
+        
     }
 }
 .nav__list {
