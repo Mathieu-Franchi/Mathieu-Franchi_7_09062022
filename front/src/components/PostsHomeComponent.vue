@@ -30,10 +30,26 @@
                 <h3 class="post__description">{{ post.description }}</h3>
                 <img class="post__img" src="../../../back/images/tabasco.png" alt="Image du post" />
             </div>
-
+            <!-- Number of likes -->
+            <div class="post__number__likes">
+                <FontAwesome class="fa__like" icon="fa-solid fa-thumbs-up" />
+                <p class="post__counter__likes">{{post.likes}}</p>
+            </div>
             <!-- footer of the post -->
             <div class="post__footer">
-                icones icones
+                <div class="post__container__btn__like">
+                    <button class="post__btn__like" type="button">
+                        <FontAwesome class="fa__like" icon="fa-solid fa-thumbs-up" />
+                    </button>
+                </div>
+                <div class="post__container__btn__comment">
+                <button class="post__btn__comment" @click="post__comment__section.style.display = block;" type="button">
+                    <FontAwesome class="fa__comment" icon="fa-solid fa-comment-dots" />
+                </button>
+                </div>
+            </div>
+            <div class="post__comment__section">
+
             </div>
 
         </div>
@@ -64,11 +80,8 @@ import axios from 'axios';
 
 </script>
 <style scoped lang="scss">
-
-
-
-
 @import '../variables';
+
 #body_posts {
   background-image: linear-gradient(90deg, $third-color 0%, $secondary-color 50%, $third-color 100%);
   display: flex;
@@ -81,7 +94,7 @@ import axios from 'axios';
   padding:30px;
 }
 .post {
-    max-width: 600px;
+    max-width: 700px;
     width: 100%;
     height: auto;
     
@@ -151,7 +164,8 @@ import axios from 'axios';
 
 
 .post__main{
-
+    
+    border-bottom: 1px solid $secondary-color;
     .post__description{
         padding: 0px 0px 10px 10px;
     }
@@ -160,11 +174,67 @@ import axios from 'axios';
         height: 100%;
         object-fit: cover;
         border-top: 1px solid $secondary-color;
-        border-bottom: 1px solid $secondary-color;
     }
 }
+.post__number__likes{
+    display: flex;
+    width: 100%;
+    justify-content: flex-start;
+    border-bottom: 1px solid $secondary-color;
+    padding: 0 auto;
+   
+}
 .post__footer{
-    padding: 10px;
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 3px;
+    border-radius: 15px;
+    
+    .post__container__btn__like,
+    .post__container__btn__comment
+    {
+        border-radius: 15px;
+        padding: 3px;
+        width: 100%;
+        height: 100%;
+    }
+    .post__btn__like,
+    .post__btn__comment{
+        width: 100%;
+        height: 100%;
+        cursor: pointer;
+        border: none;
+        background: none;
+        display: block;
+        border-radius: 5px;
+        transition: background-color 0.2s ease-in-out;
+
+    }
+    .fa__like,
+    .fa__comment
+    {
+        font-size: 20px;
+        color: $third-color;
+        transition: color 0.2s ease-in-out;
+    }
+    .post__btn__like:hover {
+        background-color: $secondary-color;
+    }
+    .post__btn__comment:hover{
+        background-color: $secondary-color;
+    }
+    .post__btn__like:hover .fa__like {
+        color: $primary-color;
+        
+    }
+    .post__btn__comment:hover .fa__comment {
+        color: $primary-color;
+        
+    }
+    
+    
 }
 
 

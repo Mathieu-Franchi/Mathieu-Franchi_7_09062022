@@ -14,7 +14,7 @@
                 <input v-model="email" class="form-row__input" type="text" placeholder="Adresse mail" />
             </div>
             <div class="form-row" v-if="mode == 'create'">
-
+                <input v-model="prenom" class="form-row__input" type="text" placeholder="Prénom" />
                 <input v-model="nom" class="form-row__input" type="text" placeholder="Nom" />
             </div>
             <div class="form-row">
@@ -55,6 +55,7 @@ export default {
         return {
             mode: 'login',
             email: '',
+            prenom: '',
             nom: '',
             password: '',
             toggleMask: false,//For toggle mask password text
@@ -70,7 +71,7 @@ export default {
         validatedFields: function () {
             
             if (this.mode == 'create') {
-                if (this.email != "" && this.nom != "" && this.password != "") {
+                if (this.email != "" && this.nom != "" && this.prenom != "" && this.password != "") {
                     return true;
                 } else {
                     
@@ -113,6 +114,7 @@ export default {
             this.$store.dispatch('createAccount', {
                 email: this.email,
                 nom: this.nom,
+                prenom: this.prenom,
                 password: this.password,
             }).then(function () {
                 self.login();
