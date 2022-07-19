@@ -8,8 +8,7 @@
         </h1>
 
         <nav id="nav__header">
-            <button type="button" aria-label="Toggle navigation" aria-expanded="false" class="burger__btn">
-                
+            <button @click="toggleNav" :class="{'open': showNav}" type="button" aria-label="Toggle navigation" v-bind:aria-expanded="showNav"  class="burger__btn">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -25,56 +24,45 @@
                     <router-link class="nav__a" to="/">Déconnexion</router-link>
                 </li>
             </ul>
-            <NavComponent class="NavComponent" />
+            <NavComponent v-if="showNav" class="NavComponent" />
 
         </nav>
     </header>
 </template>
 
 <script>
- import NavComponent from './NavComponent.vue';
+ 
+import NavComponent from './NavComponent.vue';
     export default {
     name: "HeaderHomeComponent",
     data: function () {
         return {
-            
+            showNav: false,//For show NAV
         }
     },
     components: { NavComponent },
     
     methods: {
-        ScrollTop: function(){
+        ScrollTop: function() {
             window.scrollTo({
                 top:0,
                 left: 0,
             })
+        },
+        toggleNav: function () {
+            // const burgerBtn = document.querySelector(".burger__btn");
+            if (this.showNav === false) {
+                this.showNav = true;
+            }
+            else {
+                this.showNav = false;
+            }
+            // const ariaToggle = burgerBtn.getAttribute("aria-expanded") === "true" ? "false" : "true";
+            // burgerBtn.setAttribute("aria-expanded", ariaToggle)
         }
         
     },
-    mounted: function () {
-        const hamburgerToggler = document.querySelector(".burger__btn")
-        const navLinksContainer = document.querySelector(".NavComponent");
-
-        const toggleNav = () => {
-            hamburgerToggler.classList.toggle("open")
-
-            const ariaToggle = hamburgerToggler.getAttribute("aria-expanded") === "true" ? "false" : "true";
-            hamburgerToggler.setAttribute("aria-expanded", ariaToggle)
-
-            navLinksContainer.classList.toggle("open")
-        }
-        hamburgerToggler.addEventListener("click", toggleNav)
-
-        new ResizeObserver(entries => {
-            
-            if (entries[0].contentRect.width <= 900) {
-                navLinksContainer.style.transition = "transform 0.3s ease-out"
-            } else {
-                navLinksContainer.style.transition = "none"
-            }
-        }).observe(document.body)
-
-    },
+    
 }
 </script>
 <style scoped lang="scss">
@@ -82,10 +70,6 @@
 
 
 @import '../variables';
-.NavComponent {
-    display: none;
-}
-
 header {
 
     display: flex;
@@ -207,16 +191,6 @@ header {
         flex-shrink: 1;
     }
 
-    
-  .open.NavComponent {
-    right: 15px;
-  }      
-  .open {
-    // transform: translate(0%);
-    display: flex;
-    
-    
-  }
   .burger__btn {
     width: 100%;
     height: 100%;
@@ -258,6 +232,14 @@ header {
   .burger__btn.open span:nth-child(3) {
     transform: translate(0) rotate(-135deg);
   }
+}
+
+//cant have the menu burger when
+@media all and (min-width: 900px){
+    .NavComponent {
+        display: none;
+     }
+
 }
 
 </style>

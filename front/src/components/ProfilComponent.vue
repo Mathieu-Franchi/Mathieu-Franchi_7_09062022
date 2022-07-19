@@ -1,21 +1,19 @@
 <template>
-<div id="body">
- <section id="profil__section">
-  <div class="profil__img__container">
-    <img class="profil__img" src="../assets/placeholder_img_profil.jpg" alt="image de votre profil"/>
-    <div class="input-group">
-  <input type="file" class="profil__img__file" id="inputFile" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
-  <button class="btn__file" type="button">Modifier Image</button>
-</div>
+  <div id="body">
+    <section id="profil__section">
+      <div class="profil__img__container">
+        <img class="profil__img" src="../assets/placeholder_img_profil.jpg" alt="image de votre profil" />
+        <div class="input-group">
+          <input type="file" class="profil__img__file" id="inputFile" aria-describedby="inputGroupFileAddon04"
+            aria-label="Upload">
+          <button class="btn__file" type="button">
+            <!-- <FontAwesome class="fa__img" :icon="{ prefix: 'fas', iconName: 'bars' }" /> -->
+          </button>
+        </div>
 
+      </div>
+    </section>
   </div>
-
-
- </section>
-</div>
-
-  
-
 </template>
 
 <script>
