@@ -1,13 +1,16 @@
 <template>
+
+<CreatePostComponent />
     <!-- bloc container -->
     <div id="body_posts">
         <div class="create__post">
             <div class="create__profil__img__container">
                 <img class="create__profil__img" src="../../../back/images/moi.jpg" alt="Photo de profil" />
             </div>
-            <button class="create__btn" type="button">
+            <button class="create__btn modal-trigger" type="button">
                 <span class="create__btn__text">Quoi de neuf, Mathieu ?</span>
             </button>
+
         </div>
         <!-- card post -->
         <div class="post" :key="index" v-for="(post, index) in posts">
@@ -73,14 +76,16 @@
 </template>
 <script>
 import axios from 'axios';
+import CreatePostComponent from './CreatePostComponent.vue';
     export default {
     name: 'PostsHomeComponent',
     data: function () {
         return {
             posts: [],
-            
+            createPost: false,
         }
     },
+    components: { CreatePostComponent },
     mounted: function () {
         axios
         .get('http://localhost:3000/api/posts')
