@@ -8,7 +8,7 @@
         </h1>
 
         <nav id="nav__header">
-            <button @click="toggleNav" :class="{'open': showNav}" type="button" aria-label="Toggle navigation" v-bind:aria-expanded="showNav"  class="burger__btn">
+            <button class="burger__btn" @click="toggleNav" :class="{'open': showNav}" type="button" aria-label="Toggle navigation" v-bind:aria-expanded="showNav">
                 <span></span>
                 <span></span>
                 <span></span>
@@ -50,16 +50,14 @@ import NavComponent from './NavComponent.vue';
             })
         },
         toggleNav: function () {
-            // const burgerBtn = document.querySelector(".burger__btn");
             if (this.showNav === false) {
                 this.showNav = true;
             }
             else {
                 this.showNav = false;
             }
-            // const ariaToggle = burgerBtn.getAttribute("aria-expanded") === "true" ? "false" : "true";
-            // burgerBtn.setAttribute("aria-expanded", ariaToggle)
-        }
+        },
+        
         
     },
     
@@ -153,34 +151,7 @@ header {
 //MEDIA QUERIES 900PX
 @media all and (max-width: 900px) {
     
-
-    .nav__list {
-
-        width: 0;
-        height: 0;
-        visibility: hidden;
-        display: none;
-
-    }
-
-    .burger__btn {
-        width: 40px;
-        height: auto;
-        visibility: visible;
-        display: inline-block;
-        outline: none;
-        border: none;
-        background: none;
-        cursor: pointer;
-        
-    }
-
-    .fa__burger {
-        font-size: 32px;
-
-
-    }
-
+    
     #nav__header {
     
         width: 120px;
@@ -190,14 +161,23 @@ header {
         align-items: center;
         flex-shrink: 1;
     }
+    .nav__list {
+
+        width: 0;
+        height: 0;
+        visibility: hidden;
+        display: none;
+
+    }
 
   .burger__btn {
     width: 100%;
     height: 100%;
     cursor: pointer;
+    outline: none;
     border: none;
     display: flex;
-        
+    visibility: visible;
     justify-content: center;
     background: #ffffff;
     align-items: center;

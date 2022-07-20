@@ -2,7 +2,12 @@
     <!-- bloc container -->
     <div id="body_posts">
         <div class="create__post">
-            <button class="create__btn" type="button"></button>
+            <div class="create__profil__img__container">
+                <img class="create__profil__img" src="../../../back/images/moi.jpg" alt="Photo de profil" />
+            </div>
+            <button class="create__btn" type="button">
+                <span class="create__btn__text">Quoi de neuf, Mathieu ?</span>
+            </button>
         </div>
         <!-- card post -->
         <div class="post" :key="index" v-for="(post, index) in posts">
@@ -39,10 +44,10 @@
                     <img class="post__img" src="../../../back/images/tabasco.png" alt="Image du post" />
                 </div>
             </div>
-            
+
             <!-- Number of likes -->
             <div class="post__number__likes">
-                <FontAwesome class="fa__like__counter"  icon="fa-solid fa-thumbs-up" />
+                <FontAwesome class="fa__like__counter" icon="fa-solid fa-thumbs-up" />
                 <p class="post__counter__likes">{{ post.likes }}</p>
             </div>
             <!-- footer of the post -->
@@ -73,7 +78,7 @@ import axios from 'axios';
     data: function () {
         return {
             posts: [],
-            name: "Mathieu",
+            
         }
     },
     mounted: function () {
@@ -82,7 +87,8 @@ import axios from 'axios';
         
         .then((response) => {
             this.posts = response.data;
-            console.log(this.posts);
+            
+            
         });
     },
 
@@ -91,6 +97,9 @@ import axios from 'axios';
 
 </script>
 <style scoped lang="scss">
+
+
+
 
 @import '../variables';
 //BODY
@@ -104,6 +113,78 @@ import axios from 'axios';
   height: 100%;
   
   padding:30px;
+}
+.create__post{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 70px;
+    padding: 10px;
+    max-width: 700px;
+    background-color: white;
+    border: 1px solid $primary-color;
+    border-radius: 20px;
+    margin-bottom: 20px;
+        .create__profil__img__container{
+                width: 50px;
+                height: 50px;
+                margin-right: 10px;
+                
+            .create__profil__img {
+                    width: 50px;
+                    height: 50px;
+                    
+                    -o-object-fit: cover;
+                    object-fit: cover;
+                    border: solid 1px #FFD7D7;
+                    border-radius: 50%;
+                }
+        }
+    .create__btn{
+        display: flex;
+        padding: 15px;
+        align-items: center;
+        width: 100%;
+        height: 50px;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        background-color: #fcfcfc;
+        border: 1px solid $secondary-color;
+        border-radius: 30px;
+        transition: transform 0.2s;
+        
+        .create__btn__text{
+            display: inline-block;
+            font-size: 20px ;
+            transition: letter-spacing 0.2s ease;
+           
+        }
+    }
+    .create__btn:active{
+        transform: scale(0.95);
+        
+        // animation: heartBeat  0.3s ease;
+        // animation-delay: 0.4s;
+    }
+    .create__btn:hover .create__btn__text{
+        letter-spacing: 1px;
+        
+    }
+        @keyframes heartBeat {
+            0% {
+                transform: scale(1);
+            }
+    
+            50%{
+                transform: scale(0.90);
+            }
+    
+            100% {
+                transform: scale(1);
+            }
+        }
 }
 //POST CONTAINER 
 .post {
@@ -126,20 +207,19 @@ import axios from 'axios';
         display: flex;
         width: 100%;
         .post__profil__img__container {
-                width: 40px;
-                height: 40px;
-                
-                margin-right: 10px;
+                width: 50px;
+                height: 50px;
+                margin-right: 20px;
+            .post__profil__img {
+                width: 50px;
+                height: 50px;
+                object-fit: cover;
+                border: solid 1px #FFD7D7;
+                border-radius: 50%;
+            }
                 
                 
             }
-        .post__profil__img {
-            width: 40px;
-            height: 40px;
-            object-fit: cover;
-            border: solid 1px #FFD7D7;
-            border-radius: 50%;
-        }
         .post__name__date{
                 .post__name{
                     font-size: 20px;
@@ -212,6 +292,9 @@ import axios from 'axios';
     .fa__like__counter
     {
         margin-left: 10px;
+        color: $third-color;
+    }
+    .likes{
         color: $primary-color;
     }
     .post__counter__likes{
@@ -280,6 +363,7 @@ import axios from 'axios';
     }
     
 }
+
     
 
 
