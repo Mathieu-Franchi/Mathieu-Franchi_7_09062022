@@ -6,7 +6,8 @@ var commentairePostSchema = new mongoose.Schema({
 });
 const postSchema = mongoose.Schema({
   userId: { type: String, required: true },
-  nom : { type : String, match: /^[a-zA-Z0-9-_]+$/ },
+  name : { type : String, match: /^[a-zA-Z0-9-_]+$/ },
+  lastname : { type : String, match: /^[a-zA-Z0-9-_]+$/ },
   description: { type: String, required: true },
   imageUrl: { type: String  },
   date: { type: Date, default: Date.now() },
