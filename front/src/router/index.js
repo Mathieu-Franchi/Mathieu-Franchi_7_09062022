@@ -13,15 +13,20 @@ const routes = [
       title: "Groupomania | Accueil"
       
     },
-    
+    beforeCreate: function(){
+      if(localStorage.getItem("user") == null){
+        this.$router.push('/auth');
+      }
+      return;
+    },
      
   },
   {
-    path: '/login',
+    path: '/auth',
     name: 'loginRegister',
     component: LoginRegisterView,
     meta: {
-      title:"Groupomania | Connexion"
+      title:"Groupomania | Authentification"
     }
      
   },

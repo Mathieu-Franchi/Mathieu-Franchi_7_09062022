@@ -21,7 +21,7 @@
                     <router-link class="nav__a" to="/profil">Profil</router-link>
                 </li>
                 <li class="nav__li">
-                    <router-link class="nav__a" to="/">Déconnexion</router-link>
+                    <router-link class="nav__a" to="/auth" @click="logout">Déconnexion</router-link>
                 </li>
             </ul>
             <NavComponent v-if="showNav" class="NavComponent" />
@@ -57,6 +57,10 @@ import NavComponent from './NavComponent.vue';
                 this.showNav = false;
             }
         },
+        logout: function() {
+            this.$store.commit('logout');
+        }
+
         
         
     },
@@ -169,8 +173,8 @@ header {
         display: none;
 
     }
-
-  .burger__btn {
+    
+    .burger__btn {
     width: 100%;
     height: 100%;
     cursor: pointer;

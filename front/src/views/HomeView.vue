@@ -1,7 +1,6 @@
 <template>
   <HeaderHomeComponent />
   <PostsHomeComponent />
-  <LoginRegister />
   <FooterComponent />
 </template>
 
@@ -9,19 +8,22 @@
 
 import HeaderHomeComponent from '@/components/HeaderHomeComponent.vue'
 import PostsHomeComponent from '@/components/PostsHomeComponent.vue'
-import LoginRegister from '@/components/LoginRegister.vue'
 import FooterComponent from '@/components/FooterComponent.vue'
 export default {
   name: 'HomeView',
-  
-   
+
+  beforeCreate: function () {
+    if (localStorage.getItem("user") == null) {
+      this.$router.push('/auth');
+    }
+    return;
+  },
   components: {
-    HeaderHomeComponent, PostsHomeComponent, LoginRegister, FooterComponent
+    HeaderHomeComponent, PostsHomeComponent, FooterComponent
   }
 }
 </script>
 
 <style lang="scss">
 @import '../variables';
-
 </style>

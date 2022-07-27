@@ -10,38 +10,42 @@
             <p class="card__subtitle" v-else>Tu as déjà un compte ? <span class="card__action"
                     @click="switchToLogin()">Se
                     connecter</span></p>
-            <div class="form-row">
-                <input v-model="email" class="form-row__input" type="text" placeholder="Adresse mail" />
-            </div>
-            <div class="form-row" v-if="mode == 'create'">
-                <input v-model="prenom" class="form-row__input" type="text" placeholder="Prénom" />
-                <input v-model="nom" class="form-row__input" type="text" placeholder="Nom" />
-            </div>
-            <div class="form-row">
-                <input v-model="password" class="form-row__input password__type" type="password" aria-label="Password" placeholder="Mot de passe" />
-                <button @click="toggleMaskPassword" class="eye__button" type="button">
-                    <FontAwesome v-if="toggleMask"  class="fa__eye__mask" aria-hidden="true" icon="fa-solid fa-eye-slash" />
-                    <FontAwesome v-else  class="fa__eye" aria-hidden="true" icon="fa-solid fa-eye" />
-                </button>
-            </div>
-            <div class="form-row" v-if="mode == 'login' && status == 'error_login'">
-                Adresse mail et/ou mot de passe invalide
-            </div>
-            <div class="form-row" v-if="mode == 'create' && status == 'error_create'">
-                Adresse mail déjà utilisée
-            </div>
-            <div class="form-row">
-                <button @click="login()" class="button" :class="{ 'button--disabled': !validatedFields }"
-                    v-if="mode == 'login'">
-                    <span v-if="status == 'loading'">Connexion en cours...</span>
-                    <span v-else>Connexion</span>
-                </button>
-                <button @click="createAccount()" class="button" :class="{ 'button--disabled': !validatedFields }"
-                    v-else>
-                    <span v-if="status == 'loading'">Création en cours...</span>
-                    <span v-else>Créer mon compte</span>
-                </button>
-            </div>
+            <form>
+                <div class="form-row">
+                    <input v-model="email" class="form-row__input" type="text" placeholder="Adresse mail" />
+                </div>
+                <div class="form-row" v-if="mode == 'create'">
+                    <input v-model="name" class="form-row__input" type="text" placeholder="Prénom" />
+                    <input v-model="lastname" class="form-row__input" type="text" placeholder="Nom" />
+                </div>
+                <div class="form-row">
+                    <input v-model="password" class="form-row__input password__type" type="password"
+                        aria-label="Password" placeholder="Mot de passe" />
+                    <button @click="toggleMaskPassword" class="eye__button" type="button">
+                        <FontAwesome v-if="toggleMask" class="fa__eye__mask" aria-hidden="true"
+                            icon="fa-solid fa-eye-slash" />
+                        <FontAwesome v-else class="fa__eye" aria-hidden="true" icon="fa-solid fa-eye" />
+                    </button>
+                </div>
+                <div class="form-row" v-if="mode == 'login' && status == 'error_login'">
+                    Adresse mail et/ou mot de passe invalide
+                </div>
+                <div class="form-row" v-if="mode == 'create' && status == 'error_create'">
+                    Adresse mail déjà utilisée
+                </div>
+                <div class="form-row">
+                    <button @click="login()" class="button" :class="{ 'button--disabled': !validatedFields }"
+                        v-if="mode == 'login'">
+                        <span v-if="status == 'loading'">Connexion en cours...</span>
+                        <span v-else>Connexion</span>
+                    </button>
+                    <button @click="createAccount()" class="button" :class="{ 'button--disabled': !validatedFields }"
+                        v-else>
+                        <span v-if="status == 'loading'">Création en cours...</span>
+                        <span v-else>Créer mon compte</span>
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </template>
@@ -55,23 +59,19 @@ export default {
         return {
             mode: 'login',
             email: '',
-            prenom: '',
-            nom: '',
+            name: '',
+            lastname: '',
             password: '',
-            toggleMask: false,//For toggle mask password text
+            //For toggle mask password text
+            toggleMask: false,
         }
     },
-    mounted: function () {
-        if (this.$store.state.user.userId != -1) {
-            this.$router.push('/');
-            return;
-        }
-    },
+  
     computed: {
         validatedFields: function () {
             
             if (this.mode == 'create') {
-                if (this.email != "" && this.nom != "" && this.prenom != "" && this.password != "") {
+                if (this.email != "" && this.name != "" && this.lastname != "" && this.password != "") {
                     return true;
                 } else {
                     
@@ -98,13 +98,12 @@ export default {
 
         },
         login: function () {
-
             const self = this;
             this.$store.dispatch('login', {
                 email: this.email,
                 password: this.password,
             }).then(function () {
-                self.$router.push('/login');
+                self.$router.push('/');
             }, function (error) {
                 console.log(error);
             })
@@ -113,8 +112,8 @@ export default {
             const self = this;
             this.$store.dispatch('createAccount', {
                 email: this.email,
-                nom: this.nom,
-                prenom: this.prenom,
+                name: this.name,
+                lastname: this.lastname,
                 password: this.password,
             }).then(function () {
                 self.login();
@@ -126,14 +125,10 @@ export default {
             //Boolean Unmask and mask text password
             const passwordField = document.querySelector(".password__type")
             if (this.toggleMask === false) {
-
                 passwordField.type = "text"
                 this.toggleMask = true;
-
             }
             else {
-
-
                 passwordField.type = "password"
                 this.toggleMask = false;
             }
@@ -170,7 +165,7 @@ export default {
     width: 100%;
     height: 100px;
     display: flex;
-    
+    padding-right: 50px;
     justify-content: flex-start;
     
     align-items: center;
@@ -179,7 +174,7 @@ export default {
 .logo__img {
     width: 100%;
     max-width: 405px;
-    min-width: 255px;
+    min-width: 220px;
     height: 100%;
     object-fit:contain;
     
@@ -281,9 +276,12 @@ export default {
     display: flex;
     
     justify-content: center;
-    
+    padding-right: 30px;
     align-items: center;
     
+}
+.card__title{
+    font-size: 20px;
 }
   }
 

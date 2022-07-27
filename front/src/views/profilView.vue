@@ -17,6 +17,7 @@ export default {
   name: 'ProfilComponentView',
   components: {
     ProfilComponent, HeaderHomeComponent,FooterComponent,
-  }
+  },
+  
 }
 </script>

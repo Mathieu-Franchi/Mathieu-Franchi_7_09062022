@@ -56,7 +56,7 @@ const store = createStore({
     login: ({commit}, userInfos) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
-        instance.post('/login', userInfos)
+        instance.post('/auth/login', userInfos)
         .then(function (response) {
           commit('setStatus', '');
           commit('logUser', response.data);
@@ -68,11 +68,11 @@ const store = createStore({
         });
       });
     },
-    createAccount: ({commit}, userInfos) => {
+    createAccount: ({commit}) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
         commit;
-        instance.post('/signup', userInfos)
+        instance.post('/auth/signup')
         .then(function (response) {
           commit('setStatus', 'created');
           resolve(response);
@@ -90,7 +90,15 @@ const store = createStore({
       })
       .catch(function () {
       });
-    }
+    },
+    getAllPosts: ({commit}) => {
+      instance.get('/posts')
+      .then(function (response) {
+        commit('posts', response.data);
+      })
+      .catch(function () {
+      });
+    },
   }
 })
 

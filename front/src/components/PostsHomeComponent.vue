@@ -86,13 +86,13 @@ import CreatePostComponent from './CreatePostComponent.vue';
         }
     },
     components: { CreatePostComponent },
-    mounted: function () {
+    created: function () {
         axios
         .get('http://localhost:3000/api/posts')
         
         .then((response) => {
             this.posts = response.data;
-            
+            console.log(this.posts)
             
         });
     },
