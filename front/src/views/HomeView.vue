@@ -13,7 +13,7 @@ export default {
   name: 'HomeView',
 
   beforeCreate: function () {
-    if (localStorage.getItem("user") == null) {
+    if (localStorage.getItem("user") == null || this.$store.state.user.userId == -1) {
       this.$router.push('/auth');
     }
     return;

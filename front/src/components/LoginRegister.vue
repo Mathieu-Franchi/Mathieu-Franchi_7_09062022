@@ -10,7 +10,8 @@
             <p class="card__subtitle" v-else>Tu as déjà un compte ? <span class="card__action"
                     @click="switchToLogin()">Se
                     connecter</span></p>
-            <form>
+            <form  v-on:submit.prevent="whatForm()">
+            
                 <div class="form-row">
                     <input v-model="email" class="form-row__input" type="text" placeholder="Adresse mail" />
                 </div>
@@ -64,6 +65,12 @@ export default {
             password: '',
             //For toggle mask password text
             toggleMask: false,
+            //regex mail
+            regexMail: new RegExp (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/g),
+            invalidMail: false,
+            //regex password
+            regexPassword: new RegExp (/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/),
+            invalidPassword: false,
         }
     },
   
@@ -87,6 +94,7 @@ export default {
             }
         },
         
+        
         ...mapState(['status'])
     },
     methods: {
@@ -97,29 +105,51 @@ export default {
             this.mode = 'login';
 
         },
+        whatForm: function () {
+            if (this.mode == 'login'){
+                this.login;
+                console.log('login');
+            }
+            else{
+                this.createAccount;
+                console.log('create');
+            }
+        },
+        
         login: function () {
-            const self = this;
-            this.$store.dispatch('login', {
-                email: this.email,
-                password: this.password,
-            }).then(function () {
-                self.$router.push('/');
-            }, function (error) {
-                console.log(error);
-            })
+            if(this.validatedFields == true){
+
+                const self = this;
+                this.$store.dispatch('login', {
+                    email: this.email,
+                    password: this.password,
+                }).then(function () {
+                    self.$router.push('/');
+                }, function (error) {
+                    console.log(error);
+                })
+            }
+            else{
+                console.log('nope-login');
+            }
         },
         createAccount: function () {
-            const self = this;
-            this.$store.dispatch('createAccount', {
-                email: this.email,
-                name: this.name,
-                lastname: this.lastname,
-                password: this.password,
-            }).then(function () {
-                self.login();
-            }, function (error) {
-                console.log(error);
-            })
+            if (this.validatedFields == true) {
+                const self = this;
+                this.$store.dispatch('createAccount', {
+                    email: this.email,
+                    password: this.password,
+                    name: this.name,
+                    lastname: this.lastname,
+                }).then(function () {
+                    self.login();
+                }, function (error) {
+                    console.log(error);
+                })
+            }
+            else {
+                console.log('nope-create');
+            }
         },
         toggleMaskPassword: function () {
             //Boolean Unmask and mask text password

@@ -13,12 +13,6 @@ const routes = [
       title: "Groupomania | Accueil"
       
     },
-    beforeCreate: function(){
-      if(localStorage.getItem("user") == null){
-        this.$router.push('/auth');
-      }
-      return;
-    },
      
   },
   {

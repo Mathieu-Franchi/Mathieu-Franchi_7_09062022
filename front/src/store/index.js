@@ -6,7 +6,7 @@ const instance = axios.create({
 let user = localStorage.getItem('user');
 if (!user) {
  user = {
-    userId: '',
+    userId: -1,
     token: '',
   }; 
 } else {
@@ -15,7 +15,7 @@ if (!user) {
     instance.defaults.headers.common['Authorization'] = user.token;
   } catch (ex) {
     user = {
-      userId: '',
+      userId: -1,
       token: '',
     };
   }
@@ -26,8 +26,8 @@ const store = createStore({
     status: '',
     user: user,
     userInfos: {
-      nom:'',
-      prenom: '',
+      name:'',
+      lastname: '',
       email: '',
       photo: '',
     },
@@ -68,11 +68,10 @@ const store = createStore({
         });
       });
     },
-    createAccount: ({commit}) => {
+    createAccount: ({commit}, userInfos) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
-        commit;
-        instance.post('/auth/signup')
+        instance.post('/auth/signup', userInfos)
         .then(function (response) {
           commit('setStatus', 'created');
           resolve(response);

@@ -13,7 +13,7 @@
 
         </div>
         <!-- card post -->
-        <div class="post" :key="index" v-for="(post, index) in posts">
+        <div class="post" :key="post._id" v-for="post in posts">
             <!-- header of the post -->
             <div class="post__header">
                 <!-- profil img + name and date -->
