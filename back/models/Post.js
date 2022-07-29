@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 var commentairePostSchema = new mongoose.Schema({
-  nom: { type : String, match: /^[a-zA-Z0-9-_]+$/ },
+  name: { type : String, match: /^[a-z ,.'-]+$/i },
+  lastname : { type : String, match: /^[a-z ,.'-]+$/i },
   contenu: String,
   date: { type: Date, default: Date.now() }
 });
 const postSchema = mongoose.Schema({
   userId: { type: String, required: true },
-  name : { type : String, match: /^[a-zA-Z0-9-_]+$/ },
-  lastname : { type : String, match: /^[a-zA-Z0-9-_]+$/ },
+  name : { type : String, match: /^[a-z ,.'-]+$/i },
+  lastname : { type : String, match: /^[a-z ,.'-]+$/i },
   description: { type: String, required: true },
   imageUrl: { type: String  },
   date: { type: Date, default: Date.now() },
