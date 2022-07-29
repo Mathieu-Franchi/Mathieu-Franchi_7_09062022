@@ -13,14 +13,14 @@
             <form  v-on:submit.prevent="whatForm()">
             
                 <div class="form-row">
-                    <input v-model="email" class="form-row__input" type="text" placeholder="Adresse mail" />
+                    <input v-model="email" @keyup="setStatus('')" class="form-row__input" type="text" placeholder="Adresse mail" />
                 </div>
                 <div class="form-row" v-if="mode == 'create'">
-                    <input v-model="name" class="form-row__input" type="text" placeholder="Prénom" />
-                    <input v-model="lastname" class="form-row__input" type="text" placeholder="Nom" />
+                    <input v-model="name" @keyup="setStatus(''); emailTest();" class="form-row__input" type="text" placeholder="Prénom" />
+                    <input v-model="lastname" @keyup="setStatus('')" class="form-row__input" type="text" placeholder="Nom" />
                 </div>
                 <div class="form-row">
-                    <input v-model="password" class="form-row__input password__type" type="password"
+                    <input v-model="password" @keyup="setStatus('')" class="form-row__input password__type" type="password"
                         aria-label="Password" placeholder="Mot de passe" />
                     <button @click="toggleMaskPassword" class="eye__button" type="button">
                         <FontAwesome v-if="toggleMask" class="fa__eye__mask" aria-hidden="true"
@@ -52,8 +52,7 @@
 </template>
 
 <script>
-
-import { mapState } from 'vuex'
+import { mapMutations, mapState } from 'vuex'
 export default {
     name: 'LoginRegister',
     data: function () {
@@ -66,10 +65,13 @@ export default {
             //For toggle mask password text
             toggleMask: false,
             //regex mail
-            regexMail: new RegExp (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/g),
+            regexMail: new RegExp (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/),
             invalidMail: false,
+            //regex name
+            regexName: new RegExp (/^[a-z ,.'-]+$/i),
+            invalidName: false,
             //regex password
-            regexPassword: new RegExp (/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$/),
+            regexPassword: new RegExp (/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,32}$/),
             invalidPassword: false,
         }
     },
@@ -93,8 +95,6 @@ export default {
                 }
             }
         },
-        
-        
         ...mapState(['status'])
     },
     methods: {
@@ -163,6 +163,19 @@ export default {
                 this.toggleMask = false;
             }
         },
+        emailTest: function (){
+            this.regexMail.test(this.name);
+            console.log(this.regexMail.test(this.name))
+            if(this.regexMail.test(this.name) === true)
+            {
+                return true;
+            }
+            else{
+                return false;
+            }
+        },
+       
+        ...mapMutations(['setStatus'])
     }
 }
 </script>

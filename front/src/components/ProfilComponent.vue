@@ -12,17 +12,27 @@
         </div>
 
       </div>
+      <div class="name">{{userInfos.name}}</div>
+      <div class="lastname">{{userInfos.lastname}}</div>
     </section>
   </div>
 </template>
 
 <script>
-
+import { mapState } from 'vuex'
 
 
 export default {
   name: 'ProfilComponent',
-  
+  data: function (){
+    return {
+
+    }
+  },
+  computed: {
+    ...mapState(['userInfos'])
+  },
+
 }
 </script>
 
