@@ -1,19 +1,22 @@
 <template>
   <div id="body">
-    <section id="profil__section">
+    <section id="profil__section" >
+      
+      
       <div class="profil__img__container">
-        <img class="profil__img" src="../assets/placeholder_img_profil.jpg" alt="image de votre profil" />
+        <img class="profil__img" src="../assets/placeholder_img_profil.jpg" alt="photo de profil" />
         <div class="input-group">
           <input type="file" class="profil__img__file" id="inputFile" aria-describedby="inputGroupFileAddon04"
             aria-label="Upload">
           <button class="btn__file" type="button">
             <!-- <FontAwesome class="fa__img" :icon="{ prefix: 'fas', iconName: 'bars' }" /> -->
           </button>
+          <div class="name">{{userInfos.email}}</div>
+          <div class="lastname">{{userInfos.lastname}}</div>
+          <div class="password">{{userInfos.password}}</div>
         </div>
 
       </div>
-      <div class="name">{{userInfos.name}}</div>
-      <div class="lastname">{{userInfos.lastname}}</div>
     </section>
   </div>
 </template>
@@ -26,11 +29,26 @@ export default {
   name: 'ProfilComponent',
   data: function (){
     return {
-
+      
     }
   },
   computed: {
+    
     ...mapState(['userInfos'])
+  },
+  mounted: function () {
+    this.$store.dispatch('getUserInfos', {
+      params: JSON.parse(localStorage.getItem('user')).userId,
+
+    }).then(function () {
+      console.log(JSON.parse(localStorage.getItem('user')).userId)
+    }, function (error) {
+      console.log(error);
+    })
+    
+  },
+  methods: {
+    
   },
 
 }

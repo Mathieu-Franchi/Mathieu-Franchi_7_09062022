@@ -57,6 +57,7 @@ export default {
     name: 'LoginRegister',
     data: function () {
         return {
+            //to switch login or create account
             mode: 'login',
             email: '',
             name: '',
@@ -66,6 +67,7 @@ export default {
             toggleMask: false,
             //regex mail
             regexMail: new RegExp (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/),
+            
             invalidMail: false,
             //regex name
             regexName: new RegExp (/^[a-z ,.'-]+$/i),
@@ -95,7 +97,7 @@ export default {
                 }
             }
         },
-        ...mapState(['status'])
+         ...mapState(['status'])
     },
     methods: {
         switchToCreateAccount: function () {

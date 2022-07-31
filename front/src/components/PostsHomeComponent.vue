@@ -25,14 +25,14 @@
                         <h2 class="post__name">
                             {{ post.name + ' ' + post.lastname }}
                         </h2>
-                        <p class="post__date">{{ post.date }}</p>
+                        <p class="post__date">{{post.date}}</p>
                     </div>
                 </div>
                 <!-- profil img + name and date -->
 
                 <!-- btn modify  -->
                 <div class="post__btn__modify">
-                    <button class="btn__modify" type="button">
+                    <button @click="test()" class="btn__modify" type="button">
                         <FontAwesome class="fa__ellipsis" icon="fa-solid fa-ellipsis" />
                     </button>
                 </div>
@@ -75,26 +75,30 @@
     </div>
 </template>
 <script>
-import axios from 'axios';
+// import axios from 'axios';
+import { mapState } from 'vuex';
 import CreatePostComponent from './CreatePostComponent.vue';
     export default {
     name: 'PostsHomeComponent',
+    components: { CreatePostComponent },
     data: function () {
         return {
-            posts: [],
+            
             createPost: false,
+            
+            
         }
     },
-    components: { CreatePostComponent },
-    created: function () {
-        axios
-        .get('http://localhost:3000/api/posts')
+    computed:{
+        ...mapState(['posts'])
+    },
+    mounted: function () {
+        this.$store.dispatch('getAllPosts');
         
-        .then((response) => {
-            this.posts = response.data;
-            console.log(this.posts)
-            
-        });
+    },
+    methods: {
+        
+    
     },
 
     
