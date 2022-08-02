@@ -7,7 +7,7 @@
             <router-link class="nav__burger__a" to="/profil"><span class="surlign">Profil</span></router-link>
         </li>
         <li class="nav__burger__li">
-            <router-link class="nav__burger__a" to="/"><span class="surlign">Déconnexion</span></router-link>
+            <router-link class="nav__burger__a" to="/auth" @click="this.$store.commit('logout')"><span class="surlign">Déconnexion</span></router-link>
         </li>
     </ul>
 </template>

@@ -32,6 +32,7 @@ const store = createStore({
       photo: '',
     },
     posts: [],
+    date: '',
     
   },
   mutations: {
@@ -55,6 +56,9 @@ const store = createStore({
     },
     posts: function (state, posts){
       state.posts = posts;
+    },
+    setDate: function (state, date) {
+      state.date = date;
     },
   },
   actions: {

@@ -4,10 +4,10 @@
     <!-- bloc container -->
     <div id="body_posts">
         <div class="create__post">
-            <div class="create__profil__img__container">
+            <div class="create__profil__img__container" @click="test()">
                 <img class="create__profil__img" src="../../../back/images/moi.jpg" alt="Photo de profil" />
             </div>
-            <button class="create__btn modal-trigger" type="button">
+            <button class="create__btn modal-trigger" type="button" @click="setDate(new Date());">
                 <span class="create__btn__text">Quoi de neuf, {{userInfos.name}} ?</span>
             </button>
 
@@ -76,7 +76,7 @@
 </template>
 <script>
 // import axios from 'axios';
-import { mapState } from 'vuex';
+import { mapMutations, mapState } from 'vuex';
 import CreatePostComponent from './CreatePostComponent.vue';
     export default {
     name: 'PostsHomeComponent',
@@ -84,11 +84,12 @@ import CreatePostComponent from './CreatePostComponent.vue';
     data: function () {
         return {
             
-            createPost: false,
+            
         }
     },
     computed:{
-        ...mapState(['posts','userInfos'])
+       
+        ...mapState(['posts','userInfos','date'])
     },
     created: function () {
         this.$store.dispatch('getAllPosts');
@@ -98,8 +99,10 @@ import CreatePostComponent from './CreatePostComponent.vue';
         })
     },
     methods: {
-        
-    
+         test: function () {
+            console.log(this.$store.state.posts[13].imageUrl)
+         },
+    ...mapMutations(['setDate', 'setStatus'])
     },
 
     

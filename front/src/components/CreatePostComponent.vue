@@ -6,9 +6,20 @@
     <div class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="dialogDesc">
       <div class="modal__header">
         <button aria-label="close modal" class="close-modal modal-trigger">X</button>
-        <h3 class="modal__title">Créer une publication</h3>
+        <h3 class="modal__title fontsize__titles">Créer une publication</h3>
       </div>
-      <input type="text" class="description">
+      <div class="post__profil">
+        <div class="post__profil__img__container">
+          <img class="post__profil__img" src="../../../back/images/tabasco.png" alt="Photo de profil" />
+        </div>
+        <div class="post__name__date">
+          <h2 class="post__name fontsize__p">
+            {{ userInfos.name + ' ' + userInfos.lastname }}
+          </h2>
+          <p class="post__date">{{date}}</p>
+        </div>
+      </div>
+      <textarea class="description" type="text" placeholder="Quoi de neuf ?"></textarea>
     </div>
 
   </div>
@@ -26,11 +37,12 @@ export default {
     return {
       description: '',
       imageUrl: '',
+      
     }
   },
   computed: {
     
-    ...mapState(['userInfos'])
+    ...mapState(['userInfos','date'])
   },
   mounted: function () {
     this.toggleModal();
@@ -66,7 +78,7 @@ export default {
       })
     },
     test: function() {
-      console.log(this.userInfos.name);
+     
     },
     
   },
@@ -77,6 +89,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 @import '../variables';
 
 
@@ -87,7 +100,7 @@ export default {
   top: 0;
   width: 100vw;
   height: 100vh;
-  transition: visibility 0.15s;
+  transition: visibility 0.3s;
   z-index: 100;
 }
 .modal-container.active {
@@ -101,16 +114,16 @@ export default {
   width: 100%;
   height: 100%;
   background: #333333d3;
-  transition: opacity 0.2s 0.2s ease-out;
+  transition: opacity 0.3s 0.3s ease-out;
 }
 .modal-container.active .overlay {
   opacity: 1;
-  transition: opacity 0.15s ease-out;
+  transition: opacity 0.3s ease-out;
 }
 
 .modal {
   opacity: 0;
-  width: 95%;
+  width: 100%;
   height: auto;
   max-width: 600px;
   border: solid 1px $primary-color;
@@ -120,18 +133,19 @@ export default {
   top: 40%;
   left: 50%;
   transform: translate(-50%, calc(-50% - 50px));
-  transition: opacity 0.2s ease-out,
-  transform 0.15s ease-out;
+  transition: opacity 0.3s ease-out,
+  transform 0.3s ease-out;
+  
 
 }
 
 .modal-container.active .modal {
   opacity: 1;
   transform: translate(-50%, -50%);
-  transition: opacity 0.15s 0.15s ease-out,
-  transform 0.15s 0.15s ease-out;
+  transition: opacity 0.2s 0.2s ease-out,
+  transform 0.2s 0.2s ease-out;
 }
-
+//Header modal
 .modal__header{
   width: 100%;
   height: 70px;
@@ -142,12 +156,13 @@ export default {
   border-bottom: solid 1px $primary-color;
    .modal__title{
     font-size: 25px;
-    
+    -webkit-font-smoothing: antialiased;
     
    }
      .close-modal {
        padding: 8px 10px;
        border: none;
+       outline: none;
        border-radius: 5px;
        font-size: 18px;
        position: absolute;
@@ -157,6 +172,74 @@ export default {
        background: #ff365e;
        color: #fff;
      }
+     
+}
+//profil img + name lastname
+.post__profil {
+  display: flex;
+  width: 100%;
+  padding: 10px;
+
+  .post__profil__img__container {
+    width: 50px;
+    height: 50px;
+    margin-right: 20px;
+
+    .post__profil__img {
+      width: 50px;
+      height: 50px;
+      object-fit: cover;
+      border: solid 1px #FFD7D7;
+      border-radius: 50%;
+    }
+
+
+  }
+
+  .post__name__date {
+    .post__name {
+      font-size: 20px;
+
+    }
+
+    .post__date {
+      font-size: 12px;
+      color: #b0b3b8;
+    }
+  }
+}
+.description{
+  width: 100%;
+  border: none;
+  outline: none;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  height: auto;
+  user-select: text;
+  white-space: pre-wrap;
+  word-break: break-word;
+  resize: none;
+  font-size: 20px;
+  padding: 10px;
+  
+}
+
+@media all and (max-width: 450px){
+.fontsize__titles{
+  font-size: 20px !important;
+}
+.fontsize__p{
+  font-size: 15px !important;
+}
+.modal{
+  max-width: 320px !important;
+}
+}
+@media all and (max-width: 640px){
+.modal{
+  max-width: 450px;
+}
 }
 
 </style>
