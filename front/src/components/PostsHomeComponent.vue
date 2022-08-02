@@ -8,7 +8,7 @@
                 <img class="create__profil__img" src="../../../back/images/moi.jpg" alt="Photo de profil" />
             </div>
             <button class="create__btn modal-trigger" type="button">
-                <span class="create__btn__text">Quoi de neuf, Mathieu ?</span>
+                <span class="create__btn__text">Quoi de neuf, {{userInfos.name}} ?</span>
             </button>
 
         </div>
@@ -32,7 +32,7 @@
 
                 <!-- btn modify  -->
                 <div class="post__btn__modify">
-                    <button @click="test()" class="btn__modify" type="button">
+                    <button class="btn__modify" type="button">
                         <FontAwesome class="fa__ellipsis" icon="fa-solid fa-ellipsis" />
                     </button>
                 </div>
@@ -85,16 +85,17 @@ import CreatePostComponent from './CreatePostComponent.vue';
         return {
             
             createPost: false,
-            
-            
         }
     },
     computed:{
-        ...mapState(['posts'])
+        ...mapState(['posts','userInfos'])
     },
-    mounted: function () {
+    created: function () {
         this.$store.dispatch('getAllPosts');
-        
+        this.$store.dispatch('getUserInfos', {
+            params: JSON.parse(localStorage.getItem('user')).userId,
+
+        })
     },
     methods: {
         

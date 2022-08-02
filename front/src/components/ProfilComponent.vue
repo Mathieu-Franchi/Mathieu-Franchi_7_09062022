@@ -39,11 +39,6 @@ export default {
   mounted: function () {
     this.$store.dispatch('getUserInfos', {
       params: JSON.parse(localStorage.getItem('user')).userId,
-
-    }).then(function () {
-      console.log(JSON.parse(localStorage.getItem('user')).userId)
-    }, function (error) {
-      console.log(error);
     })
     
   },

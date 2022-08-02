@@ -89,7 +89,6 @@ const store = createStore({
     },
     getUserInfos: ({commit}, params) => {
       commit('setStatus', 'loading');
-      
         instance.get('/auth/user',{
           params: {
             userId: params,
@@ -108,29 +107,85 @@ const store = createStore({
     },
     getAllPosts: ({ commit }) => {
       commit('setStatus', 'loading');
-
       instance.get('/posts')
         .then(function (response) {
           commit('setStatus', 'get_posts')
           commit('posts', response.data);
-          console.log('reussihttp')
         })
         .catch(function () {
           commit('setStatus', 'error_get_posts');
 
         });
     },
-    createPost: ({commit}) => {
-      commit;
+    createPost: ({commit}, postForm) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        instance.post('/posts/like', postForm)
+        .then(function (response) {
+          commit('setStatus', 'post_created');
+          resolve(response);
+        })
+        .catch(function (error) {
+          commit('setStatus', 'post_error_create');
+          reject(error);
+        });
+      });
     },
-    modifyPost: ({commit}) => {
-      commit;
+    modifyPost: ({commit}, postForm, params) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        instance.put('/posts', postForm, {
+          params:  {
+            params,
+          }
+        })
+        .then(function (response) {
+          commit('setStatus', 'post_modified');
+          resolve(response);
+        })
+        .catch(function (error) {
+          commit('setStatus', 'post_error_modified');
+          reject(error);
+        });
+      });
     },
-    deletePost: ({commit}) => {
-      commit;
+    deletePost: ({commit}, postForm, params) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        instance.delete('/posts', postForm, {
+          params: {
+            params,
+          }
+        })
+        .then(function (response) {
+          commit('setStatus', 'post_deleted');
+          resolve(response);
+        })
+        .catch(function (error) {
+          commit('setStatus', 'post_error_deleted');
+          reject(error);
+        });
+      });
     },
-    postLike: ({commit}) => {
-      commit;
+    postLike: ({commit}, params, like) => {
+      commit('setStatus', 'loading');
+      return new Promise((resolve, reject) => {
+        instance.delete('/posts/like', like, {
+          params: {
+            params,
+          }
+        })
+        .then(function (response) {
+          commit('setStatus', 'liked');
+          commit('setStatus', 'liked');
+          commit('setStatus', 'disliked');
+          resolve(response);
+        })
+        .catch(function (error) {
+          commit('setStatus', 'error_likeDislike');
+          reject(error);
+        });
+      });
     },
   }
 })
