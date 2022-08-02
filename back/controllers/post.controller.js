@@ -11,10 +11,11 @@ exports.createPost = (req, res, next) => {
     
     //delete le faux _id envoyé par le front-end
     delete postObject._id;
+    delete postObject._userId;
     //creer une nouvelle post par rapport aux champs recupérer dans le corps de la requète
     const post = new Post({
         ...postObject,
-        
+        userId: req.auth.userId,
         likes:  0 ,
         dislikes:  0 
     });
@@ -24,14 +25,25 @@ exports.createPost = (req, res, next) => {
 };
 //put
 exports.modifyPost = (req, res, next) => {
-    const postObject = req.file ?
-    {
-        ...JSON.parse(req.body.post),
-        imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : {...req.body};
-    Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
-        .then(() => res.status(200).json({ message: 'Post modifié !' }))
-        .catch(error => res.status(400).json({ error }));
+  const postObject = req.file ? {
+    ...JSON.parse(req.body.post),
+    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+  } : { ...req.body };
+
+  delete postObject._userId;
+  Post.findOne({ _id: req.params.id })
+    .then((post) => {
+      if (post.userId != req.auth.userId) {
+        res.status(401).json({ message: 'Not authorized' });
+      } else {
+        Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
+          .then(() => res.status(200).json({ message: 'Post modifié!' }))
+          .catch(error => res.status(401).json({ error }));
+      }
+    })
+    .catch((error) => {
+      res.status(400).json({ error });
+    });
 };
 //delete
 exports.deletePost = (req, res, next) => {

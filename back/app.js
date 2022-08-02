@@ -14,7 +14,7 @@ const mongoose = require('mongoose');
 // import path : pour accéder au chemin d'un dossier statique (ici sur notre pc)
 const path = require('path');
 
-
+const cookieParser = require('cookie-parser')
 // alternative à express.json
 // const bodyParser = require('body-parser'); 
 
@@ -45,6 +45,8 @@ app.use((req, res, next) => {
 //alternative à express.json
 // app.use(bodyParser.json()); 
 
+// middleware pour convertir le contenu des cookies
+// app.use(cookieParser())
 
 // middleware qui intercepte toutes les requêtes qui ont comme Content-Type  application/json pour mettre leur body dans l'objet req
 app.use(express.json());
