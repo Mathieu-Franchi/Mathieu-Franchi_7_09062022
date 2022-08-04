@@ -91,17 +91,12 @@ const store = createStore({
         });
       });
     },
-    getUserInfos: ({commit}, params) => {
+    getUserInfos: ({commit}, id) => {
       commit('setStatus', 'loading');
-        instance.get('/auth/user',{
-          params: {
-            userId: params,
-          }
-        })
+        instance.get("/auth/user/" + id)
         .then(function (response) {
           commit('setStatus', 'get_userInfos');
           commit('userInfos', response.data);
-          console.log('reussihttp')
         })
         .catch(function () {
           commit('setStatus', 'error_userInfos');

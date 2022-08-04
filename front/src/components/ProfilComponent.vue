@@ -4,7 +4,7 @@
       
       
       <div class="profil__img__container">
-        <img class="profil__img" src="../assets/placeholder_img_profil.jpg" alt="photo de profil" />
+        <img class="profil__img" :src="userInfos.photo" alt="Votre photo de profil" />
         <div class="input-group">
           <input type="file" class="profil__img__file" id="inputFile" aria-describedby="inputGroupFileAddon04"
             aria-label="Upload">
@@ -22,6 +22,7 @@
 </template>
 
 <script>
+// import axios from 'axios';
 import { mapState } from 'vuex'
 
 
@@ -37,9 +38,20 @@ export default {
     ...mapState(['userInfos'])
   },
   mounted: function () {
-    this.$store.dispatch('getUserInfos', {
-      params: JSON.parse(localStorage.getItem('user')).userId,
-    })
+    //PAS BESOIN DE RE FETCH VU QUE TU FETCH DEJA DANS L'ACCUEIL
+    // this.$store.dispatch('getUserInfos', JSON.parse(localStorage.getItem('user')).userId)
+
+    //SI TA DES PROBLEMES AVEC LE :ID POUR PASSER UN OBJET DANS LES PARAMETREE OU  PATH VARIABLE TMTC
+    // axios.get("http://localhost:3000/api/auth/user/" + JSON.parse(localStorage.getItem('user')).userId, 
+    // {headers: {'Content-Type': 'application/json', Authorization: 'Bearer ' + JSON.parse(localStorage.getItem('user')).token}})
+    //     .then(function (response) {
+          
+    //       console.log(response.data)
+    //     })
+    //     .catch(function (error) {
+    //       console.log(error)
+          
+    //     });
     
   },
   methods: {

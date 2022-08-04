@@ -13,7 +13,7 @@
 
         </div>
         <!-- card post -->
-        <div class="post" :key="post._id" v-for="post in posts">
+        <div class="post" :class="{ 'posts--loading': status === 'loading' }" :key="post._id" v-for="post in posts">
             <!-- header of the post -->
             <div class="post__header">
                 <!-- profil img + name and date -->
@@ -89,14 +89,11 @@ import CreatePostComponent from './CreatePostComponent.vue';
     },
     computed:{
        
-        ...mapState(['posts','userInfos','date'])
+        ...mapState(['posts','userInfos','date','status'])
     },
     created: function () {
         this.$store.dispatch('getAllPosts');
-        this.$store.dispatch('getUserInfos', {
-            params: JSON.parse(localStorage.getItem('user')).userId,
-
-        })
+        this.$store.dispatch('getUserInfos', JSON.parse(localStorage.getItem('user')).userId)
     },
     methods: {
          test: function () {

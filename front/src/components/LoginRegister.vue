@@ -271,6 +271,7 @@ export default {
   background:white;
   border-radius: 16px;
   padding:32px;
+  border: solid 1px $primary-color;
 }
 .card__title {
   text-align:center;

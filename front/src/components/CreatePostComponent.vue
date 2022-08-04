@@ -46,10 +46,7 @@ export default {
   },
   mounted: function () {
     this.toggleModal();
-    this.$store.dispatch('getUserInfos', {
-            params: JSON.parse(localStorage.getItem('user')).userId,
-
-    })
+    // this.$store.dispatch('getUserInfos', JSON.parse(localStorage.getItem('user')).userId)
   },
   methods: {
     toggleModal: function () {
