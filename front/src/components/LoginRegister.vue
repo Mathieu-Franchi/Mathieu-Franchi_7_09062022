@@ -16,8 +16,8 @@
                     <input v-model="email" @keyup="setStatus('')" class="form-row__input" type="text" placeholder="Adresse mail" />
                 </div>
                 <div class="form-row" v-if="mode == 'create'">
-                    <input v-model="name" @keyup="setStatus(''); emailTest();" class="form-row__input" type="text" placeholder="Prénom" />
-                    <input v-model="lastname" @keyup="setStatus('')" class="form-row__input" type="text" placeholder="Nom" />
+                    <input v-model="name" @keyup="setStatus(''); emailTest();" minlength="2" maxlength="26" class="form-row__input" type="text" placeholder="Prénom" />
+                    <input v-model="lastname" @keyup="setStatus('')" minlength="2" maxlength="16" class="form-row__input" type="text" placeholder="Nom" />
                 </div>
                 <div class="form-row">
                     <input v-model="password" @keyup="setStatus('')" class="form-row__input password__type" type="password"
@@ -110,11 +110,9 @@ export default {
         whatForm: function () {
             if (this.mode == 'login'){
                 this.login;
-                console.log('login');
             }
             else{
                 this.createAccount;
-                console.log('create');
             }
         },
         
