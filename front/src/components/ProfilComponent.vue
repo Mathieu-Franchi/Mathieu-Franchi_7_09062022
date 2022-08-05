@@ -3,8 +3,9 @@
     <section id="profil__section" >
       
       
-      <div class="profil__img__container">
-        <img class="profil__img" :src="userInfos.photo" alt="Votre photo de profil" />
+      <div v-if="userInfos.photo != null" class="profil__img__container">
+        <img class="profil__img" crossorigin="anonymous" :src="userInfos.photo" alt="Votre photo de profil" />
+      </div>
         <div class="input-group">
           <input type="file" class="profil__img__file" id="inputFile" aria-describedby="inputGroupFileAddon04"
             aria-label="Upload">
@@ -12,11 +13,11 @@
             <!-- <FontAwesome class="fa__img" :icon="{ prefix: 'fas', iconName: 'bars' }" /> -->
           </button>
           <div class="name">{{userInfos.email}}</div>
-          <div class="lastname">{{userInfos.lastname}}</div>
-          <div class="password">{{userInfos.password}}</div>
+          <div class="lastname">{{userInfos.name}}</div>
+          <div class="password">{{userInfos.lastname}}</div>
         </div>
 
-      </div>
+      
     </section>
   </div>
 </template>
@@ -35,11 +36,11 @@ export default {
   },
   computed: {
     
-    ...mapState(['userInfos'])
+    ...mapState(['userInfos','user'])
   },
   mounted: function () {
     //PAS BESOIN DE RE FETCH VU QUE TU FETCH DEJA DANS L'ACCUEIL
-    // this.$store.dispatch('getUserInfos', JSON.parse(localStorage.getItem('user')).userId)
+    this.$store.dispatch('getUserInfos', JSON.parse(localStorage.getItem('user')).userId)
 
     //SI TA DES PROBLEMES AVEC LE :ID POUR PASSER UN OBJET DANS LES PARAMETREE OU  PATH VARIABLE TMTC
     // axios.get("http://localhost:3000/api/auth/user/" + JSON.parse(localStorage.getItem('user')).userId, 
@@ -65,7 +66,6 @@ export default {
 @import '../variables';
 #body {
   background-image: linear-gradient(62deg, $primary-color 0%, $secondary-color 20%, $third-color 100%);
-  
   min-height: 100vh;
   
 }

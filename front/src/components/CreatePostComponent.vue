@@ -5,15 +5,18 @@
     <div class="overlay modal-trigger"></div>
     <!-- MODAL -->
     <div class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="dialogDesc">
+      <!-- MODAL HEADER -->
       <div class="modal__header">
         <button aria-label="close modal" class="close-modal modal-trigger">
           <FontAwesome style="color: white;" icon="fa-solid fa-xmark" />
         </button>
         <h3 class="modal__title fontsize__titles">Créer une publication</h3>
       </div>
+      <!-- MODAL PROFIL -->
       <div class="post__profil">
         <div v-if="userInfos.photo != null" class="post__profil__img__container">
-          <img class="post__profil__img" :src="userInfos.photo" alt="Photo de profil" />
+          <img class="post__profil__img" v-if="userInfos.photo != null" crossorigin="anonymous" :src="userInfos.photo"
+            alt="Photo de profil" />
         </div>
         <div class="post__name__date">
           <h2 class="post__name fontsize__p">
@@ -22,24 +25,14 @@
           <p class="post__date">{{ date }}</p>
         </div>
       </div>
-      <textarea class="description" type="text" placeholder="Quoi de neuf ?"></textarea>
-      <!-- tailwindtest -->
-      <!-- <div class="flex justify-center items-center w-full">
-        <label for="dropzone-file"
-          class="flex flex-col justify-center items-center w-full h-64 bg-gray-50 rounded-lg border-2 border-gray-300 border-dashed cursor-pointer dark:hover:bg-bray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
-          <div class="flex flex-col justify-center items-center pt-5 pb-6">
-            <svg aria-hidden="true" class="mb-3 w-10 h-10 text-gray-400" fill="none" stroke="currentColor"
-              viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
-            </svg>
-            <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to upload</span>
-              or drag and drop</p>
-            <p class="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG or GIF (MAX. 800x400px)</p>
-          </div>
-          <input id="dropzone-file" type="file" class="hidden">
-        </label>
-      </div> -->
+      <!-- MODAL MAIN CONTENT -->
+      <textarea v-model="description" class="description" type="text" placeholder="Quoi de neuf ?"></textarea>
+      <input @change="imageUrl" id="dropzone-file" type="file">
+      <button @click="createPost()" class="button" :class="{ 'button--disabled': !validatedFields }">
+        <span v-if="status == 'loading'">Publication en cours...</span>
+        <span v-else>Publier</span>
+      </button>
+
     </div>
     <!-- MODAL -->
   </div>
@@ -53,14 +46,27 @@ export default {
   name: 'CreatePostComponent',
   data: function (){
     return {
+      
       description: '',
       imageUrl: '',
-      
+      photo: 'http://localhost:3000/images/moi.jpg'
     }
   },
   computed: {
+    validatedFields: function () {
+            
+           
+                if (this.description != "") {
+                    return true;
+                } else {
+                    
+                    return false;
+                }
+          
+    },
+         
     
-    ...mapState(['userInfos','date'])
+    ...mapState(['userInfos','date', 'status'])
   },
   mounted: function () {
     this.toggleModal();
@@ -83,7 +89,8 @@ export default {
         name: this.userInfos.name,
         lastname: this.userInfos.lastname,
         description: this.description,
-        imageUrl: this.imageUrl,
+        photo: this.userInfos.photo,
+
 
       }).then(function () {
         self.$store.dispatch('getAllPosts');
@@ -92,10 +99,6 @@ export default {
         console.log('nope');
       })
     },
-    test: function() {
-     
-    },
-    
   },
 
 

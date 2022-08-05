@@ -22,4 +22,5 @@ html {
 #app {
   max-width: 100%;
 }
+img { font-size: 0.5rem; }
 </style>

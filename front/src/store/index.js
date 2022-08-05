@@ -29,7 +29,7 @@ const store = createStore({
       name:'',
       lastname: '',
       email: '',
-      photo: '',
+      photo: null,
     },
     posts: [],
     date: '',
@@ -119,13 +119,15 @@ const store = createStore({
     createPost: ({commit}, postForm) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
-        instance.post('/posts/like', postForm)
+        instance.post('/posts', postForm)
         .then(function (response) {
           commit('setStatus', 'post_created');
+          console.log(response)
           resolve(response);
         })
         .catch(function (error) {
           commit('setStatus', 'post_error_create');
+          console.log(error)
           reject(error);
         });
       });

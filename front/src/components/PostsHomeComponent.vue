@@ -4,8 +4,8 @@
     <!-- bloc container -->
     <div id="body_posts">
         <div class="create__post">
-            <div class="create__profil__img__container" @click="test()">
-                <img class="create__profil__img" src="../../../back/images/moi.jpg" alt="Photo de profil" />
+            <div v-if="userInfos.photo != null" class="create__profil__img__container">
+                <img class="create__profil__img" crossorigin="anonymous" :src="userInfos.photo" alt="Photo de profil" />
             </div>
             <button class="create__btn modal-trigger" type="button" @click="setDate(new Date());">
                 <span class="create__btn__text">Quoi de neuf, {{userInfos.name}} ?</span>
@@ -13,13 +13,13 @@
 
         </div>
         <!-- card post -->
-        <div class="post" :class="{ 'posts--loading': status === 'loading' }" :key="post._id" v-for="post in posts">
+        <div class="post" :key="post._id" v-for="post in posts">
             <!-- header of the post -->
             <div class="post__header">
                 <!-- profil img + name and date -->
                 <div class="post__profil">
-                    <div class="post__profil__img__container">
-                        <img class="post__profil__img" src="../../../back/images/tabasco.png" alt="Photo de profil" />
+                    <div class="post__profil__img__container" v-if="userInfos.photo != null">
+                        <img class="post__profil__img" crossorigin="anonymous" :src="post.photo" alt="Photo de profil du post" />
                     </div>
                     <div class="post__name__date">
                         <h2 class="post__name">
@@ -31,7 +31,7 @@
                 <!-- profil img + name and date -->
 
                 <!-- btn modify  -->
-                <div class="post__btn__modify">
+                <div class="post__btn__modify" v-if="post.userId === user.userId || user.isAdmin === true">
                     <button class="btn__modify" type="button">
                         <FontAwesome class="fa__ellipsis" icon="fa-solid fa-ellipsis" />
                     </button>
@@ -43,8 +43,8 @@
             <!-- main content of the post -->
             <div class="post__main">
                 <h3 class="post__description">{{ post.description }}</h3>
-                <div class="post__main__img__container">
-                    <img class="post__img" src="../../../back/images/tabasco.png" alt="Image du post" />
+                <div class="post__main__img__container" v-if="post.imageUrl != null">
+                    <img class="post__img" v-if="post.imageUrl != null" crossorigin="anonymous" :src="post.imageUrl" alt="Image du post" />
                 </div>
             </div>
 
@@ -89,7 +89,7 @@ import CreatePostComponent from './CreatePostComponent.vue';
     },
     computed:{
        
-        ...mapState(['posts','userInfos','date','status'])
+        ...mapState(['posts','userInfos', 'user','date','status'])
     },
     created: function () {
         this.$store.dispatch('getAllPosts');
@@ -97,7 +97,8 @@ import CreatePostComponent from './CreatePostComponent.vue';
     },
     methods: {
          test: function () {
-            console.log(this.$store.state.posts[13].imageUrl)
+            
+            
          },
     ...mapMutations(['setDate', 'setStatus'])
     },
@@ -107,21 +108,16 @@ import CreatePostComponent from './CreatePostComponent.vue';
 
 </script>
 <style scoped lang="scss">
-
-
-
-
 @import '../variables';
+
+
 //BODY
 #body_posts {
   background-image: linear-gradient(90deg, $third-color 0%, $secondary-color 50%, $third-color 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  
-  height: 100%;
-  
+  min-height: 100vh;
   padding:30px;
 }
 .create__post{
@@ -281,7 +277,7 @@ import CreatePostComponent from './CreatePostComponent.vue';
             
             width: 100%;
             height: 100%;
-            object-fit: cover;
+            object-fit: contain;
             border-top: 1px solid $secondary-color;
             border-bottom: 1px solid $secondary-color;
         }
