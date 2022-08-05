@@ -7,10 +7,11 @@ var commentairePostSchema = new mongoose.Schema({
 });
 const postSchema = mongoose.Schema({
   userId: { type: String, required: true },
+  photo: {type: String },
   name : { type : String, required: true, match: /^[a-z ,.'-]+$/i },
   lastname : { type : String, required: true, match: /^[a-z ,.'-]+$/i },
   description: { type: String, required: true },
-  imageUrl: { type: String  },
+  imageUrl: { type: String },
   date: { type: Date, default: Date.now() },
   comment: {commentairePostSchema},
   likes: { type: Number },

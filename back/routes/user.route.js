@@ -8,6 +8,9 @@ const userCtrl = require('../controllers/user.controller');
 
 router.post('/signup', userCtrl.signup);
 router.post('/login', userCtrl.login);
-router.get('/user', auth, userCtrl.getUserInfos);
+//requête de type get pour récupérer les données de l'utilisateur
+router.get('/user/:id', auth, userCtrl.getUserInfos);
+//requête de type put pour modifier les données de l'utilisateur
+router.put('/user/:id', auth, multer, userCtrl.modifyUser);
 
 module.exports = router;

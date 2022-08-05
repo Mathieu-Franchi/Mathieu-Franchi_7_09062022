@@ -33,6 +33,9 @@ mongoose.connect(process.env.DATABASE_URI,
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 //Middleware : intercepte pour la sécurité
 app.use(helmet());
+// helmet({
+//   crossOriginResourcePolicy: false,
+// })
 // Middleware  : réponse pour n'importe quelle requête
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');

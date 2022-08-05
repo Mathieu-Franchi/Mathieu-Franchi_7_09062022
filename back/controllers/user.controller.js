@@ -3,6 +3,7 @@ require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+//SIGNUP LOGIN
 exports.signup = (req, res, next) => {
    let password = req.body.password;
    //Minimum 6 and maximum 32 characters, at least one uppercase letter, one lowercase letter, one number and one special character:
@@ -50,9 +51,55 @@ exports.login = (req, res, next) => {
     })
     .catch(error => res.status(500).json({ error }));
 };
+
+//OneUser
+//modify ONE user
+exports.modifyUser = (req, res, next) => {
+  const userInfos = req.file ? {
+    ...JSON.parse(req.body.user),
+    photo: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+  } : { ...req.body };
+
+  delete userInfos._id;
+  User.findOne({_id: req.params.id})
+  .then((user) => {
+    if (user._id != req.auth.userId) {
+      res.status(401).json({ message: 'Not authorized' });
+    } else {
+      User.updateOne({ _id: req.auth.userId }, { ...userInfos, _id: req.auth.userId })
+        .then(() => res.status(200).json({ message: 'User modifié!' }))
+        .catch(error => res.status(401).json({ error }));
+    }
+  })
+  .catch((error) => {
+    res.status(400).json({ error });
+  });
+}
 exports.getUserInfos = (req, res, next) => {
-  User.findOne({userId: req.params.userId})
-  .then(user => res.status(200).json(user))
-  .catch(error => res.status(404).json({ error }));
-    
+  User.findOne({ _id: req.params.id })
+    .then(user => {
+      if (user._id != req.auth.userId) {
+        res.status(401).json({ message: 'Not authorized' });
+      } else {
+        const userInfos =
+        {
+          email: user.email,
+          name: user.name,
+          lastname: user.lastname,
+          photo: user.photo
+        };
+        res.status(200).json(userInfos)
+      }
+    })
+    .catch(error => {
+      res.status(404).json({ error });
+    });
+
 };
+//All users
+// exports.getAllUsers = (req, res, next) => {
+//   //récupère tout les posts de la base de donnée
+//   User.find()
+//       .then(users => res.status(200).json(users))
+//       .catch(error => res.status(400).json({ error }));
+// };
