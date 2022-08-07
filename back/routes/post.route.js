@@ -22,6 +22,9 @@ router.get('/:id', auth, postCtrl.getOnePost);
 //réponse pour requête de type get all
 router.get('/', auth, postCtrl.getAllPosts);
 
+//réponse pour requête de type get user feed
+router.get('/user/:id', auth, postCtrl.getUserFeed);
+
 //POST : like/dislike
 router.post("/:id/like", auth, postCtrl.likePosts);
   

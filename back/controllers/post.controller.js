@@ -90,6 +90,18 @@ exports.getAllPosts = (req, res, next) => {
         .catch(error => res.status(400).json({ error }));
 };
 
+//get user feed
+exports.getUserFeed = (req, res, next) => {
+  if (req.params.id != req.auth.userId) {
+    res.status(401).json({ message: 'Not authorized' });
+  } else {
+
+    Post.find({ userId: req.params.id })
+      .then(posts => res.status(200).json(posts))
+      .catch(error => res.status(400).json({ error }));
+  }
+};
+
 // LIKE DISLIKE
 exports.likePosts = (req, res, next) => {
     //const pour simplifier la lisibilitée du code
