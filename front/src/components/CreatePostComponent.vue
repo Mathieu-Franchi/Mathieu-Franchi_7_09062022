@@ -15,7 +15,7 @@
       <!-- MODAL PROFIL -->
       <div class="post__profil">
         <div v-if="userInfos.photo != null" class="post__profil__img__container">
-          <img class="post__profil__img" v-if="userInfos.photo != null" crossorigin="anonymous" :src="userInfos.photo"
+          <img class="post__profil__img" v-if="userInfos.photo != null" crossorigin="http://localhost:3000/" :src="userInfos.photo"
             alt="Photo de profil" />
         </div>
         <div class="post__name__date">
@@ -27,7 +27,11 @@
       </div>
       <!-- MODAL MAIN CONTENT -->
       <textarea v-model="description" class="description" type="text" placeholder="Quoi de neuf ?"></textarea>
-      <input @change="imageUrl" id="dropzone-file" type="file">
+      <input type="file" @change="onFileSelected">
+      <button @click="onFileSelected()" class="button">
+        <span v-if="status == 'loading'">Chargement du fichier en cours...</span>
+        <span v-else>Choisir une image</span>
+      </button>
       <button @click="createPost()" class="button" :class="{ 'button--disabled': !validatedFields }">
         <span v-if="status == 'loading'">Publication en cours...</span>
         <span v-else>Publier</span>
@@ -48,24 +52,22 @@ export default {
     return {
       
       description: '',
-      imageUrl: '',
-      photo: 'http://localhost:3000/images/moi.jpg'
+      imageUrl: null,
     }
   },
   computed: {
     validatedFields: function () {
-            
-           
-                if (this.description != "") {
-                    return true;
-                } else {
-                    
-                    return false;
-                }
-          
+
+
+      if (this.description != "") {
+        return true;
+      } else {
+
+        return false;
+      }
+
     },
          
-    
     ...mapState(['userInfos','date', 'status'])
   },
   mounted: function () {
@@ -99,6 +101,13 @@ export default {
         console.log('nope');
       })
     },
+    onFileSelected(event) {
+      this.imageUrl = event.target.files[0];
+      console.log(event);
+    },
+    // onUpload() {
+
+    // },
   },
 
 
@@ -203,7 +212,7 @@ export default {
 
   .post__profil__img__container {
     width: 50px;
-    height: 50px;
+    
     margin-right: 20px;
 
     .post__profil__img {

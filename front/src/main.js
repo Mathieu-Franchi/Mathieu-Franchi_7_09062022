@@ -18,10 +18,29 @@ import { fab } from '@fortawesome/free-brands-svg-icons' //all brand svg icons
 //     if(error.status == '401')
 //     {
 //         this.$router.push('/auth');
-//         localStorage.clear();
+//         localStorage.removeItem('user');
 //     }
 //     return Promise.reject(error);
 // });
+// export const unauthorized = axios.create() 
+
+// unauthorized.interceptors.response.use(
+//     function (response) {
+//         //console.log(response)
+//         // continue sending response to the then() method
+//         return response;
+//     },
+//     function (error) {
+//         // check if unauthorized error returned
+//         if (error.response.status === 401 || error.response.status === 404) {
+//         console.log('Unauthorized access')
+//         console.log(error.response)
+//         this.$router.push('/auth');
+//         localStorage.removeItem('user');
+//         }
+//         // request is rejected and will direct logic to the catch() method
+//         return Promise.reject(error)
+//     })
 /* add icons to the library */
 library.add(fas, far, fab);
 //<FontAwesome :icon="{prefix:'fas',iconName: 'exempleIcon'}"/>  

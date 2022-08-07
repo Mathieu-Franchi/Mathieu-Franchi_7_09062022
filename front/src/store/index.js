@@ -132,12 +132,12 @@ const store = createStore({
         });
       });
     },
-    modifyPost: ({commit}, postForm, params) => {
+    modifyPost: ({commit}, postId, postForm) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
-        instance.put('/posts', postForm, {
-          params:  {
-            params,
+        instance.put("/posts/" + postId, {
+          headers:  {
+            postForm,
           }
         })
         .then(function (response) {
@@ -150,14 +150,10 @@ const store = createStore({
         });
       });
     },
-    deletePost: ({commit}, postForm, params) => {
+    deletePost: ({commit}, postId) => {
       commit('setStatus', 'loading');
       return new Promise((resolve, reject) => {
-        instance.delete('/posts', postForm, {
-          params: {
-            params,
-          }
-        })
+        instance.delete("/posts/" + postId)
         .then(function (response) {
           commit('setStatus', 'post_deleted');
           resolve(response);

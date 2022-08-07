@@ -3,7 +3,7 @@
 
 
         <h1 class="logo__h1__header">
-            <router-link class="logo__link" to="/" @click="ScrollTop"><img class="logo__img" alt="Groupomania logo" src="../assets/logos/icon-left-font.png">
+            <router-link class="logo__link" to="/" @click="ScrollTop(); refreshHome();"><img class="logo__img" alt="Groupomania logo" src="../assets/logos/icon-left-font.png">
             </router-link>
         </h1>
 
@@ -15,7 +15,7 @@
             </button>
             <ul class="nav__list">
                 <li class="nav__li">
-                    <router-link class="nav__a" to="/" @click="ScrollTop">Accueil</router-link>
+                    <router-link class="nav__a refresh" to="/" @click="ScrollTop(); refreshHome();">Accueil</router-link>
                 </li>
                 <li class="nav__li">
                     <router-link class="nav__a" to="/profil">Profil</router-link>
@@ -59,7 +59,14 @@ import NavComponent from './NavComponent.vue';
         },
         logout: function() {
             this.$store.commit('logout');
-        }
+        },
+        refreshHome: function () {
+            if(this.$route.path === '/')
+            this.$store.dispatch('getAllPosts')
+            else{
+                return;
+            }
+         },
 
         
         

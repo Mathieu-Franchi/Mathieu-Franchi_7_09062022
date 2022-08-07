@@ -5,7 +5,7 @@
     <div id="body_posts">
         <div class="create__post">
             <div v-if="userInfos.photo != null" class="create__profil__img__container">
-                <img class="create__profil__img" crossorigin="anonymous" :src="userInfos.photo" alt="Photo de profil" />
+                <img class="create__profil__img" crossorigin="http://localhost:3000/" :src="userInfos.photo" alt="Photo de profil" />
             </div>
             <button class="create__btn modal-trigger" type="button" @click="setDate(new Date());">
                 <span class="create__btn__text">Quoi de neuf, {{userInfos.name}} ?</span>
@@ -19,7 +19,7 @@
                 <!-- profil img + name and date -->
                 <div class="post__profil">
                     <div class="post__profil__img__container" v-if="userInfos.photo != null">
-                        <img class="post__profil__img" crossorigin="anonymous" :src="post.photo" alt="Photo de profil du post" />
+                        <img class="post__profil__img" crossorigin="http://localhost:3000/" :src="post.photo" alt="Photo de profil du post" />
                     </div>
                     <div class="post__name__date">
                         <h2 class="post__name">
@@ -31,7 +31,7 @@
                 <!-- profil img + name and date -->
 
                 <!-- btn modify  -->
-                <div class="post__btn__modify" v-if="post.userId === user.userId || user.isAdmin === true">
+                <div class="post__btn__modify" @click="deletePost(post._id)" v-if="post.userId === user.userId || user.isAdmin === true">
                     <button class="btn__modify" type="button">
                         <FontAwesome class="fa__ellipsis" icon="fa-solid fa-ellipsis" />
                     </button>
@@ -44,7 +44,7 @@
             <div class="post__main">
                 <h3 class="post__description">{{ post.description }}</h3>
                 <div class="post__main__img__container" v-if="post.imageUrl != null">
-                    <img class="post__img" v-if="post.imageUrl != null" crossorigin="anonymous" :src="post.imageUrl" alt="Image du post" />
+                    <img class="post__img" v-if="post.imageUrl != null" crossorigin="http://localhost:3000/" :src="post.imageUrl" alt="Image du post" />
                 </div>
             </div>
 
@@ -93,13 +93,14 @@ import CreatePostComponent from './CreatePostComponent.vue';
     },
     created: function () {
         this.$store.dispatch('getAllPosts');
-        this.$store.dispatch('getUserInfos', JSON.parse(localStorage.getItem('user')).userId)
+        this.$store.dispatch('getUserInfos', this.user.userId)
     },
     methods: {
-         test: function () {
-            
-            
-         },
+         deletePost: function (postId) {
+            this.$store.dispatch('deletePost', postId)
+            .then(() => this.$store.dispatch('getAllPosts'))
+        },
+         
     ...mapMutations(['setDate', 'setStatus'])
     },
 
@@ -254,15 +255,17 @@ import CreatePostComponent from './CreatePostComponent.vue';
             justify-content: center;
             align-items: center;
             border-radius: 50%;
-            transition: background 0.2s ease;
+            transition: background 0.2s ease-in-out, transform 0.2s ease-in-out;
+            
                 .fa__ellipsis {
-                    font-size: 27px;
-                    
-                    
+                    font-size: 2.1em;
                 }
         }
         .btn__modify:hover{
             background: $secondary-color;
+        }
+        .btn__modify:active{
+            transform: scale(0.92);
         }
     }
   
@@ -285,6 +288,7 @@ import CreatePostComponent from './CreatePostComponent.vue';
     .post__description{
         padding: 0px 10px 10px 10px;
         text-align: justify;
+        font-weight: normal;
         
     }
 }
@@ -343,29 +347,26 @@ import CreatePostComponent from './CreatePostComponent.vue';
         background: none;
         display: block;
         border-radius: 5px;
-        transition: background-color 0.2s ease-in-out;
+        transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
 
     }
-    .fa__like,
-    .fa__comment
+    .fa__like, .fa__comment
     {
-        font-size: 20px;
+        font-size: 1.6em;
         color: $third-color;
         transition: color 0.1s ease-in-out;
     }
-    .post__btn__like:hover {
+    .post__btn__comment:hover, .post__btn__like:hover{
         background-color: $secondary-color;
+        
     }
-    .post__btn__comment:hover{
-        background-color: $secondary-color;
-    }
-    .post__btn__like:hover .fa__like {
+    .post__btn__like:hover .fa__like, .post__btn__comment:hover .fa__comment {
         color: $primary-color;
         
     }
-    .post__btn__comment:hover .fa__comment {
-        color: $primary-color;
-        
+    .post__btn__comment:active, .post__btn__like:active{
+
+        transform: scale(0.92);
     }
     
 }

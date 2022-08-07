@@ -19,7 +19,7 @@ export default {
     ProfilComponent, HeaderHomeComponent,FooterComponent,
   },
    beforeCreate: function () {
-    if (localStorage.getItem("user") == null || this.$store.state.user.userId == -1) {
+    if (!localStorage.getItem("user") || this.$store.state.user.userId == -1) {
       this.$router.push('/auth');
     }
     return;
