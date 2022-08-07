@@ -15,10 +15,10 @@
             </button>
             <ul class="nav__list">
                 <li class="nav__li">
-                    <router-link class="nav__a refresh" to="/" @click="ScrollTop(); refreshHome();">Accueil</router-link>
+                    <router-link class="nav__a refresh" to="/" @click="refreshHome();">Accueil</router-link>
                 </li>
                 <li class="nav__li">
-                    <router-link class="nav__a" to="/profil">Profil</router-link>
+                    <router-link class="nav__a" to="/profil" @click="refreshProfil()">Profil</router-link>
                 </li>
                 <li class="nav__li">
                     <router-link class="nav__a" to="/auth" @click="logout">Déconnexion</router-link>
@@ -43,12 +43,6 @@ import NavComponent from './NavComponent.vue';
     components: { NavComponent },
     
     methods: {
-        ScrollTop: function() {
-            window.scrollTo({
-                top:0,
-                left: 0,
-            })
-        },
         toggleNav: function () {
             if (this.showNav === false) {
                 this.showNav = true;
@@ -61,12 +55,31 @@ import NavComponent from './NavComponent.vue';
             this.$store.commit('logout');
         },
         refreshHome: function () {
-            if(this.$route.path === '/')
-            this.$store.dispatch('getAllPosts')
-            else{
+            if (this.$route.path === '/') {
+                this.$store.dispatch('getAllPosts')
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                })
+
+            }
+
+            else {
                 return;
             }
-         },
+        },
+        refreshProfil: function () {
+            if (this.$route.path === '/profil') {
+                window.scrollTo({
+                    top: 0,
+                    left: 0,
+                })
+                this.$store.dispatch('getUserFeed', this.$store.state.user.userId)
+            }
+            else {
+                return;
+            }
+        }
 
         
         

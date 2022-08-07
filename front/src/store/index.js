@@ -83,6 +83,7 @@ const store = createStore({
         instance.post('/auth/signup', userForm)
         .then(function (response) {
           commit('setStatus', 'created');
+          commit('setStatus', 'loading');
           resolve(response);
         })
         .catch(function (error) {
@@ -97,6 +98,11 @@ const store = createStore({
         .then(function (response) {
           commit('setStatus', 'get_userInfos');
           commit('userInfos', response.data);
+          // setTimeout (function(){
+          //     commit('setStatus', '');
+          // },2000)
+          commit('setStatus', 'loading');
+          console.log('requete getUserINfos');
         })
         .catch(function () {
           commit('setStatus', 'error_userInfos');
@@ -104,12 +110,34 @@ const store = createStore({
         });
       
     },
+    getUserFeed: ({ commit }, id) => {
+      commit('setStatus', 'loading');
+      instance.get("/posts/user/" + id)
+        .then(function (response) {
+          commit('setStatus', 'get_posts');
+          commit('posts', response.data);
+          // setTimeout (function(){
+          //   commit('setStatus', '');
+          // },2000)
+          commit('setStatus', 'loading');
+          console.log('requete getUserFeed');
+        })
+        .catch(function () {
+          commit('setStatus', 'error_get_posts');
+
+        });
+    },
     getAllPosts: ({ commit }) => {
       commit('setStatus', 'loading');
       instance.get('/posts')
         .then(function (response) {
-          commit('setStatus', 'get_posts')
+          commit('setStatus', 'get_posts');
           commit('posts', response.data);
+          // setTimeout (function(){
+          //   commit('setStatus', '');
+          // },2000)
+          commit('setStatus', 'loading');
+          console.log('requete getAllPosts');
         })
         .catch(function () {
           commit('setStatus', 'error_get_posts');
@@ -122,7 +150,9 @@ const store = createStore({
         instance.post('/posts', postForm)
         .then(function (response) {
           commit('setStatus', 'post_created');
-          console.log(response)
+          setTimeout(function () {
+            commit('setStatus', '');
+          }, 2000)
           resolve(response);
         })
         .catch(function (error) {
@@ -142,6 +172,9 @@ const store = createStore({
         })
         .then(function (response) {
           commit('setStatus', 'post_modified');
+          setTimeout(function () {
+            commit('setStatus', '');
+          }, 2000)
           resolve(response);
         })
         .catch(function (error) {
@@ -156,6 +189,9 @@ const store = createStore({
         instance.delete("/posts/" + postId)
         .then(function (response) {
           commit('setStatus', 'post_deleted');
+          setTimeout (function(){
+              commit('setStatus', '');
+          },2000)
           resolve(response);
         })
         .catch(function (error) {

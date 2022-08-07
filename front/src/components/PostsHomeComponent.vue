@@ -92,16 +92,31 @@ import CreatePostComponent from './CreatePostComponent.vue';
         ...mapState(['posts','userInfos', 'user','date','status'])
     },
     created: function () {
+        if(this.$route.path === '/profil'){
+            this.$store.dispatch('getUserFeed', this.user.userId);
+            return;
+        }
         this.$store.dispatch('getAllPosts');
         this.$store.dispatch('getUserInfos', this.user.userId)
     },
     methods: {
-         deletePost: function (postId) {
+        deletePost: function (postId) {
             this.$store.dispatch('deletePost', postId)
-            .then(() => this.$store.dispatch('getAllPosts'))
+                .then(() => {
+                    if (this.$route.path === '/profil') {
+                        this.$store.dispatch('getUserFeed', this.user.userId);
+                        return;
+                    }
+                    else {
+                        this.$store.dispatch('getAllPosts');
+                    }
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
         },
-         
-    ...mapMutations(['setDate', 'setStatus'])
+
+        ...mapMutations(['setDate', 'setStatus'])
     },
 
     

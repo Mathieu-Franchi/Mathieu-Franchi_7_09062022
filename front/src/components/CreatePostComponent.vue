@@ -95,10 +95,18 @@ export default {
 
 
       }).then(function () {
-        self.$store.dispatch('getAllPosts');
+        if (self.$route.path === '/profil') {
+          self.$store.dispatch('getUserFeed', self.$store.state.user.userId);
+          return;
+        }
+        else {
+          self.$store.dispatch('getAllPosts');
+        }
+
+
       })
-      .catch(function (){
-        console.log('nope');
+      .catch(function (error){
+        console.log(error);
       })
     },
     onFileSelected(event) {

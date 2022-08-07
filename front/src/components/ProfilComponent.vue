@@ -17,13 +17,15 @@
 
       
     </section>
+
   </div>
+  <PostsHomeComponent />
 </template>
 
 <script>
 // import axios from 'axios';
 import { mapState } from 'vuex'
-
+import PostsHomeComponent from './PostsHomeComponent.vue'
 
 export default {
   name: 'ProfilComponent',
@@ -32,13 +34,17 @@ export default {
       
     }
   },
+  components: {
+    PostsHomeComponent
+  },
   computed: {
     
-    ...mapState(['userInfos','user'])
+    ...mapState(['userInfos','user','posts'])
   },
   mounted: function () {
     //PAS BESOIN DE RE FETCH VU QUE TU FETCH DEJA DANS L'ACCUEIL
     this.$store.dispatch('getUserInfos', this.user.userId)
+    // this.posts.find({userId: this.user.userId});
   },
   methods: {
     
@@ -74,4 +80,5 @@ export default {
     border-radius: 50%;
   }
 }
+
 </style>
