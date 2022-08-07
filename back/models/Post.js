@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+
 var commentairePostSchema = new mongoose.Schema({
   name: { type : String, match: /^[a-z ,.'-]+$/i },
   lastname : { type : String, match: /^[a-z ,.'-]+$/i },
@@ -10,7 +11,7 @@ const postSchema = mongoose.Schema({
   photo: {type: String },
   name : { type : String, required: true, match: /^[a-z ,.'-]+$/i },
   lastname : { type : String, required: true, match: /^[a-z ,.'-]+$/i },
-  description: { type: String, required: true },
+  description: { type: String },
   imageUrl: { type: String },
   date: { type: Date, default: Date.now() },
   comment: {commentairePostSchema},

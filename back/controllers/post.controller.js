@@ -3,25 +3,31 @@ const fs = require('fs');
 /*---------------- CRUD -----------------*/
 //post
 exports.createPost = (req, res, next) => {
-  const postObject = req.file ?
-    {
+  if (req.body.description === '' && req.file === undefined) {
+    res.status(400).json({ message: 'Veuillez remplir au moins un champ' })
+  }
+  else {
+
+    const postObject = req.file ?
+      {
         ...JSON.parse(req.body.post),
         imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : {...req.body};
-    
+      } : { ...req.body };
+
     //delete le faux _id envoyé par le front-end
     delete postObject._id;
     delete postObject._userId;
     //creer une nouvelle post par rapport aux champs recupérer dans le corps de la requète
     const post = new Post({
-        ...postObject,
-        userId: req.auth.userId,
-        likes:  0 ,
-        dislikes:  0 
+      ...postObject,
+      userId: req.auth.userId,
+      likes: 0,
+      dislikes: 0
     });
     post.save()
-        .then(() => res.status(201).json({ message: 'Post enregistré !' }))
-        .catch(error => res.status(400).json({ error }));
+      .then(() => res.status(201).json({ message: 'Post enregistré !' }))
+      .catch(error => res.status(400).json({ error }));
+  }//else
 };
 //put
 exports.modifyPost = (req, res, next) => {

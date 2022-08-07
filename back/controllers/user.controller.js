@@ -2,6 +2,7 @@
 require('dotenv').config();
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 const User = require('../models/User');
 //SIGNUP LOGIN
 exports.signup = (req, res, next) => {
@@ -95,6 +96,31 @@ exports.getUserInfos = (req, res, next) => {
       res.status(404).json({ error });
     });
 
+};
+//Delete user
+exports.deleteUser = (req, res, next) => {
+  User.findOne({ _id: req.params.id })
+    .then(user => {
+      if (user.userId != req.auth.userId) {
+        res.status(401).json({ message: 'Not authorized' });
+      } else {
+        if (user.photo) {
+          const filename = user.photo.split('/images/')[1];
+          fs.unlink(`images/${filename}`, () => {
+            User.deleteOne({ _id: req.params.id })
+              .then(() => res.status(200).json({ message: 'Utilisateur supprimé !' }))
+              .catch(error => res.status(400).json({ error }));
+          });
+        } else {
+
+          User.deleteOne({ _id: req.params.id })
+            .then(() => res.status(200).json({ message: 'Utilisateur supprimé !' }))
+            .catch(error => res.status(400).json({ error }));
+        }
+      }
+
+    })
+    .catch(error => res.status(500).json({ error }));
 };
 //All users
 // exports.getAllUsers = (req, res, next) => {
