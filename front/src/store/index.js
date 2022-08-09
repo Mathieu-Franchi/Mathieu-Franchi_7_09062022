@@ -23,7 +23,7 @@ if (!user) {
 // Create a new store instance.
 const store = createStore({
   state: {
-    status: '',
+    status: [],
     user: user,
     userInfos: {
       name:'',
@@ -36,8 +36,16 @@ const store = createStore({
     
   },
   mutations: {
-    setStatus: function (state, status) {
-      state.status = status;
+    // setStatus: function (state, status) {
+    //   state.status = status;
+    // },
+    addStatus: function (state, status) {
+      state.status.push(status);
+    },
+    removeStatus: function (state, statusToRemove) {
+      state.status = state.status.filter(status => {
+        return status != statusToRemove;
+      });
     },
     logUser: function (state, user) {
       instance.defaults.headers.common['Authorization'] = 'bearer ' + user.token;
@@ -62,110 +70,163 @@ const store = createStore({
     },
   },
   actions: {
+    /***** USER METHODS *****/
     login: ({commit}, userForm) => {
-      commit('setStatus', 'loading');
+      commit('addStatus', 'loading-login');
       return new Promise((resolve, reject) => {
         instance.post('/auth/login', userForm)
         .then(function (response) {
-          commit('setStatus', '');
+          commit('removeStatus', 'loading-login');
+          commit('addStatus', 'login');
           commit('logUser', response.data);
+          setTimeout(function () {
+            commit('removeStatus', 'login');
+          }, 2000)
           resolve(response);
         })
         .catch(function (error) {
-          commit('setStatus', 'error_login');
+          commit('removeStatus', 'loading-login');
+          commit('addStatus', 'error_login');
+          setTimeout(function () {
+            commit('removeStatus', 'error_login');
+          }, 2000)
           reject(error);
         });
       });
     },
     createAccount: ({commit}, userForm) => {
-      commit('setStatus', 'loading');
+      commit('addStatus', 'loading-account');
+      // console.log(this.$store.state.status.)
       return new Promise((resolve, reject) => {
         instance.post('/auth/signup', userForm)
         .then(function (response) {
-          commit('setStatus', 'created');
-          commit('setStatus', 'loading');
+          commit('removeStatus', 'loading-account');
+          commit('addStatus', 'account-created');
+          setTimeout(function () {
+            commit('removeStatus', 'account-created');
+          }, 2000)
           resolve(response);
         })
         .catch(function (error) {
-          commit('setStatus', 'error_create');
+          commit('removeStatus', 'loading-account');
+          commit('addStatus', 'error_create');
+          setTimeout(function () {
+            commit('removeStatus', 'error_create');
+          }, 2000)
           reject(error);
         });
       });
     },
     getUserInfos: ({commit}, id) => {
-      commit('setStatus', 'loading');
+      commit('addStatus', 'loading-userInfos');
         instance.get("/auth/user/" + id)
         .then(function (response) {
-          commit('setStatus', 'get_userInfos');
+          commit('removeStatus', 'loading-userInfos');
+          commit('addStatus', 'get_userInfos');
           commit('userInfos', response.data);
-          // setTimeout (function(){
-          //     commit('setStatus', '');
-          // },2000)
-          commit('setStatus', 'loading');
-          console.log('requete getUserINfos');
+          setTimeout (function(){
+               commit('removeStatus', 'get_userInfos');
+          },2000)
         })
         .catch(function () {
-          commit('setStatus', 'error_userInfos');
-          
+          commit('removeStatus', 'loading-userInfos');
+          commit('addStatus', 'error_userInfos');
+          setTimeout(function () {
+            commit('removeStatus', 'error_userInfos');
+          }, 2000)
         });
       
     },
     getUserFeed: ({ commit }, id) => {
-      commit('setStatus', 'loading');
+      commit('addStatus', 'loading-posts-user');
       instance.get("/posts/user/" + id)
         .then(function (response) {
-          commit('setStatus', 'get_posts');
+          commit('removeStatus', 'loading-posts-user');
+          commit('addStatus', 'get_posts_user');
           commit('posts', response.data);
-          // setTimeout (function(){
-          //   commit('setStatus', '');
-          // },2000)
-          commit('setStatus', 'loading');
-          console.log('requete getUserFeed');
+          setTimeout (function(){
+            commit('removeStatus', 'get_posts_user');
+          },2000)
         })
         .catch(function () {
-          commit('setStatus', 'error_get_posts');
+          commit('removeStatus', 'loading-posts');
+          commit('addStatus', 'error_get_posts_user');
+          setTimeout (function(){
+            commit('removeStatus', 'error_get_posts_user');
+          },2000)
 
         });
     },
+    /****** POSTS METHODS *****/
     getAllPosts: ({ commit }) => {
-      commit('setStatus', 'loading');
+      commit('addStatus', 'loading-posts');
       instance.get('/posts')
         .then(function (response) {
-          commit('setStatus', 'get_posts');
+          commit('removeStatus', 'loading-posts');
+          commit('addStatus', 'get_posts');
           commit('posts', response.data);
-          // setTimeout (function(){
-          //   commit('setStatus', '');
-          // },2000)
-          commit('setStatus', 'loading');
-          console.log('requete getAllPosts');
+          setTimeout (function(){
+            commit('removeStatus', 'get_posts');
+          },2000)
+          
         })
         .catch(function () {
-          commit('setStatus', 'error_get_posts');
-
+          commit('removeStatus', 'loading-posts');
+          commit('addStatus', 'error_get_posts');
+          setTimeout (function(){
+            commit('removeStatus', 'error_get_posts');
+          },2000)
         });
     },
     createPost: ({commit}, postForm) => {
-      commit('setStatus', 'loading');
+      commit('addStatus', 'loading-createPost');
       return new Promise((resolve, reject) => {
         instance.post('/posts', postForm)
         .then(function (response) {
-          commit('setStatus', 'post_created');
+          commit('removeStatus', 'loading-createPost');
+          commit('addStatus', 'post-created');
           setTimeout(function () {
-            commit('setStatus', '');
+            commit('removeStatus', 'post-created');
           }, 2000)
           resolve(response);
         })
         .catch(function (error) {
-          commit('setStatus', 'post_error_create');
+          commit('removeStatus', 'loading-createPost');
+          commit('addStatus', 'post_error_create');
           setTimeout(function () {
-            commit('setStatus', '');
+            commit('removeStatus', 'post_error_create');
+          }, 2000)
+          reject(error);
+        });
+      });
+    },
+    createPostFormData: ({commit}, postFormData) => {
+      commit('addStatus', 'loading-createPost');
+      console.log(postFormData)
+      return new Promise((resolve, reject) => {
+        instance.post('/posts', postFormData, {
+          headers: {"Content-Type": "multipart/form-data"}
+        })
+        .then(function (response) {
+          commit('removeStatus', 'loading-createPost');
+          commit('addStatus', 'post-created');
+          setTimeout(function () {
+            commit('removeStatus', 'post-created');
+          }, 2000)
+          resolve(response);
+        })
+        .catch(function (error) {
+          commit('removeStatus', 'loading-createPost');
+          commit('addStatus', 'post_error_create');
+          setTimeout(function () {
+            commit('removeStatus', 'post_error_create');
           }, 2000)
           reject(error);
         });
       });
     },
     modifyPost: ({commit}, postId, postForm) => {
-      commit('setStatus', 'loading');
+      commit('addStatus', 'loading-modifyPost');
       return new Promise((resolve, reject) => {
         instance.put("/posts/" + postId, {
           headers:  {
@@ -173,37 +234,47 @@ const store = createStore({
           }
         })
         .then(function (response) {
-          commit('setStatus', 'post_modified');
+          commit('removeStatus', 'loading-modifyPost');
+          commit('addStatus', 'post-modified');
           setTimeout(function () {
-            commit('setStatus', '');
+            commit('removeStatus', 'post-modified');
           }, 2000)
           resolve(response);
         })
         .catch(function (error) {
-          commit('setStatus', 'post_error_modified');
+          commit('removeStatus', 'loading-createPost');
+          commit('addStatus', 'post_error_create');
+          setTimeout(function () {
+            commit('removeStatus', 'post_error_create');
+          }, 2000)
           reject(error);
         });
       });
     },
     deletePost: ({commit}, postId) => {
-      commit('setStatus', 'loading');
+      commit('addStatus', 'loading-delete-post');
       return new Promise((resolve, reject) => {
         instance.delete("/posts/" + postId)
         .then(function (response) {
-          commit('setStatus', 'post_deleted');
+          commit('removeStatus', 'loading-delete-post');
+          commit('addStatus', 'post_deleted');
           setTimeout (function(){
-              commit('setStatus', '');
+              commit('removeStatus', 'post_deleted');
           },2000)
           resolve(response);
         })
         .catch(function (error) {
-          commit('setStatus', 'post_error_deleted');
+          commit('removeStatus', 'loading-delete-post');
+          commit('addStatus', 'post_error_deleted');
+          setTimeout(function () {
+            commit('removeStatus', 'post_error_deleted');
+          }, 2000)
           reject(error);
         });
       });
     },
     postLike: ({commit}, params, like) => {
-      commit('setStatus', 'loading');
+      commit('addStatus', 'loading-like');
       return new Promise((resolve, reject) => {
         instance.delete('/posts/like', like, {
           params: {
@@ -211,13 +282,18 @@ const store = createStore({
           }
         })
         .then(function (response) {
-          commit('setStatus', 'liked');
-          commit('setStatus', 'liked');
-          commit('setStatus', 'disliked');
+          commit('removeStatus', 'loading-like');
+          commit('addStatus', 'liked');
+          commit('addStatus', 'unliked');
+          commit('addStatus', 'disliked');
           resolve(response);
         })
         .catch(function (error) {
-          commit('setStatus', 'error_likeDislike');
+          commit('removeStatus', 'loading-like');
+          commit('addStatus', 'error_likeDislike');
+          setTimeout(function () {
+            commit('removeStatus', 'error_likeDislike');
+          }, 2000)
           reject(error);
         });
       });

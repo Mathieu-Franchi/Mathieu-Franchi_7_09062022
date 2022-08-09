@@ -17,15 +17,15 @@
 
       
     </section>
-
     
   </div>
+  <PostsHomeComponent />
 </template>
 
 <script>
 // import axios from 'axios';
 import { mapState } from 'vuex'
-
+import PostsHomeComponent from './PostsHomeComponent.vue'
 
 export default {
   name: 'ProfilComponent',
@@ -33,6 +33,9 @@ export default {
     return {
       
     }
+  },
+  components :{
+    PostsHomeComponent,
   },
   
   computed: {

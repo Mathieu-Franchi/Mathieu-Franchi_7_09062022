@@ -22,21 +22,28 @@
           <h2 class="post__name fontsize__p">
             {{ userInfos.name + ' ' + userInfos.lastname }}
           </h2>
-          <p class="post__date">{{ date }}</p>
+          <p class="post__date" @click="test">{{ date }}</p>
         </div>
       </div>
       <!-- MODAL MAIN CONTENT -->
       <textarea v-model="description" class="description" type="text" placeholder="Quoi de neuf ?"></textarea>
-      <input type="file" @change="onFileSelected">
-      <button @click="onFileSelected()" class="button">
-        <span v-if="status == 'loading'">Chargement du fichier en cours...</span>
-        <span v-else>Choisir une image</span>
-      </button>
-      <button @click="createPost()" class="button" :class="{ 'button--disabled': !validatedFields }">
-        <span v-if="status == 'loading'">Publication en cours...</span>
-        <span v-else>Publier</span>
-      </button>
-
+      <!-- button choose file + publish container -->
+      <div class="buttons__container">
+        <div class="drop_img">
+          <input type="file" @change="onFileSelected" ref="inputFile" class="button__file">
+          <!-- <img v-if="this.imageUrl != null" :src="this.imageUrl" /> -->
+        </div>
+        <button @click="$refs.inputFile.click()" class="button__file">
+          <span v-if="status == 'loading'">Chargement du fichier en cours...</span>
+          <span v-else>Choisir une image</span>
+        </button>
+        <button @click="publishPost()" class="button__publish" :class="{ 'button--disabled': !validatedFields }">
+          <span v-if="status.includes('loading-createPost')">Publication en cours...</span>
+          <span v-else-if="status.includes('post-created')">Post créé !</span>
+          <span v-else>Publier</span>
+        </button>
+      </div>
+      <!-- button choose file + publish container -->
     </div>
     <!-- MODAL -->
   </div>
@@ -44,6 +51,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { mapState } from 'vuex';
 
 export default {
@@ -57,12 +65,10 @@ export default {
   },
   computed: {
     validatedFields: function () {
-
-
-      if (this.description != "") {
+      if (this.description != '' || this.imageUrl != null) {
         return true;
-      } else {
-
+      }
+      else {
         return false;
       }
 
@@ -85,39 +91,109 @@ export default {
         modalContainer.classList.toggle("active")
       }
     },
-    createPost: function() {
+    publishPost: function () {
       const self = this;
-      const fd = new FormData();
-      fd.append('image', this.imageUrl);
-      this.$store.dispatch('createPost', {
-        name: this.userInfos.name,
-        lastname: this.userInfos.lastname,
-        description: this.description,
-        photo: this.userInfos.photo,
+      const l = new FormData();
+      l.append('image', self.imageUrl, self.imageUrl.name);
+      l.append('post', self.$store.state.userInfos.name, self.$store.state.userInfos.lastname)
+      console.log(l.values)
+      axios.post('http://localhost:3000/api/posts', {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          'Authorization' : 'bearer ' + self.$store.state.user.token
+        },
+        data: l
         
 
-      }).then(function () {
-        if (self.$route.path === '/profil') {
-          self.$store.dispatch('getUserFeed', self.$store.state.user.userId);
-          return;
-        }
-        else {
-          self.$store.dispatch('getAllPosts');
-        }
+      }).then(res => console.log(res))
+      .catch(err => console.log(err))
 
+      // if (this.imageUrl != null && this.description == '') {
+      //   const fd = new FormData();
+      //   fd.append('image', this.imageUrl, this.imageUrl.name);
+      //   this.$store.dispatch('createPostFormData', fd)
+      //     .then(function () {
+      //       if (self.$route.path === '/profil') {
+      //         self.$store.dispatch('getUserFeed', self.$store.state.user.userId);
 
-      })
-      .catch(function (error){
-        console.log(error);
-      })
+      //       }
+      //       else {
+      //         self.$store.dispatch('getAllPosts');
+      //       }
+      //       if (self.$store.state.status.includes('post-created') === true) {
+      //         document.querySelector(".modal-container").classList.toggle("active");
+      //       }
+
+      //     })
+      //     .catch(function (error) {
+      //       console.log(error);
+      //     })
+
+      // }
+      // if (this.imageUrl != null && this.description != '')
+      // {
+      //   const field = {
+      //     name: this.userInfos.name,
+      //     lastname: this.userInfos.lastname,
+      //     description: this.description,
+      //     photo: this.userInfos.photo,
+      //     imageUrl: "",
+      //   }
+      //   const fd = new FormData();
+      //   fd.append('image', this.imageUrl);
+      //   fd.append('post', field)
+      //   this.$store.dispatch('createPostFormData', fd)
+      //     .then(function () {
+      //       if (self.$route.path === '/profil') {
+      //         self.$store.dispatch('getUserFeed', self.$store.state.user.userId);
+
+      //       }
+      //       else {
+      //         self.$store.dispatch('getAllPosts');
+      //       }
+      //       if (self.$store.state.status.includes('post-created') === true) {
+      //         document.querySelector(".modal-container").classList.toggle("active");
+      //       }
+
+      //     })
+      //     .catch(function (error) {
+      //       console.log(error);
+      //     })
+      // }
+      // if(this.imageUrl === null && this.description != '')
+      // {
+
+      //   this.$store.dispatch('createPost', {
+      //     name: this.userInfos.name,
+      //     lastname: this.userInfos.lastname,
+      //     description: this.description,
+      //     photo: this.userInfos.photo,
+  
+  
+      //   }).then(function () {
+      //     if (self.$route.path === '/profil') {
+      //       self.$store.dispatch('getUserFeed', self.$store.state.user.userId);
+  
+      //     }
+      //     else {
+      //       self.$store.dispatch('getAllPosts');
+      //     }
+      //     if (self.$store.state.status.includes('post-created') === true) {
+      //       document.querySelector(".modal-container").classList.toggle("active");
+      //     }
+  
+      //   })
+      //     .catch(function (error) {
+      //       console.log(error);
+      //     })
+      // }
     },
     onFileSelected(event) {
       this.imageUrl = event.target.files[0];
-      console.log(this.imageUrl.name);
+      console.log(this.imageUrl);
+      console.log(this.imageUrl.name)
     },
-    publish() {
-      
-    },
+    
   },
 
 
@@ -126,6 +202,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 
 @import '../variables';
 
@@ -173,6 +250,8 @@ export default {
   transition: opacity 0.3s ease-out,
   transform 0.3s ease-out;
   
+  display: flex;
+  flex-direction: column;
 
 }
 
@@ -248,6 +327,7 @@ export default {
     }
   }
 }
+//MAIN CONTENT DESCRIPTION + IMAGE
 .description{
   width: 100%;
   border: none;
@@ -264,6 +344,59 @@ export default {
   padding: 10px;
   
 }
+.buttons__container {
+  display: flex;
+  flex-direction: column;
+  
+  padding: 10px;
+
+  .button__file {
+    display: inline-block;
+    border: none;
+    outline: none;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 30px;
+    border: solid 1px $secondary-color;
+    background-color: $third-color;
+    color: white;
+    font-size: 15px;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .button__publish {
+    display: inline-block;
+    background: $primary-color;
+    color:white;
+    border-radius: 8px;
+    font-weight: 800;
+    font-size: 15px;
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 16px;
+    transition: .4s background-color;
+    cursor: pointer;
+  }
+  .button__publish:hover {
+  
+    background: $secondary-color;
+  }
+  .button--disabled {
+    background:#cecece;
+    color:#ececec
+  }
+  .button--disabled:hover {
+    cursor:not-allowed;
+    background:#cecece;
+  }
+}
+
+  
+
+
 
 @media all and (max-width: 450px){
 .fontsize__titles{

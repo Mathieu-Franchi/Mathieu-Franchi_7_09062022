@@ -105,7 +105,7 @@ import CreatePostComponent from './CreatePostComponent.vue';
                 .then(() => {
                     if (this.$route.path === '/profil') {
                         this.$store.dispatch('getUserFeed', this.user.userId);
-                        return;
+                        
                     }
                     else {
                         this.$store.dispatch('getAllPosts');
