@@ -157,7 +157,9 @@ const store = createStore({
         })
         .catch(function (error) {
           commit('setStatus', 'post_error_create');
-          console.log(error)
+          setTimeout(function () {
+            commit('setStatus', '');
+          }, 2000)
           reject(error);
         });
       });

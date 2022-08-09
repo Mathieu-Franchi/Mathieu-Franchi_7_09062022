@@ -18,7 +18,7 @@
             <div class="post__header">
                 <!-- profil img + name and date -->
                 <div class="post__profil">
-                    <div class="post__profil__img__container" v-if="userInfos.photo != null">
+                    <div class="post__profil__img__container" v-if="post.photo != null">
                         <img class="post__profil__img" crossorigin="http://localhost:3000/" :src="post.photo" alt="Photo de profil du post" />
                     </div>
                     <div class="post__name__date">

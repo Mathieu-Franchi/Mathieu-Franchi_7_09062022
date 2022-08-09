@@ -87,12 +87,14 @@ export default {
     },
     createPost: function() {
       const self = this;
+      const fd = new FormData();
+      fd.append('image', this.imageUrl);
       this.$store.dispatch('createPost', {
         name: this.userInfos.name,
         lastname: this.userInfos.lastname,
         description: this.description,
         photo: this.userInfos.photo,
-
+        
 
       }).then(function () {
         if (self.$route.path === '/profil') {
@@ -111,11 +113,11 @@ export default {
     },
     onFileSelected(event) {
       this.imageUrl = event.target.files[0];
-      console.log(event);
+      console.log(this.imageUrl.name);
     },
-    // onUpload() {
-
-    // },
+    publish() {
+      
+    },
   },
 
 
