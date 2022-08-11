@@ -141,7 +141,7 @@ const store = createStore({
             commit('removeStatus', 'error_userInfos');
           }, 2000)
         });
-      
+    /****** POSTS METHODS *****/
     },
     getUserFeed: ({ commit }, id) => {
       commit('addStatus', 'loading-posts-user');
@@ -164,7 +164,7 @@ const store = createStore({
 
         });
     },
-    /****** POSTS METHODS *****/
+    
     getAllPosts: ({ commit }) => {
       commit('addStatus', 'loading-posts');
       instance.get('/posts')
@@ -185,10 +185,12 @@ const store = createStore({
           },2000)
         });
     },
-    createPost: ({commit}, postForm) => {
+    createPost: ({commit}, FormData) => {
       commit('addStatus', 'loading-createPost');
       return new Promise((resolve, reject) => {
-        instance.post('/posts', postForm)
+        instance.post('/posts', FormData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        })
         .then(function (response) {
           commit('removeStatus', 'loading-createPost');
           commit('addStatus', 'post-created');

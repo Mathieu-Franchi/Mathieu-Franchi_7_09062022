@@ -192,27 +192,20 @@ export default {
       // }
       // if(this.imageUrl === null && this.description != '')
       // {
-         const field = {
+         let field = {
           name: this.userInfos.name,
           lastname: this.userInfos.lastname,
           description: this.description,
           photo: this.userInfos.photo,
           imageUrl: "",
         }
-        URL.createObjectURL(this.imageUrl)
+        field = JSON.stringify(field)
+        // URL.createObjectURL(this.imageUrl)
         const fd = new FormData();
         fd.append('image', this.imageUrl);
         fd.append('post', field)
-        this.$store.dispatch('createPost', fd ,
-        // {
-        //   name: this.userInfos.name,
-        //   lastname: this.userInfos.lastname,
-        //   description: this.description,
-        //   photo: this.userInfos.photo,
-  
-  
-        // }
-        ).then(function () {
+        console.log(...fd)
+        this.$store.dispatch('createPost', fd ,).then(function () {
           self.$emit('refresh-posts');
           if (self.$store.state.status.includes('post-created') === true) {
             document.querySelector(".modal-container").classList.toggle("active");
@@ -227,7 +220,6 @@ export default {
     onFileSelected(event) {
       this.imageUrl = event.target.files[0];
       console.log(this.imageUrl);
-      console.log(this.imageUrl.name)
     },
     
   },
