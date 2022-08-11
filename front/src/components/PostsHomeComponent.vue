@@ -1,13 +1,10 @@
 <template>
-
-<CreatePostComponent />
-    <!-- bloc container -->
-    <div id="body_posts">
+    
         <div class="create__post">
             <div v-if="userInfos.photo != null" class="create__profil__img__container">
                 <img class="create__profil__img" crossorigin="http://localhost:3000/" :src="userInfos.photo" alt="Photo de profil" />
             </div>
-            <button class="create__btn modal-trigger" type="button" @click="setDate(new Date());">
+            <button class="create__btn modal-trigger" @click="this.$emit('show-modal')" type="button">
                 <span class="create__btn__text">Quoi de neuf, {{userInfos.name}} ?</span>
             </button>
 
@@ -31,7 +28,7 @@
                 <!-- profil img + name and date -->
 
                 <!-- btn modify  -->
-                <div class="post__btn__modify" @click="deletePost(post._id)" v-if="post.userId === user.userId || user.isAdmin === true">
+                <div class="post__btn__modify" @click="deletePost(post._id);" v-if="post.userId === user.userId || user.isAdmin === true">
                     <button class="btn__modify" type="button">
                         <FontAwesome class="fa__ellipsis" icon="fa-solid fa-ellipsis" />
                     </button>
@@ -72,15 +69,14 @@
             </div>
 
         </div>
-    </div>
 </template>
 <script>
-// import axios from 'axios';
-import { mapMutations, mapState } from 'vuex';
-import CreatePostComponent from './CreatePostComponent.vue';
+import { mapState } from 'vuex';
+
     export default {
     name: 'PostsHomeComponent',
-    components: { CreatePostComponent },
+    components: {  },
+    emits: ["delete-post","show-modal","refresh-post"],
     data: function () {
         return {
             
@@ -91,32 +87,24 @@ import CreatePostComponent from './CreatePostComponent.vue';
        
         ...mapState(['posts','userInfos', 'user','date','status'])
     },
-    created: function () {
-        if(this.$route.path === '/profil'){
-            this.$store.dispatch('getUserFeed', this.user.userId);
-            return;
-        }
-        this.$store.dispatch('getAllPosts');
-        this.$store.dispatch('getUserInfos', this.user.userId)
+    mounted: function () {
+        this.showModal();
     },
+    
     methods: {
         deletePost: function (postId) {
-            this.$store.dispatch('deletePost', postId)
-                .then(() => {
-                    if (this.$route.path === '/profil') {
-                        this.$store.dispatch('getUserFeed', this.user.userId);
-                        
-                    }
-                    else {
-                        this.$store.dispatch('getAllPosts');
-                    }
-                })
-                .catch((error) => {
-                    console.log(error);
-                });
+            this.$emit('delete-post', postId);
         },
+        showModal: function () {
+            const modalContainer = document.querySelector(".modal-container");
+            const modalTriggers = document.querySelectorAll(".modal-trigger");
 
-        ...mapMutations(['setDate', 'setStatus'])
+            modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal))
+
+            function toggleModal() {
+                modalContainer.classList.toggle("active")
+            }
+        },
     },
 
     
@@ -125,17 +113,6 @@ import CreatePostComponent from './CreatePostComponent.vue';
 </script>
 <style scoped lang="scss">
 @import '../variables';
-
-
-//BODY
-#body_posts {
-  background-image: linear-gradient(90deg, $third-color 0%, $secondary-color 50%, $third-color 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding:30px;
-}
 .create__post{
     display: flex;
     justify-content: space-between;
@@ -186,27 +163,11 @@ import CreatePostComponent from './CreatePostComponent.vue';
     }
     .create__btn:active{
         transform: scale(0.95);
-        
-        // animation: heartBeat  0.3s ease;
-        // animation-delay: 0.4s;
     }
     .create__btn:hover .create__btn__text{
         letter-spacing: 1px;
         
     }
-        @keyframes heartBeat {
-            0% {
-                transform: scale(1);
-            }
-    
-            50%{
-                transform: scale(0.90);
-            }
-    
-            100% {
-                transform: scale(1);
-            }
-        }
 }
 //POST CONTAINER 
 .post {

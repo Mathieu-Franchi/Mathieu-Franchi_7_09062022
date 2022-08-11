@@ -32,13 +32,10 @@ const store = createStore({
       photo: null,
     },
     posts: [],
-    date: '',
+    date: new Date(),
     
   },
   mutations: {
-    // setStatus: function (state, status) {
-    //   state.status = status;
-    // },
     addStatus: function (state, status) {
       state.status.push(status);
     },
@@ -81,7 +78,7 @@ const store = createStore({
           commit('logUser', response.data);
           setTimeout(function () {
             commit('removeStatus', 'login');
-          }, 2000)
+          }, 3000)
           resolve(response);
         })
         .catch(function (error) {
@@ -89,7 +86,7 @@ const store = createStore({
           commit('addStatus', 'error_login');
           setTimeout(function () {
             commit('removeStatus', 'error_login');
-          }, 2000)
+          }, 3000)
           reject(error);
         });
       });
@@ -104,7 +101,7 @@ const store = createStore({
           commit('addStatus', 'account-created');
           setTimeout(function () {
             commit('removeStatus', 'account-created');
-          }, 2000)
+          }, 3000)
           resolve(response);
         })
         .catch(function (error) {
@@ -112,8 +109,14 @@ const store = createStore({
           commit('addStatus', 'error_create');
           setTimeout(function () {
             commit('removeStatus', 'error_create');
-          }, 2000)
+          }, 3000)
           reject(error);
+          if(error.response.data.error.errors.email.kind == 'unique'){
+            commit('addStatus', 'error_unique')
+            setTimeout(function () {
+              commit('removeStatus', 'error_unique');
+            }, 3000)
+          }
         });
       });
     },
@@ -147,6 +150,7 @@ const store = createStore({
           setTimeout (function(){
             commit('removeStatus', 'get_posts_user');
           },2000)
+          console.log('oui ça marche user')
         })
         .catch(function () {
           commit('removeStatus', 'loading-posts');
@@ -168,7 +172,7 @@ const store = createStore({
           setTimeout (function(){
             commit('removeStatus', 'get_posts');
           },2000)
-          
+          console.log('oui ça marche')
         })
         .catch(function () {
           commit('removeStatus', 'loading-posts');

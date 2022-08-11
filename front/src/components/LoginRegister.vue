@@ -13,14 +13,14 @@
             <form  v-on:submit.prevent="whatForm()">
             
                 <div class="form-row">
-                    <input v-model="email" @keyup="setStatus('')" class="form-row__input" type="text" placeholder="Adresse mail" />
+                    <input v-model="email" @blur="mailTest()" class="form-row__input" type="text" placeholder="Adresse mail" />
                 </div>
                 <div class="form-row" v-if="mode == 'create'">
-                    <input v-model="name" @keyup="setStatus(''); emailTest();" minlength="2" maxlength="26" class="form-row__input" type="text" placeholder="Prénom" />
-                    <input v-model="lastname" @keyup="setStatus('')" minlength="2" maxlength="16" class="form-row__input" type="text" placeholder="Nom" />
+                    <input v-model="name" @focusout="nameTest()" minlength="2" maxlength="26" class="form-row__input" type="text" placeholder="Prénom" />
+                    <input v-model="lastname" @focusout="lastnameTest()" minlength="2" maxlength="16" class="form-row__input" type="text" placeholder="Nom" />
                 </div>
                 <div class="form-row">
-                    <input v-model="password" @keyup="setStatus('')" class="form-row__input password__type" type="password"
+                    <input v-model="password" @focusout="passwordTest()" class="form-row__input password__type" type="password"
                         aria-label="Password" placeholder="Mot de passe" />
                     <button @click="toggleMaskPassword" class="eye__button" type="button">
                         <FontAwesome v-if="toggleMask" class="fa__eye__mask" aria-hidden="true"
@@ -28,21 +28,27 @@
                         <FontAwesome v-else class="fa__eye" aria-hidden="true" icon="fa-solid fa-eye" />
                     </button>
                 </div>
+                <div class="regex-mdp" v-if="mode == 'create'">
+                    <div class="msg"></div>
+                </div>
                 <div class="form-row" v-if="mode == 'login' && status == 'error_login'">
                     Adresse mail et/ou mot de passe invalide
                 </div>
-                <div class="form-row" v-if="mode == 'create' && status == 'error_create'">
+                <div class="form-row" v-if="mode == 'create' && status.includes('error_unique')">
                     Adresse mail déjà utilisée
                 </div>
+                <div class="form-row" v-if="mode == 'create' && status.includes('error_create')">
+                    Champs invalide
+                </div>
                 <div class="form-row">
-                    <button @click="login()" class="button" :class="{ 'button--disabled': !validatedFields }"
+                    <button @click="login()" class="button" :class="{ 'button--disabled': !validatedFields || !regexFields }"
                         v-if="mode == 'login'">
-                        <span v-if="status == 'loading'">Connexion en cours...</span>
+                        <span v-if="status.includes('loading-login')">Connexion en cours...</span>
                         <span v-else>Connexion</span>
                     </button>
-                    <button @click="createAccount()" class="button" :class="{ 'button--disabled': !validatedFields }"
+                    <button @click="createAccount()" class="button" :class="{ 'button--disabled': !validatedFields || !regexFields }"
                         v-else>
-                        <span v-if="status == 'loading'">Création en cours...</span>
+                        <span v-if="status.includes('loading-account')">Création en cours...</span>
                         <span v-else>Créer mon compte</span>
                     </button>
                 </div>
@@ -73,7 +79,7 @@ export default {
             regexName: new RegExp (/^[a-z ,.'-]+$/i),
             invalidName: false,
             //regex password
-            regexPassword: new RegExp (/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,32}$/),
+            regexPassword: new RegExp (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,32}$/),
             invalidPassword: false,
         }
     },
@@ -90,6 +96,24 @@ export default {
                 }
             } else {
                 if (this.email != "" && this.password != "") {
+                    return true;
+                } else {
+                    
+                    return false;
+                }
+            }
+        },
+        regexFields: function() {
+            if (this.mode == 'create') {
+                if (this.regexMail.test(this.email) === true && this.regexPassword.test(this.password) === true
+                && this.regexName.test(this.name) === true && this.regexName.test(this.name) === true) {
+                    return true;
+                } else {
+                    
+                    return false;
+                }
+            } else {
+                if (this.regexMail.test(this.email) === true && this.regexPassword.test(this.password) === true) {
                     return true;
                 } else {
                     
@@ -117,7 +141,7 @@ export default {
         },
         
         login: function () {
-            if(this.validatedFields == true){
+            if(this.validatedFields == true && this.regexFields == true){
 
                 const self = this;
                 this.$store.dispatch('login', {
@@ -134,7 +158,7 @@ export default {
             }
         },
         createAccount: function () {
-            if (this.validatedFields == true) {
+            if (this.validatedFields == true && this.regexFields == true) {
                 const self = this;
                 this.$store.dispatch('createAccount', {
                     email: this.email,
@@ -163,10 +187,11 @@ export default {
                 this.toggleMask = false;
             }
         },
-        emailTest: function (){
-            this.regexMail.test(this.name);
-            console.log(this.regexMail.test(this.name))
-            if(this.regexMail.test(this.name) === true)
+        /******REGEX TEST ******/
+        passwordTest: function (){
+            let test = this.regexPassword.test(this.password);
+            console.log(test + 'password')
+            if(this.regexPassword.test(this.password) === true)
             {
                 return true;
             }
@@ -174,15 +199,49 @@ export default {
                 return false;
             }
         },
+        mailTest: function (){
+            let test = this.regexMail.test(this.email);
+            console.log(test + 'mail')
+            if(test === true)
+            {
+                return true;
+            }
+            else{
+                return false;
+            }
+        },
+        nameTest: function (){
+            let test = this.regexName.test(this.name);
+            console.log(test + 'name')
+            if(test === true)
+            {
+                return true;
+            }
+            else{
+                return false;
+            }
+        },
+        lastnameTest: function (){
+            let test = this.regexName.test(this.lastname);
+            console.log(test + 'lastname')
+            if(test === true)
+            {
+                return true;
+            }
+            else{
+                return false;
+            }
+        },
+
+        /******REGEX TEST ******/
        
-        ...mapMutations(['setStatus'])
+        ...mapMutations(['addStatus'])
     }
 }
 </script>
       
 <style scoped lang="scss">
 @import '../variables';
-@import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
 #body {
   background-image: linear-gradient(62deg, $primary-color 0%, $secondary-color 20%, $third-color 100%);

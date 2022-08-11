@@ -2,12 +2,12 @@
   <!-- MODAL CONTAINER -->
   <div class="modal-container">
     <!-- OVERLAY -->
-    <div class="overlay modal-trigger"></div>
+    <div class="overlay modal-trigger" @click="this.$emit('show-modal')"></div>
     <!-- MODAL -->
     <div class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="dialogDesc">
       <!-- MODAL HEADER -->
       <div class="modal__header">
-        <button aria-label="close modal" class="close-modal modal-trigger">
+        <button aria-label="close modal" class="close-modal modal-trigger" @click="this.$emit('show-modal')">
           <FontAwesome style="color: white;" icon="fa-solid fa-xmark" />
         </button>
         <h3 class="modal__title fontsize__titles">Créer une publication</h3>
@@ -22,7 +22,7 @@
           <h2 class="post__name fontsize__p">
             {{ userInfos.name + ' ' + userInfos.lastname }}
           </h2>
-          <p class="post__date" @click="test">{{ date }}</p>
+          <p class="post__date">{{ new Date() }}</p>
         </div>
       </div>
       <!-- MODAL MAIN CONTENT -->
@@ -34,7 +34,7 @@
           <!-- <img v-if="this.imageUrl != null" :src="this.imageUrl" /> -->
         </div>
         <button @click="$refs.inputFile.click()" class="button__file">
-          <span v-if="status == 'loading'">Chargement du fichier en cours...</span>
+          <span v-if="status.includes('loading-createPost')">Chargement du fichier en cours...</span>
           <span v-else>Choisir une image</span>
         </button>
         <button @click="publishPost()" class="button__publish" :class="{ 'button--disabled': !validatedFields }">
@@ -51,11 +51,12 @@
 </template>
 
 <script>
-import axios from 'axios';
+// import axios from 'axios';
 import { mapState } from 'vuex';
 
 export default {
   name: 'CreatePostComponent',
+  emits: ["refresh-post","show-modal"],
   data: function (){
     return {
       
@@ -78,7 +79,6 @@ export default {
   },
   mounted: function () {
     this.toggleModal();
-    // this.$store.dispatch('getUserInfos', JSON.parse(localStorage.getItem('user')).userId)
   },
   methods: {
     toggleModal: function () {
@@ -92,21 +92,51 @@ export default {
       }
     },
     publishPost: function () {
-      const self = this;
-      const l = new FormData();
-      l.append('image', self.imageUrl, self.imageUrl.name);
-      l.append('post', self.$store.state.userInfos.name, self.$store.state.userInfos.lastname)
-      console.log(l.values)
-      axios.post('http://localhost:3000/api/posts', {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          'Authorization' : 'bearer ' + self.$store.state.user.token
-        },
-        data: l
+       const self = this;
+      // let myHeaders = new Headers();
+      // myHeaders.append("Authorization", 'Bearer ' + self.$store.state.user.token);
+      // let formdata = new FormData();
+      // // formdata.append("post", {
+      // //   name: this.userInfos.name,
+      // //   lastname: this.userInfos.lastname,
+      // //   description: this.description,
+      // //   photo: this.userInfos.photo,
+      // //   imageUrl: "",
+      // // });
+
+      // formdata.append("image", self.imageUrl, self.imageUrl.name);
+      // var requestOptions = {
+      //   method: 'POST',
+      //   headers: myHeaders,
+      //   body: formdata,
+      //   redirect: 'follow'
+      // };
+      // fetch("http://localhost:3000/api/posts", requestOptions)
+      //   .then(response => response.text())
+      //   .then(result => console.log(result))
+      //   .catch(error => console.log('error', error));
+      // const field = {
+      //     name: this.userInfos.name,
+      //     lastname: this.userInfos.lastname,
+          
+      //     photo: this.userInfos.photo,
+      //     imageUrl: "",
+      //   }
+      // const dataForm = new FormData();
+      // dataForm.append('image', self.imageUrl, self.imageUrl.name);
+      // dataForm.append('post', field)
+      // console.log(dataForm.values)
+      // axios.post('http://localhost:3000/api/posts', {
+      //   headers: {
+          
+      //     'Authorization' : 'bearer ' + self.$store.state.user.token,
+      //     'Content-Type': 'multipart/form-data'
+      //   },
+      //   data: dataForm
         
 
-      }).then(res => console.log(res))
-      .catch(err => console.log(err))
+      // }).then(res => console.log(res))
+      // .catch(err => console.log(err))
 
       // if (this.imageUrl != null && this.description == '') {
       //   const fd = new FormData();
@@ -163,30 +193,24 @@ export default {
       // if(this.imageUrl === null && this.description != '')
       // {
 
-      //   this.$store.dispatch('createPost', {
-      //     name: this.userInfos.name,
-      //     lastname: this.userInfos.lastname,
-      //     description: this.description,
-      //     photo: this.userInfos.photo,
+        this.$store.dispatch('createPost', {
+          name: this.userInfos.name,
+          lastname: this.userInfos.lastname,
+          description: this.description,
+          photo: this.userInfos.photo,
   
   
-      //   }).then(function () {
-      //     if (self.$route.path === '/profil') {
-      //       self.$store.dispatch('getUserFeed', self.$store.state.user.userId);
+        }).then(function () {
+          self.$emit('refresh-post');
+          if (self.$store.state.status.includes('post-created') === true) {
+            document.querySelector(".modal-container").classList.toggle("active");
+          }
   
-      //     }
-      //     else {
-      //       self.$store.dispatch('getAllPosts');
-      //     }
-      //     if (self.$store.state.status.includes('post-created') === true) {
-      //       document.querySelector(".modal-container").classList.toggle("active");
-      //     }
-  
-      //   })
-      //     .catch(function (error) {
-      //       console.log(error);
-      //     })
-      // }
+        })
+          .catch(function (error) {
+            console.log(error);
+          })
+      
     },
     onFileSelected(event) {
       this.imageUrl = event.target.files[0];
@@ -202,10 +226,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
-
 @import '../variables';
-
 
 .modal-container {
   /* display: none; */
