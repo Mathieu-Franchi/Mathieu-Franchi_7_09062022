@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import NotFoundView from '../views/NotFoundView.vue'
 import LoginRegisterView from '../views/LoginRegisterView.vue'
 import HomeView from '../views/HomeView.vue'
 import profilView from '../views/profilView'
@@ -32,9 +33,17 @@ const routes = [
       title: "Groupomania | Profil"
       
     },
-    
-     
   },
+  {
+    path: '/:pathMatch(.*)',
+    name: 'NotFound',
+    component: NotFoundView,
+    meta:  {
+      title: "Groupomania | 404 Not Found"
+      
+    },
+  },
+
   
 ]
 

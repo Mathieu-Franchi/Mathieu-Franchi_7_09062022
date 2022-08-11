@@ -56,7 +56,7 @@ import { mapState } from 'vuex';
 
 export default {
   name: 'CreatePostComponent',
-  emits: ["refresh-post","show-modal"],
+  emits: ["refresh-posts","show-modal"],
   data: function (){
     return {
       
@@ -192,16 +192,28 @@ export default {
       // }
       // if(this.imageUrl === null && this.description != '')
       // {
-
-        this.$store.dispatch('createPost', {
+         const field = {
           name: this.userInfos.name,
           lastname: this.userInfos.lastname,
           description: this.description,
           photo: this.userInfos.photo,
+          imageUrl: "",
+        }
+        URL.createObjectURL(this.imageUrl)
+        const fd = new FormData();
+        fd.append('image', this.imageUrl);
+        fd.append('post', field)
+        this.$store.dispatch('createPost', fd ,
+        // {
+        //   name: this.userInfos.name,
+        //   lastname: this.userInfos.lastname,
+        //   description: this.description,
+        //   photo: this.userInfos.photo,
   
   
-        }).then(function () {
-          self.$emit('refresh-post');
+        // }
+        ).then(function () {
+          self.$emit('refresh-posts');
           if (self.$store.state.status.includes('post-created') === true) {
             document.querySelector(".modal-container").classList.toggle("active");
           }

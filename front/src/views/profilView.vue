@@ -1,13 +1,16 @@
 <template>
   <HeaderHomeComponent @refresh-profil="refreshProfil()"/>
-  <CreatePostComponent />
+  <CreatePostComponent @refresh-posts="this.$store.dispatch('getUserFeed', user.userId);" @show-modal="showModal()"/>
   
   <div id="body_posts_profil">
     <div class="profil_container">
       <ProfilComponent />
     </div>
     <div class="posts_container">
-      <PostsHomeComponent @delete-post="deletePost($event)" />
+      <PostsHomeComponent :posts="this.postsUser"
+      @delete-post="deletePost($event)" 
+      @show-modal="showModal()" 
+      @refresh-post="this.$store.dispatch('getUserFeed');"/>
     </div>
   </div>
   <FooterComponent />
@@ -32,7 +35,7 @@ export default {
     
   },
   computed: {
-    ...mapState(['posts', 'userInfos', 'user', 'date', 'status'])
+    ...mapState(['postsUser', 'userInfos', 'user', 'date', 'status'])
   },
    beforeCreate: function () {
     if (!localStorage.getItem("user") || this.$store.state.user.userId == -1) {
@@ -63,6 +66,13 @@ export default {
           console.log(error);
         });
     },
+    showModal: function (){
+      const modalContainer = document.querySelector(".modal-container");
+      modalContainer.classList.toggle("active")
+    },
+
+
+
   }
 }
 </script>

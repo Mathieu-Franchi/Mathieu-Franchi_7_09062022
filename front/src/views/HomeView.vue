@@ -1,8 +1,11 @@
 <template>
   <HeaderHomeComponent @refresh-home="refreshHome()" />
-  <CreatePostComponent @show-modal="showModal()"/>
+  <CreatePostComponent @refresh-posts="this.$store.dispatch('getAllPosts');" @show-modal="showModal()"/>
   <div id="body_posts">
-    <PostsHomeComponent @delete-post="deletePost($event)" @show-modal="showModal()" @refresh-post="this.$store.dispatch('getAllPosts');"/>
+    <PostsHomeComponent :posts="this.posts" 
+    @delete-post="deletePost($event)" 
+    @show-modal="showModal()" 
+    @refresh-post="this.$store.dispatch('getAllPosts');"/>
   </div>
   <FooterComponent />
 </template>
@@ -15,7 +18,6 @@ import FooterComponent from '@/components/FooterComponent.vue'
 import { mapState } from 'vuex'
 export default {
   name: 'HomeView',
-
   beforeCreate: function () {
     if (!localStorage.getItem("user") || this.$store.state.user.userId == -1) {
       this.$router.push('/auth');

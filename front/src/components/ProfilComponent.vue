@@ -1,17 +1,16 @@
 <template>
     <section id="profil__section" >
-      <div class="profil__img__container">
+      <div class="profil__img__container" v-if="userInfos.photo != null">
         <img v-if="userInfos.photo != null" class="profil__img" crossorigin="http://localhost:3000/" :src="userInfos.photo" alt="Votre photo de profil" />
       </div>
         <div class="input-group">
-          <input type="file" class="profil__img__file" id="inputFile" aria-describedby="inputGroupFileAddon04"
-            aria-label="Upload">
+          <input type="file" class="profil__img__file" aria-label="Upload">
           <button class="btn__file" type="button">
             <!-- <FontAwesome class="fa__img" :icon="{ prefix: 'fas', iconName: 'bars' }" /> -->
           </button>
-          <div class="name">{{userInfos.email}}</div>
-          <div class="lastname">{{userInfos.name}}</div>
-          <div class="password">{{userInfos.lastname}}</div>
+          <div class="fields">{{userInfos.email}}</div>
+          <div class="fields">{{userInfos.name}}</div>
+          <div class="fields">{{userInfos.lastname}}</div>
         </div>
     </section>
 </template>
@@ -19,8 +18,6 @@
 <script>
 // import axios from 'axios';
 import { mapState } from 'vuex'
-
-
 export default {
   name: 'ProfilComponent',
   data: function (){
@@ -34,7 +31,7 @@ export default {
   
   computed: {
     
-    ...mapState(['userInfos','user','posts'])
+    ...mapState(['userInfos'])
   },
   methods: {
     
@@ -48,7 +45,7 @@ export default {
 #profil__section{
   display: flex;
   flex-direction: column;
-  align-items: center;
+  
 }
 .profil__img__container{
   width: 300px;
@@ -64,6 +61,12 @@ export default {
     height: 100%;
     border-radius: 50%;
   }
+}
+.profil__img__file{
+  padding: 20px;
+}
+.btn__file{
+  padding: 30px;
 }
 
 </style>

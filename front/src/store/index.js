@@ -32,8 +32,8 @@ const store = createStore({
       photo: null,
     },
     posts: [],
+    postsUser: [],
     date: new Date(),
-    
   },
   mutations: {
     addStatus: function (state, status) {
@@ -61,6 +61,9 @@ const store = createStore({
     },
     posts: function (state, posts){
       state.posts = posts;
+    },
+    postsUser: function (state, posts){
+      state.postsUser = posts;
     },
     setDate: function (state, date) {
       state.date = date;
@@ -146,7 +149,7 @@ const store = createStore({
         .then(function (response) {
           commit('removeStatus', 'loading-posts-user');
           commit('addStatus', 'get_posts_user');
-          commit('posts', response.data);
+          commit('postsUser', response.data);
           setTimeout (function(){
             commit('removeStatus', 'get_posts_user');
           },2000)

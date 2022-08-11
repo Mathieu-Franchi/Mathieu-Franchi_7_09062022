@@ -73,9 +73,10 @@
 <script>
 import { mapState } from 'vuex';
 
-    export default {
+export default {
     name: 'PostsHomeComponent',
-    components: {  },
+    components: {},
+    props: ['posts'],
     emits: ["delete-post","show-modal","refresh-post"],
     data: function () {
         return {
@@ -84,8 +85,10 @@ import { mapState } from 'vuex';
         }
     },
     computed:{
-       
-        ...mapState(['posts','userInfos', 'user','date','status'])
+        post: function () {
+            return this.posts
+        },
+        ...mapState(['userInfos', 'user','date','status'])
     },
     mounted: function () {
         this.showModal();
