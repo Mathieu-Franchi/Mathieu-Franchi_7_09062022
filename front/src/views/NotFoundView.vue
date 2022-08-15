@@ -1,15 +1,22 @@
 <template>
   <HeaderHomeComponent />
-  <div id="home">
-    <p class="txt">404 PAGE NOT FOUND </p>
-    <router-link to="/" class="back"><span class="txt_link">Retourner à l'accueil</span> </router-link>
+  <div id="container">
+    <div class="content">
+      <p class="txt">404 PAGE NOT FOUND </p>
+      <div class="button">
+
+        <router-link to="/" class="back">Retourner à l'accueil</router-link>
+      </div>
+
+    </div>
+
   </div>
-  <FooterComponent />
+ 
 </template>
 
 <script>
 import HeaderHomeComponent from '@/components/HeaderHomeComponent.vue'
-import FooterComponent from '@/components/FooterComponent.vue'
+
 
 export default {
   name: 'NotFoundView',
@@ -20,7 +27,7 @@ export default {
     return;
   },
   components: {
-    HeaderHomeComponent, FooterComponent, 
+    HeaderHomeComponent, 
   },
 }
 </script>
@@ -29,52 +36,51 @@ export default {
 
 
 
+
+
 @import '../variables';
 //BODY
-#home {
-    background-color: #3c3c3c;
+#container {
+  background-color: #3c3c3c;
+  display: flex;
+  flex-direction: column;
+  max-width: 100%;
+  align-items: center;
+  min-height: calc(100vh - 78px);;
+  .content {
+    margin-top: 5%;
     display: flex;
     flex-direction: column;
-    position: relative;
+    justify-content: center;
     align-items: center;
-    min-height: 100vh;
-    padding: 30px;
-
     .txt {
-        color: $secondary-color;
-        font-size: 5em;
-        padding: 30px;
-        position: absolute;
-        top: 20%;
-        bottom: 50%;
+      color: $secondary-color;
+      font-size: clamp(30px, 6vw, 10em);
+      padding: 30px 0px;
+    }
+    .back {
+      display: inline-block;
+      background: $secondary-color;
+      color: $third-color;
+      border-radius: 15px;
+      font-weight: 900;
+      font-size: clamp(18px, 3vw, 25px);
+      border: 1px solid transparent;
+      width: 100%;
+      min-width: 100px;
+      max-width: 350px;
+      transition: transform 0.2s ease-in-out, border 0.3s ease-in-out;
+      text-decoration: none;
+      padding: 10px;
     }
 
-        .back {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            position: absolute;
-            top: 40%;
-            bottom: 50%;
-            background: $secondary-color;
-            color: $third-color;
-            border-radius: 15px;
-            font-weight: 900;
-            font-size: 30px;
-            border: none;
-            width: 350px;
-            height: 40px;
-            transition: transform 0.2s ease-in-out, border 0.3s ease-in-out;
-            text-decoration: none;
-            .txt_link{
-                display: inline-block;
-            }
-        }
-                .back:hover{
-                    border: 1px solid $primary-color;
-                }
-                .back:active {
-                    transform: scale(0.92);
-                }
+    .back:hover {
+      border: 1px solid $primary-color;
+    }
+
+    .back:active {
+      transform: scale(0.96);
+    }
+  }
 }
 </style>
