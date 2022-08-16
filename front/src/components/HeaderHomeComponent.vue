@@ -86,7 +86,7 @@ header {
  }
 .logo__h1__header{
     
-    height: 78px;
+    height: 77px;
     width: 100%;
     
     .logo__link{

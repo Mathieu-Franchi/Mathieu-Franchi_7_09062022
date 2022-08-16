@@ -30,8 +30,7 @@
       <!-- button choose file + publish container -->
       <div class="buttons__container">
         <div class="drop_img">
-          <input type="file" @change="onFileSelected" ref="inputFile" class="button__file">
-          <!-- <img v-if="this.imageUrl != null" :src="this.imageUrl" /> -->
+          <input type="file" style="display: none;" @change="onFileSelected" ref="inputFile" class="button__file">
         </div>
         <button @click="$refs.inputFile.click()" class="button__file">
           <span v-if="status.includes('loading-createPost')">Chargement du fichier en cours...</span>

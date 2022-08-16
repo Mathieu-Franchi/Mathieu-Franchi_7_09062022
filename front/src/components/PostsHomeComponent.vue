@@ -7,7 +7,6 @@
             <button class="create__btn modal-trigger" @click="this.$emit('show-modal')" type="button">
                 <span class="create__btn__text">Quoi de neuf, {{userInfos.name}} ?</span>
             </button>
-
         </div>
         <!-- card post -->
         <div class="post" :key="post._id" v-for="post in posts">
@@ -268,6 +267,7 @@ export default {
         padding: 0px 10px 10px 10px;
         text-align: justify;
         font-weight: normal;
+        word-break: break-word;
         
     }
 }
