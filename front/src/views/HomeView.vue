@@ -1,21 +1,27 @@
 <template>
-  <HeaderHomeComponent @refresh-home="refreshHome()" />
-  <CreatePostComponent @refresh-posts="this.$store.dispatch('getAllPosts');" @show-modal="showModal()"/>
+  <HeaderComponent @refresh-home="refreshHome()" />
+  <CreatePostComponent 
+  v-if="showCreatePost"
+  @refresh-posts="this.$store.dispatch('getAllPosts');" 
+  @show-modal="showModal()"/>
   <div id="body_posts">
-    <PostsHomeComponent :posts="this.posts" 
-    @delete-post="deletePost($event)" 
-    @show-modal="showModal()" 
+    <ButtonCreatePost @show-modal="showModal()"/>
+    <PostsComponent 
+    :posts="this.posts" 
+    @delete-post="deletePost($event)"  
     @refresh-post="this.$store.dispatch('getAllPosts');"/>
   </div>
   <FooterComponent />
 </template>
 
 <script>
-import HeaderHomeComponent from '@/components/HeaderHomeComponent.vue'
+import HeaderComponent from '@/components/HeaderComponent.vue'
+import ButtonCreatePost from '@/components/ButtonCreatePost.vue'
 import CreatePostComponent from '@/components/CreatePostComponent.vue';
-import PostsHomeComponent from '@/components/PostsHomeComponent.vue'
+import PostsComponent from '@/components/PostsComponent.vue'
 import FooterComponent from '@/components/FooterComponent.vue'
 import { mapState } from 'vuex'
+
 export default {
   name: 'HomeView',
   beforeCreate: function () {
@@ -29,14 +35,23 @@ export default {
     this.$store.dispatch('getUserInfos', this.user.userId)
   },
   components: {
-    HeaderHomeComponent, PostsHomeComponent, FooterComponent, CreatePostComponent
+    HeaderComponent,
+    PostsComponent,
+    FooterComponent,
+    CreatePostComponent,
+    ButtonCreatePost
+  },
+  data: function () {
+    return {
+      showCreatePost: false
+    }
   },
   computed: {
-    ...mapState(['posts','userInfos', 'user','date','status'])
+    ...mapState(['posts', 'userInfos', 'user', 'date', 'status'])
   },
   methods: {
     refreshHome: function () {
-    this.$store.dispatch('getAllPosts')
+      this.$store.dispatch('getAllPosts')
       window.scrollTo({
         top: 0,
         left: 0,
@@ -51,12 +66,11 @@ export default {
           console.log(error);
         });
     },
-    showModal: function (){
-      const modalContainer = document.querySelector(".modal-container");
-      modalContainer.classList.toggle("active")
+    showModal: function () {
+      this.showCreatePost = !this.showCreatePost
     },
-    
-    
+
+
   }
 }
 </script>

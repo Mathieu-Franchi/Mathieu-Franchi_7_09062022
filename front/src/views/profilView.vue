@@ -1,15 +1,18 @@
 <template>
-  <HeaderHomeComponent @refresh-profil="refreshProfil()"/>
-  <CreatePostComponent @refresh-posts="this.$store.dispatch('getUserFeed', user.userId);" @show-modal="showModal()"/>
+  <HeaderComponent @refresh-profil="refreshProfil()"/>
+  <CreatePostComponent 
+  v-if="showCreatePost"
+  @refresh-posts="this.$store.dispatch('getUserFeed', user.userId);" 
+  @show-modal="showModal()"/>
   
   <div id="body_posts_profil">
     <div class="profil_container">
       <ProfilComponent />
     </div>
     <div class="posts_container">
-      <PostsHomeComponent :posts="this.postsUser"
+      <ButtonCreatePost @show-modal="showModal()"/>
+      <PostsComponent :posts="this.postsUser"
       @delete-post="deletePost($event)" 
-      @show-modal="showModal()" 
       @refresh-post="this.$store.dispatch('getUserFeed');"/>
     </div>
   </div>
@@ -19,10 +22,11 @@
 </template>
 
 <script>
-import HeaderHomeComponent from '@/components/HeaderHomeComponent.vue'
+import HeaderComponent from '@/components/HeaderComponent.vue'
 import ProfilComponent from '@/components/ProfilComponent.vue'
 import CreatePostComponent from '@/components/CreatePostComponent.vue';
-import PostsHomeComponent from '@/components/PostsHomeComponent.vue'
+import ButtonCreatePost from '@/components/ButtonCreatePost.vue'
+import PostsComponent from '@/components/PostsComponent.vue'
 import FooterComponent from '@/components/FooterComponent.vue'
 
 import { mapState } from 'vuex'
@@ -30,9 +34,15 @@ import { mapState } from 'vuex'
 export default {
   name: 'ProfilComponentView',
   components: {
-    HeaderHomeComponent, ProfilComponent, PostsHomeComponent, FooterComponent,
+    HeaderComponent, ProfilComponent, PostsComponent, FooterComponent,
+    ButtonCreatePost,
     CreatePostComponent
     
+  },
+  data: function () {
+    return {
+      showCreatePost: false
+    }
   },
   computed: {
     ...mapState(['postsUser', 'userInfos', 'user', 'date', 'status'])
@@ -66,9 +76,8 @@ export default {
           console.log(error);
         });
     },
-    showModal: function (){
-      const modalContainer = document.querySelector(".modal-container");
-      modalContainer.classList.toggle("active")
+    showModal: function () {
+      this.showCreatePost = !this.showCreatePost
     },
 
 

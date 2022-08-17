@@ -1,5 +1,5 @@
 <template>
-  <HeaderHomeComponent />
+  <HeaderComponent />
   <div id="container">
     <div class="content">
       <p class="txt">404 PAGE NOT FOUND </p>
@@ -11,12 +11,12 @@
     </div>
 
   </div>
- 
+ <FooterComponent/>
 </template>
 
 <script>
-import HeaderHomeComponent from '@/components/HeaderHomeComponent.vue'
-
+import HeaderComponent from '@/components/HeaderComponent.vue'
+import FooterComponent from '@/components/FooterComponent.vue'
 
 export default {
   name: 'NotFoundView',
@@ -27,7 +27,7 @@ export default {
     return;
   },
   components: {
-    HeaderHomeComponent, 
+    HeaderComponent, FooterComponent
   },
 }
 </script>

@@ -37,7 +37,7 @@
  
 import NavComponent from './NavComponent.vue';
     export default {
-    name: "HeaderHomeComponent",
+    name: "HeaderComponent",
     data: function () {
         return {
             showNav: false,//For show NAV
@@ -47,12 +47,7 @@ import NavComponent from './NavComponent.vue';
     
     methods: {
         toggleNav: function () {
-            if (this.showNav === false) {
-                this.showNav = true;
-            }
-            else {
-                this.showNav = false;
-            }
+            this.showNav = !this.showNav
         },
         logout: function() {
             this.$store.commit('logout');

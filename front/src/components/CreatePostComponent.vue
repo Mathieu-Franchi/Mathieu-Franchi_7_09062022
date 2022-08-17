@@ -58,7 +58,6 @@ export default {
   emits: ["refresh-posts","show-modal"],
   data: function (){
     return {
-      
       description: '',
       imageUrl: null,
     }
@@ -76,20 +75,7 @@ export default {
          
     ...mapState(['userInfos','date', 'status'])
   },
-  mounted: function () {
-    this.toggleModal();
-  },
   methods: {
-    toggleModal: function () {
-      const modalContainer = document.querySelector(".modal-container");
-      const modalTriggers = document.querySelectorAll(".modal-trigger");
-
-      modalTriggers.forEach(trigger => trigger.addEventListener("click", toggleModal))
-
-      function toggleModal() {
-        modalContainer.classList.toggle("active")
-      }
-    },
     publishPost: function () {
        const self = this;
       // let myHeaders = new Headers();
@@ -205,9 +191,9 @@ export default {
         fd.append('post', field)
         console.log(...fd)
         this.$store.dispatch('createPost', fd ,).then(function () {
-          self.$emit('refresh-posts');
-          if (self.$store.state.status.includes('post-created') === true) {
-            document.querySelector(".modal-container").classList.toggle("active");
+          if (self.$store.state.status.includes('post-created')) {
+            self.$emit('refresh-posts');
+            return self.$emit('show-modal');
           }
   
         })
@@ -227,40 +213,25 @@ export default {
 
 }
 </script>
-
 <style scoped lang="scss">
 @import '../variables';
 
 .modal-container {
-  /* display: none; */
-  visibility: hidden;
   position: fixed;
   top: 0;
   width: 100vw;
   height: 100vh;
-  transition: visibility 0.3s;
   z-index: 100;
-}
-.modal-container.active {
-  /* display: block; */
-  visibility: visible;
 }
 
 .overlay {
-  opacity: 0;
   position: absolute;
   width: 100%;
   height: 100%;
   background: #333333d3;
-  transition: opacity 0.3s 0.3s ease-out;
-}
-.modal-container.active .overlay {
-  opacity: 1;
-  transition: opacity 0.3s ease-out;
 }
 
 .modal {
-  opacity: 0;
   width: 100%;
   height: auto;
   max-width: 600px;
@@ -271,20 +242,11 @@ export default {
   top: 40%;
   left: 50%;
   transform: translate(-50%, calc(-50% - 50px));
-  transition: opacity 0.3s ease-out,
-  transform 0.3s ease-out;
-  
   display: flex;
   flex-direction: column;
 
 }
 
-.modal-container.active .modal {
-  opacity: 1;
-  transform: translate(-50%, -50%);
-  transition: opacity 0.2s 0.2s ease-out,
-  transform 0.2s 0.2s ease-out;
-}
 //Header modal
 .modal__header{
   width: 100%;
