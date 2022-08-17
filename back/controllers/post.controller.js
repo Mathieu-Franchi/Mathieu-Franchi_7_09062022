@@ -85,7 +85,7 @@ exports.getOnePost = (req, res, next) => {
 //get all
 exports.getAllPosts = (req, res, next) => {
     //récupère tout les posts de la base de donnée
-    Post.find()
+    Post.find().sort({date: -1})
         .then(posts => res.status(200).json(posts))
         .catch(error => res.status(400).json({ error }));
 };

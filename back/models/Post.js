@@ -13,7 +13,7 @@ const postSchema = mongoose.Schema({
   lastname : { type : String, required: true, match: /^[a-z ,.'-]+$/i },
   description: { type: String },
   imageUrl: { type: String },
-  date: { type: Date, default: Date.now() },
+  date: { type: Date, default: Date.now },
   comment: {commentairePostSchema},
   likes: { type: Number },
   dislikes: { type: Number },
