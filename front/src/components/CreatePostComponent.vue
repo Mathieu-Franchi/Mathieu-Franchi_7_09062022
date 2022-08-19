@@ -219,15 +219,21 @@ export default {
 .modal-container {
   position: fixed;
   top: 0;
-  width: 100vw;
-  height: 100vh;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 100;
 }
 
 .overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: #333333d3;
 }
 
@@ -238,10 +244,8 @@ export default {
   border: solid 1px $primary-color;
   background: #fff;
   border-radius: 5px;
-  position: absolute;
-  top: 40%;
-  left: 50%;
-  transform: translate(-50%, calc(-50% - 50px));
+  position: fixed;
+  top: 20%;
   display: flex;
   flex-direction: column;
 
@@ -340,6 +344,7 @@ export default {
     display: inline-block;
     border: none;
     outline: none;
+    cursor: pointer;
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 30px;
@@ -379,7 +384,14 @@ export default {
     background:#cecece;
   }
 }
-
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.3s;
+}
+.slide-enter,
+.slide-leave-to{
+  transform: translateY(-50%) translateX(100vw);
+}
   
 
 

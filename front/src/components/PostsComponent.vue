@@ -154,7 +154,7 @@ export default {
             justify-content: center;
             align-items: center;
             border-radius: 50%;
-            transition: background 0.2s ease-in-out, transform 0.2s ease-in-out;
+            transition: background 0.2s ease-in-out, transform 0.01s ease-in-out;
             
                 .fa__ellipsis {
                     font-size: 2.1em;
@@ -164,7 +164,7 @@ export default {
             background: $secondary-color;
         }
         .btn__modify:active{
-            transform: scale(0.92);
+            transform: scale(0.95);
         }
     }
   
@@ -247,7 +247,7 @@ export default {
         background: none;
         display: block;
         border-radius: 5px;
-        transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+        transition: background-color 0.2s ease-in-out, transform 0.01s ease-in-out;
 
     }
     .fa__like, .fa__comment
@@ -266,7 +266,7 @@ export default {
     }
     .post__btn__comment:active, .post__btn__like:active{
 
-        transform: scale(0.92);
+        transform: scale(0.95);
     }
     
 }
