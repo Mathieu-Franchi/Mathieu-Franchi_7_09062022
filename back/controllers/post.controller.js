@@ -96,7 +96,7 @@ exports.getUserFeed = (req, res, next) => {
     res.status(401).json({ message: 'Not authorized' });
   } else {
 
-    Post.find({ userId: req.params.id })
+    Post.find({ userId: req.params.id }).sort({date: -1})
       .then(posts => res.status(200).json(posts))
       .catch(error => res.status(400).json({ error }));
   }
@@ -105,9 +105,10 @@ exports.getUserFeed = (req, res, next) => {
 // LIKE DISLIKE
 exports.likePosts = (req, res, next) => {
     //const pour simplifier la lisibilitée du code
+    const name = req.body.name + ' ' + req.body.lastname;
     const like = req.body.like;
     const postId = req.params.id;
-    const userId = req.body.userId;
+    const userId = req.auth.userId;
     //on trouve le post grace à l'id recupéré dans l'url du front
     Post.findOne({ _id: postId })
     .then(function (post) {
@@ -119,7 +120,7 @@ exports.likePosts = (req, res, next) => {
             //si userId n'est pas inclus  et que le front renvoie like = 1
             Post.updateOne({ _id: postId },
               { //on incrémente les likes et on push userId dans le tableau des users ayant liké
-                $inc: { likes: 1 }, $push: { usersLiked: userId }
+                $inc: { likes: 1 }, $push: { usersLiked: {userId, name} }
               })
               .then(function () {
                 res.status(201).json({ message: "like" });

@@ -1,7 +1,7 @@
 import { createStore } from 'vuex'
 const axios = require('axios').default;
 const instance = axios.create({
-  baseURL:'http://localhost:3000/api/'
+  baseURL: process.env.VUE_APP_BACK
 });
 let user = localStorage.getItem('user');
 if (!user) {
@@ -175,7 +175,7 @@ const store = createStore({
           setTimeout (function(){
             commit('removeStatus', 'get_posts');
           },2000)
-          console.log('oui ça marche')
+          console.log(response.data)
         })
         .catch(function () {
           commit('removeStatus', 'loading-posts');

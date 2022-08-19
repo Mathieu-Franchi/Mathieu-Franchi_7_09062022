@@ -1,7 +1,7 @@
 <template>
     <section id="profil__section" >
       <div class="profil__img__container" v-if="userInfos.photo != null">
-        <img v-if="userInfos.photo != null" class="profil__img" crossorigin="http://localhost:3000/" :src="userInfos.photo" alt="Votre photo de profil" />
+        <img v-if="userInfos.photo != null" class="profil__img" crossorigin="anonymous" :src="userInfos.photo" alt="Votre photo de profil" />
       </div>
         <div class="input-group">
           <input type="file" class="profil__img__file" aria-label="Upload">

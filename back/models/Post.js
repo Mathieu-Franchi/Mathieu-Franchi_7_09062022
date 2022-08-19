@@ -6,6 +6,10 @@ var commentairePostSchema = new mongoose.Schema({
   contenu: String,
   date: { type: Date, default: Date.now() }
 });
+let ObjectLiked = new mongoose.Schema({
+  name: { type : String, match: /^[a-z ,.'-]+$/i },
+  userId: String,
+})
 const postSchema = mongoose.Schema({
   userId: { type: String, required: true },
   photo: {type: String },
@@ -17,7 +21,7 @@ const postSchema = mongoose.Schema({
   comment: {commentairePostSchema},
   likes: { type: Number },
   dislikes: { type: Number },
-  usersLiked: [String],
+  usersLiked: [ObjectLiked],
   usersDisliked: [String]
 });
 

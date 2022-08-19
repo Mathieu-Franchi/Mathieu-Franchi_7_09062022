@@ -15,7 +15,7 @@
       <!-- MODAL PROFIL -->
       <div class="post__profil">
         <div v-if="userInfos.photo != null" class="post__profil__img__container">
-          <img class="post__profil__img" v-if="userInfos.photo != null" crossorigin="http://localhost:3000/" :src="userInfos.photo"
+          <img class="post__profil__img" v-if="userInfos.photo != null" crossorigin="anonymous" :src="userInfos.photo"
             alt="Photo de profil" />
         </div>
         <div class="post__name__date">

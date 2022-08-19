@@ -13,7 +13,7 @@
             <form  v-on:submit.prevent="whatForm()">
             
                 <div class="form-row">
-                    <input v-model="email" @blur="mailTest()" class="form-row__input" type="text" placeholder="Adresse mail" />
+                    <input v-model="email" @focusout="mailTest()" class="form-row__input" type="text" placeholder="Adresse mail" />
                 </div>
                 <div class="form-row" v-if="mode == 'create'">
                     <input v-model="name" @focusout="nameTest()" minlength="2" maxlength="26" class="form-row__input" type="text" placeholder="Prénom" />
@@ -172,6 +172,7 @@ export default {
                 })
             }
             else {
+                if(this.validatedFields == false && this.regexFields == true)
                 console.log('nope-create');
             }
         },

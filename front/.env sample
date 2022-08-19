@@ -1,0 +1,4 @@
+//Create a .env file like and write your backend server between brackets < > ( dont forget the "/api/")
+//write between and delete brackets
+//exemple :
+VUE_APP_BACK="<http://localhost:3000/api/>"
