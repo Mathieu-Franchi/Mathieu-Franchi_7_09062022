@@ -33,7 +33,6 @@ const store = createStore({
     },
     posts: [],
     postsUser: [],
-    date: new Date(),
   },
   mutations: {
     addStatus: function (state, status) {
@@ -65,9 +64,6 @@ const store = createStore({
     postsUser: function (state, posts){
       state.postsUser = posts;
     },
-    setDate: function (state, date) {
-      state.date = date;
-    },
   },
   actions: {
     /***** USER METHODS *****/
@@ -81,7 +77,7 @@ const store = createStore({
           commit('logUser', response.data);
           setTimeout(function () {
             commit('removeStatus', 'login');
-          }, 3000)
+          }, 3500)
           resolve(response);
         })
         .catch(function (error) {
@@ -89,7 +85,7 @@ const store = createStore({
           commit('addStatus', 'error_login');
           setTimeout(function () {
             commit('removeStatus', 'error_login');
-          }, 3000)
+          }, 3500)
           reject(error);
         });
       });
@@ -104,7 +100,7 @@ const store = createStore({
           commit('addStatus', 'account-created');
           setTimeout(function () {
             commit('removeStatus', 'account-created');
-          }, 3000)
+          }, 3500)
           resolve(response);
         })
         .catch(function (error) {
@@ -112,13 +108,13 @@ const store = createStore({
           commit('addStatus', 'error_create');
           setTimeout(function () {
             commit('removeStatus', 'error_create');
-          }, 3000)
+          }, 3500)
           reject(error);
           if(error.response.data.error.errors.email.kind == 'unique'){
             commit('addStatus', 'error_unique')
             setTimeout(function () {
               commit('removeStatus', 'error_unique');
-            }, 3000)
+            }, 3500)
           }
         });
       });

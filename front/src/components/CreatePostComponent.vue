@@ -73,7 +73,7 @@ export default {
 
     },
          
-    ...mapState(['userInfos','date', 'status'])
+    ...mapState(['userInfos', 'status'])
   },
   methods: {
     publishPost: function () {
@@ -368,12 +368,15 @@ export default {
     outline: none;
     width: 100%;
     padding: 16px;
-    transition: .4s background-color;
+    transition: .4s background-color, transform 0.01s ease-in-out;;
     cursor: pointer;
   }
   .button__publish:hover {
   
     background: $secondary-color;
+  }
+  .button__publish:active {
+    transform: scale(0.96);
   }
   .button--disabled {
     background:#cecece;

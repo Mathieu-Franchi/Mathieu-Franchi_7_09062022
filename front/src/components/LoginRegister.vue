@@ -20,7 +20,7 @@
                     <input v-model="lastname" @focusout="lastnameTest()" minlength="2" maxlength="16" class="form-row__input" type="text" placeholder="Nom" />
                 </div>
                 <div class="form-row">
-                    <input v-model="password" @focusout="passwordTest()" class="form-row__input password__type" type="password"
+                    <input v-model="password" @focusout="passwordTest()" @keyup="ValidPassword()" class="form-row__input password__type" type="password"
                         aria-label="Password" placeholder="Mot de passe" />
                     <button @click="toggleMaskPassword" class="eye__button" type="button">
                         <FontAwesome v-if="toggleMask" class="fa__eye__mask" aria-hidden="true"
@@ -31,13 +31,13 @@
                 <div class="regex-mdp" v-if="mode == 'create'">
                     <div class="msg"></div>
                 </div>
-                <div class="form-row" v-if="mode == 'login' && status == 'error_login'">
+                <div class="form-row" style="color: red;" v-if="mode == 'login' && status.includes('error_login')">
                     Adresse mail et/ou mot de passe invalide
                 </div>
-                <div class="form-row" v-if="mode == 'create' && status.includes('error_unique')">
+                <div class="form-row" style="color: red;" v-if="mode == 'create' && status.includes('error_unique')">
                     Adresse mail déjà utilisée
                 </div>
-                <div class="form-row" v-if="mode == 'create' && status.includes('error_create')">
+                <div class="form-row" style="color: red;" v-if="mode == 'create' && status.includes('error_create')">
                     Champs invalide
                 </div>
                 <div class="form-row">
@@ -58,13 +58,14 @@
 </template>
 
 <script>
-import { mapMutations, mapState } from 'vuex'
+import { mapState } from 'vuex'
 export default {
     name: 'LoginRegister',
     data: function () {
         return {
             //to switch login or create account
             mode: 'login',
+            //fields required
             email: '',
             name: '',
             lastname: '',
@@ -73,14 +74,11 @@ export default {
             toggleMask: false,
             //regex mail
             regexMail: new RegExp (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/),
-            
-            invalidMail: false,
             //regex name
             regexName: new RegExp (/^[a-z ,.'-]+$/i),
-            invalidName: false,
             //regex password
             regexPassword: new RegExp (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,32}$/),
-            invalidPassword: false,
+            checkingPassword: false,
         }
     },
   
@@ -141,7 +139,7 @@ export default {
         },
         
         login: function () {
-            if(this.validatedFields == true && this.regexFields == true){
+            if(this.regexFields == true){
 
                 const self = this;
                 this.$store.dispatch('login', {
@@ -158,7 +156,7 @@ export default {
             }
         },
         createAccount: function () {
-            if (this.validatedFields == true && this.regexFields == true) {
+            if (this.regexFields == true) {
                 const self = this;
                 this.$store.dispatch('createAccount', {
                     email: this.email,
@@ -172,7 +170,6 @@ export default {
                 })
             }
             else {
-                if(this.validatedFields == false && this.regexFields == true)
                 console.log('nope-create');
             }
         },
@@ -235,8 +232,6 @@ export default {
         },
 
         /******REGEX TEST ******/
-       
-        ...mapMutations(['addStatus'])
     }
 }
 </script>

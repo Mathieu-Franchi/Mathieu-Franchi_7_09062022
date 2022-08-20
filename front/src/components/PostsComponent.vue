@@ -12,7 +12,7 @@
                         <h2 class="post__name">
                             {{ post.name + ' ' + post.lastname }}
                         </h2>
-                        <p class="post__date">{{post.date}}</p>
+                        <p class="post__date">{{dayjs(post.date).fromNow()}}</p>
                     </div>
                 </div>
                 <!-- profil img + name and date -->
@@ -55,12 +55,17 @@
                 </div>
             </div>
             <div class="post__comment__section">
-
             </div>
 
         </div>
 </template>
+
 <script>
+import dayjs from 'dayjs';
+dayjs.locale('fr')
+console.log(dayjs.locale('jap'))
+var relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime)
 import { mapState } from 'vuex';
 
 export default {
@@ -70,7 +75,7 @@ export default {
     emits: ["delete-post","refresh-post"],
     data: function () {
         return {
-            
+            dayjs
             
         }
     },
@@ -78,7 +83,7 @@ export default {
         post: function () {
             return this.posts
         },
-        ...mapState(['user','date','status'])
+        ...mapState(['user','status'])
     },
     methods: {
         deletePost: function (postId) {
@@ -129,6 +134,7 @@ export default {
         .post__name__date{
                 .post__name{
                     font-size: 20px;
+                    word-break: break-word;
 
                 }
                 .post__date{

@@ -24,6 +24,7 @@
                     <router-link class="nav__a" to="/auth" @click="logout">Déconnexion</router-link>
                 </li>
             </ul>
+            <div v-if="showNav" @click="toggleNav" class="overlayNav"></div>
             <NavComponent v-if="showNav" class="NavComponent" 
             @refresh-home="this.$emit('refresh-home');" 
             @refresh-profil="this.$emit('refresh-profil');"
@@ -58,6 +59,13 @@ import NavComponent from './NavComponent.vue';
 </script>
 <style scoped lang="scss">
 @import '../variables';
+.overlayNav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
 header {
 
     display: flex;
@@ -203,13 +211,20 @@ header {
     transform: translate(0) rotate(-135deg);
   }
 }
-
-//cant have the menu burger when
-@media all and (min-width: 900px){
-    .NavComponent {
-        display: none;
-     }
-
+@media all and (max-width: 1600px){
+    header {
+        height: 70px;
+    }
+    .logo__h1__header {
+    height: 68px;
+    }
+    .nav__burger__list {
+        top: 70px
+    }
 }
-
+@media all and (max-width: 900px){
+#nav__header {
+    height: 68px;
+    }
+}
 </style>
