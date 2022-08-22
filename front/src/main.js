@@ -10,6 +10,13 @@ import { fas } from '@fortawesome/free-solid-svg-icons' //all solid svg icons
 import { fab } from '@fortawesome/free-brands-svg-icons' //all brand svg icons
 /* add icons to the library */
 library.add(fas, far, fab);
+
+//dayjs
+// import dayjs from 'dayjs';
+// require('dayjs/locale/fr')
+// dayjs.locale('fr')
+// var relativeTime = require('dayjs/plugin/relativeTime')
+// dayjs.extend(relativeTime)
 //Write like this : <FontAwesome :icon="{prefix:'fas',iconName: 'exempleIcon'}"/>  
 //Axios
 // import Axios from "axios"

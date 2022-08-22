@@ -22,7 +22,7 @@
           <h2 class="post__name fontsize__p">
             {{ userInfos.name + ' ' + userInfos.lastname }}
           </h2>
-          <p class="post__date">{{ new Date() }}</p>
+          <p class="post__date">{{ dayjs(Date.now()).format('DD/MM/YYYY') }}</p>
         </div>
       </div>
       <!-- MODAL MAIN CONTENT -->
@@ -52,6 +52,13 @@
 <script>
 // import axios from 'axios';
 import { mapState } from 'vuex';
+import dayjs from 'dayjs';
+
+require('dayjs/locale/fr')
+dayjs.locale('fr')
+var relativeTime = require('dayjs/plugin/relativeTime')
+dayjs.extend(relativeTime)
+
 
 export default {
   name: 'CreatePostComponent',
@@ -60,6 +67,7 @@ export default {
     return {
       description: '',
       imageUrl: null,
+      dayjs,
     }
   },
   computed: {
@@ -206,7 +214,7 @@ export default {
       this.imageUrl = event.target.files[0];
       console.log(this.imageUrl);
     },
-    
+   
   },
 
 
@@ -218,22 +226,17 @@ export default {
 
 .modal-container {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0px;
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 100;
+  overflow: hidden auto;
 }
 
 .overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0px;
   background: #333333d3;
 }
 
@@ -244,8 +247,8 @@ export default {
   border: solid 1px $primary-color;
   background: #fff;
   border-radius: 5px;
-  position: fixed;
-  top: 20%;
+  // position: fixed;
+  position: relative;//scrollmodal
   display: flex;
   flex-direction: column;
 

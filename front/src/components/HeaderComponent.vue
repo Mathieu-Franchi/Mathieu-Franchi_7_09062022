@@ -227,4 +227,10 @@ header {
     height: 68px;
     }
 }
+//cant have the menu burger when
+@media all and (min-width: 900px){
+    .NavComponent {
+        display: none;
+     }
+}
 </style>
