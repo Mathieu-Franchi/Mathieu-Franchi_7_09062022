@@ -20,7 +20,7 @@
                     <input v-model="lastname" @focusout="lastnameTest()" minlength="2" maxlength="16" class="form-row__input" type="text" placeholder="Nom" />
                 </div>
                 <div class="form-row">
-                    <input v-model="password" @focusout="passwordTest()" @keyup="ValidPassword()" class="form-row__input password__type" type="password"
+                    <input v-model="password" @focusout="passwordTest()" class="form-row__input password__type" type="password"
                         aria-label="Password" placeholder="Mot de passe" />
                     <button @click="toggleMaskPassword" class="eye__button" type="button">
                         <FontAwesome v-if="toggleMask" class="fa__eye__mask" aria-hidden="true"

@@ -50,15 +50,8 @@
 </template>
 
 <script>
-// import axios from 'axios';
 import { mapState } from 'vuex';
-import dayjs from 'dayjs';
-
-require('dayjs/locale/fr')
-dayjs.locale('fr')
-var relativeTime = require('dayjs/plugin/relativeTime')
-dayjs.extend(relativeTime)
-
+import dayjs from '@/_services/dayjs';
 
 export default {
   name: 'CreatePostComponent',

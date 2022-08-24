@@ -1,8 +1,6 @@
 import { createStore } from 'vuex'
-const axios = require('axios').default;
-const instance = axios.create({
-  baseURL: process.env.VUE_APP_BACK
-});
+import instance from '@/_services/caller.service'
+import router from '@/router';
 let user = localStorage.getItem('user');
 if (!user) {
  user = {
@@ -57,6 +55,7 @@ const store = createStore({
         token: '',
       }
       localStorage.removeItem('user');
+      router.push('/auth');
     },
     posts: function (state, posts){
       state.posts = posts;
@@ -92,7 +91,6 @@ const store = createStore({
     },
     createAccount: ({commit}, userForm) => {
       commit('addStatus', 'loading-account');
-      // console.log(this.$store.state.status.)
       return new Promise((resolve, reject) => {
         instance.post('/auth/signup', userForm)
         .then(function (response) {

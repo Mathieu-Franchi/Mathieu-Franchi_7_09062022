@@ -11,28 +11,4 @@ import { fab } from '@fortawesome/free-brands-svg-icons' //all brand svg icons
 /* add icons to the library */
 library.add(fas, far, fab);
 
-//dayjs
-// import dayjs from 'dayjs';
-// require('dayjs/locale/fr')
-// dayjs.locale('fr')
-// var relativeTime = require('dayjs/plugin/relativeTime')
-// dayjs.extend(relativeTime)
-//Write like this : <FontAwesome :icon="{prefix:'fas',iconName: 'exempleIcon'}"/>  
-//Axios
-// import Axios from "axios"
-// const instance = Axios.create({
-//     baseURL: process.env.VUE_APP_BACK
-//   });
-// //Interceptor request response
-// instance.interceptors.response.use(function (response){
-//     return response;
-// }, function (error) {
-//     if (error.response.status == 401) {
-        
-//         // router.push('/auth')
-
-//     }
-//     return Promise.reject(error);
-// })
-// export default instance
 createApp(App).use(store).use(router).component('FontAwesome', FontAwesomeIcon).mount('#app')

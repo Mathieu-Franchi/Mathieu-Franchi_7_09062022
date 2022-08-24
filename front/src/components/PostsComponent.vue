@@ -61,16 +61,7 @@
 </template>
 
 <script>
- import dayjs from 'dayjs';
-
-require('dayjs/locale/fr')
-dayjs.locale('fr')
-var relativeTime = require('dayjs/plugin/relativeTime')
-dayjs.extend(relativeTime)
-// dayjs.locale('fr')
-// console.log(dayjs.locale('jap'))
-// var relativeTime = require('dayjs/plugin/relativeTime')
-// dayjs.extend(relativeTime)
+import dayjs from '@/_services/dayjs';
 import { mapState } from 'vuex';
 
 export default {
@@ -80,7 +71,7 @@ export default {
     emits: ["delete-post","refresh-post"],
     data: function () {
         return {
-             dayjs
+            dayjs
             
         }
     },
