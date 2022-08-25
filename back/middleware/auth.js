@@ -9,8 +9,9 @@ module.exports = (req, res, next) => {
         const decodedToken = jwt.verify(token, process.env.TOKEN);
         const userId = decodedToken.userId;
         req.auth = { userId };
+        req.auth.isAdmin = decodedToken.isAdmin
         //si on a un userId dans le corps de la requête et qu'il est différent du userId decodé
-        if (req.body.userId && req.body.userId !== userId){
+        if (req.body.userId && req.body.userId !== userId  && decodedToken.isAdmin === false){
             throw 'User ID non valable !';
 
         }

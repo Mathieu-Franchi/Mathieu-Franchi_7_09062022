@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const fs = require('fs');
 const User = require('../models/User');
-//SIGNUP LOGIN
+//SIGNUP 
 exports.signup = (req, res, next) => {
    let password = req.body.password;
    //Minimum 6 and maximum 32 characters, at least one uppercase letter, one lowercase letter, one number and one special character:
@@ -28,6 +28,7 @@ exports.signup = (req, res, next) => {
      .catch(error => res.status(500).json({error}));
    }
 }
+//LOGIN
 exports.login = (req, res, next) => {
   User.findOne({ email: req.body.email })
     .then(user => {
@@ -42,7 +43,9 @@ exports.login = (req, res, next) => {
           res.status(200).json({
             userId: user._id,
             token: jwt.sign(//payload
-              { userId: user._id },
+              { userId: user._id,
+                isAdmin: user.isAdmin
+              },
               process.env.TOKEN,
               { expiresIn: '24h' }
             )
@@ -52,8 +55,29 @@ exports.login = (req, res, next) => {
     })
     .catch(error => res.status(500).json({ error }));
 };
+//GET USER INFOS
+exports.getUserInfos = (req, res, next) => {
+  User.findOne({ _id: req.params.id })
+    .then(user => {
+      if (user._id != req.auth.userId && req.auth.isAdmin === false) {
+        res.status(401).json({ message: 'Not authorized' });
+      } else {
+        const userInfos =
+        {
+          email: user.email,
+          name: user.name,
+          lastname: user.lastname,
+          photo: user.photo,
+          isAdmin: user.isAdmin
+        };
+        res.status(200).json(userInfos)
+      }
+    })
+    .catch(error => {
+      res.status(404).json({ error });
+    });
 
-//OneUser
+};
 //modify ONE user
 exports.modifyUser = (req, res, next) => {
   const userInfos = req.file ? {
@@ -64,7 +88,7 @@ exports.modifyUser = (req, res, next) => {
   delete userInfos._id;
   User.findOne({_id: req.params.id})
   .then((user) => {
-    if (user._id != req.auth.userId) {
+    if (user._id != req.auth.userId && req.auth.isAdmin === false) {
       res.status(401).json({ message: 'Not authorized' });
     } else {
       User.updateOne({ _id: req.auth.userId }, { ...userInfos, _id: req.auth.userId })
@@ -76,32 +100,11 @@ exports.modifyUser = (req, res, next) => {
     res.status(400).json({ error });
   });
 }
-exports.getUserInfos = (req, res, next) => {
-  User.findOne({ _id: req.params.id })
-    .then(user => {
-      if (user._id != req.auth.userId) {
-        res.status(401).json({ message: 'Not authorized' });
-      } else {
-        const userInfos =
-        {
-          email: user.email,
-          name: user.name,
-          lastname: user.lastname,
-          photo: user.photo
-        };
-        res.status(200).json(userInfos)
-      }
-    })
-    .catch(error => {
-      res.status(404).json({ error });
-    });
-
-};
 //Delete user
 exports.deleteUser = (req, res, next) => {
   User.findOne({ _id: req.params.id })
     .then(user => {
-      if (user.userId != req.auth.userId) {
+      if (user.userId != req.auth.userId && req.auth.isAdmin === false) {
         res.status(401).json({ message: 'Not authorized' });
       } else {
         if (user.photo) {

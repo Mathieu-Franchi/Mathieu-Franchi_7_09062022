@@ -14,7 +14,7 @@ const mongoose = require('mongoose');
 // import path : pour accéder au chemin d'un dossier statique (ici sur notre pc)
 const path = require('path');
 
-const cookieParser = require('cookie-parser')
+// const cookieParser = require('cookie-parser')
 // alternative à express.json
 // const bodyParser = require('body-parser'); 
 
@@ -39,7 +39,8 @@ app.use(helmet());
 // Middleware  : réponse pour n'importe quelle requête
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization');
+  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization',
+  'application/x-www-form-urlencoded','multipart/form-data');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
   next();
 });

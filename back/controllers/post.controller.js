@@ -39,7 +39,7 @@ exports.modifyPost = (req, res, next) => {
   delete postObject._userId;
   Post.findOne({ _id: req.params.id })
     .then((post) => {
-      if (post.userId != req.auth.userId) {
+      if (post.userId != req.auth.userId && req.auth.isAdmin === false) {
         res.status(401).json({ message: 'Not authorized' });
       } else {
         Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
@@ -55,7 +55,7 @@ exports.modifyPost = (req, res, next) => {
 exports.deletePost = (req, res, next) => {
   Post.findOne({ _id: req.params.id })
     .then(post => {
-      if (post.userId != req.auth.userId) {
+      if (post.userId != req.auth.userId && req.auth.isAdmin === false) {
         res.status(401).json({ message: 'Not authorized' });
       } else {
         if (post.imageUrl) {
@@ -92,7 +92,7 @@ exports.getAllPosts = (req, res, next) => {
 
 //get user feed
 exports.getUserFeed = (req, res, next) => {
-  if (req.params.id != req.auth.userId) {
+  if (req.params.id != req.auth.userId && req.auth.isAdmin === false) {
     res.status(401).json({ message: 'Not authorized' });
   } else {
 
