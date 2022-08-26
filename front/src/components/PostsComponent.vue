@@ -18,7 +18,7 @@
                 <!-- profil img + name and date -->
 
                 <!-- btn modify  -->
-                <div class="post__btn__modify" @click="deletePost(post._id);" v-if="post.userId === user.userId || user.isAdmin === true">
+                <div class="post__btn__modify" @click="deletePost(post._id);" v-if="post.userId === user.userId || userInfos.isAdmin === true">
                     <button class="btn__modify" type="button">
                         <FontAwesome class="fa__ellipsis" icon="fa-solid fa-ellipsis" />
                     </button>
@@ -79,7 +79,7 @@ export default {
         post: function () {
             return this.posts
         },
-        ...mapState(['user','status'])
+        ...mapState(['user','status','userInfos'])
     },
     methods: {
         deletePost: function (postId) {

@@ -56,6 +56,7 @@ const store = createStore({
       }
       localStorage.removeItem('user');
       router.push('/auth');
+      delete instance.defaults.headers.common['Authorization'];
     },
     posts: function (state, posts){
       state.posts = posts;

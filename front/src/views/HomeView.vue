@@ -4,13 +4,13 @@
   v-if="showCreatePost"
   @refresh-posts="this.$store.dispatch('getAllPosts');" 
   @show-modal="showModal()"/>
-  <div id="body_posts">
+  <main id="body_posts">
     <ButtonCreatePost @show-modal="showModal()"/>
     <PostsComponent 
     :posts="this.posts" 
     @delete-post="deletePost($event)"  
     @refresh-post="this.$store.dispatch('getAllPosts');"/>
-  </div>
+  </main>
   <FooterComponent />
 </template>
 

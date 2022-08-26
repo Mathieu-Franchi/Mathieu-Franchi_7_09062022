@@ -1,4 +1,3 @@
-//   import router from '@/router';
 import store from '@/store';
 import axios from 'axios'
 
@@ -12,6 +11,7 @@ instance.interceptors.response.use(response => {
     if (error.response.status == 401){
 
         store.commit('logout')
+         
         
     }
 })
