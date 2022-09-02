@@ -33,7 +33,7 @@
           <input type="file" style="display: none;" @change="onFileSelected" ref="inputFile" class="button__file">
         </div>
         <button @click="$refs.inputFile.click()" class="button__file">
-          <span v-if="status.includes('loading-createPost')">Chargement du fichier en cours...</span>
+          <span v-if="this.imageUrl != null">Image chargé !</span>
           <span v-else>Choisir une image</span>
         </button>
         <button @click="publishPost()" class="button__publish" :class="{ 'button--disabled': !validatedFields }">
@@ -78,130 +78,76 @@ export default {
   },
   methods: {
     publishPost: function () {
-       const self = this;
-      // let myHeaders = new Headers();
-      // myHeaders.append("Authorization", 'Bearer ' + self.$store.state.user.token);
-      // let formdata = new FormData();
-      // // formdata.append("post", {
-      // //   name: this.userInfos.name,
-      // //   lastname: this.userInfos.lastname,
-      // //   description: this.description,
-      // //   photo: this.userInfos.photo,
-      // //   imageUrl: "",
-      // // });
+      if (this.validatedFields) {
+        const self = this;
 
-      // formdata.append("image", self.imageUrl, self.imageUrl.name);
-      // var requestOptions = {
-      //   method: 'POST',
-      //   headers: myHeaders,
-      //   body: formdata,
-      //   redirect: 'follow'
-      // };
-      // fetch("http://localhost:3000/api/posts", requestOptions)
-      //   .then(response => response.text())
-      //   .then(result => console.log(result))
-      //   .catch(error => console.log('error', error));
-      // const field = {
-      //     name: this.userInfos.name,
-      //     lastname: this.userInfos.lastname,
-          
-      //     photo: this.userInfos.photo,
-      //     imageUrl: "",
-      //   }
-      // const dataForm = new FormData();
-      // dataForm.append('image', self.imageUrl, self.imageUrl.name);
-      // dataForm.append('post', field)
-      // console.log(dataForm.values)
-      // axios.post('http://localhost:3000/api/posts', {
-      //   headers: {
-          
-      //     'Authorization' : 'bearer ' + self.$store.state.user.token,
-      //     'Content-Type': 'multipart/form-data'
-      //   },
-      //   data: dataForm
-        
+        if (this.imageUrl != null && this.description != '') {
+          let field = {
+            name: this.userInfos.name,
+            lastname: this.userInfos.lastname,
+            description: this.description,
+            photo: this.userInfos.photo,
 
-      // }).then(res => console.log(res))
-      // .catch(err => console.log(err))
-
-      // if (this.imageUrl != null && this.description == '') {
-      //   const fd = new FormData();
-      //   fd.append('image', this.imageUrl, this.imageUrl.name);
-      //   this.$store.dispatch('createPostFormData', fd)
-      //     .then(function () {
-      //       if (self.$route.path === '/profil') {
-      //         self.$store.dispatch('getUserFeed', self.$store.state.user.userId);
-
-      //       }
-      //       else {
-      //         self.$store.dispatch('getAllPosts');
-      //       }
-      //       if (self.$store.state.status.includes('post-created') === true) {
-      //         document.querySelector(".modal-container").classList.toggle("active");
-      //       }
-
-      //     })
-      //     .catch(function (error) {
-      //       console.log(error);
-      //     })
-
-      // }
-      // if (this.imageUrl != null && this.description != '')
-      // {
-      //   const field = {
-      //     name: this.userInfos.name,
-      //     lastname: this.userInfos.lastname,
-      //     description: this.description,
-      //     photo: this.userInfos.photo,
-      //     imageUrl: "",
-      //   }
-      //   const fd = new FormData();
-      //   fd.append('image', this.imageUrl);
-      //   fd.append('post', field)
-      //   this.$store.dispatch('createPostFormData', fd)
-      //     .then(function () {
-      //       if (self.$route.path === '/profil') {
-      //         self.$store.dispatch('getUserFeed', self.$store.state.user.userId);
-
-      //       }
-      //       else {
-      //         self.$store.dispatch('getAllPosts');
-      //       }
-      //       if (self.$store.state.status.includes('post-created') === true) {
-      //         document.querySelector(".modal-container").classList.toggle("active");
-      //       }
-
-      //     })
-      //     .catch(function (error) {
-      //       console.log(error);
-      //     })
-      // }
-      // if(this.imageUrl === null && this.description != '')
-      // {
-         let field = {
-          name: this.userInfos.name,
-          lastname: this.userInfos.lastname,
-          description: this.description,
-          photo: this.userInfos.photo,
-          imageUrl: "",
-        }
-        field = JSON.stringify(field)
-        // URL.createObjectURL(this.imageUrl)
-        const fd = new FormData();
-        fd.append('image', this.imageUrl);
-        fd.append('post', field)
-        console.log(...fd)
-        this.$store.dispatch('createPost', fd ,).then(function () {
-          if (self.$store.state.status.includes('post-created')) {
-            self.$emit('refresh-posts');
-            return self.$emit('show-modal');
           }
-  
-        })
-          .catch(function (error) {
-            console.log(error);
-          })
-      
+          field = JSON.stringify(field)
+          const fd = new FormData();
+          fd.append('image', this.imageUrl);
+          fd.append('post', field)
+          
+          this.$store.dispatch('createPost', {data: fd, type: 0})
+            .then(function () {
+              if (self.$store.state.status.includes('post-created')) {
+                self.$emit('refresh-posts');
+
+                return self.$emit('show-modal');
+              }
+
+            })
+
+        }
+        if (this.imageUrl != null && this.description === '') {
+          
+          let field = {
+            name: this.userInfos.name,
+            lastname: this.userInfos.lastname,
+            photo: this.userInfos.photo,
+
+          }
+          field = JSON.stringify(field)
+          const fd = new FormData();
+          fd.append('image', this.imageUrl);
+          fd.append('post', field);
+          this.$store.dispatch('createPost', {data: fd, type: 0})
+            .then(function () {
+              if (self.$store.state.status.includes('post-created')) {
+                self.$emit('refresh-posts');
+
+                return self.$emit('show-modal');
+              }
+
+            })
+        }
+        if (this.imageUrl === null && this.description != ''){
+          
+          let field = {
+            name: this.userInfos.name,
+            lastname: this.userInfos.lastname,
+            photo: this.userInfos.photo,
+            description: this.description
+          }
+          this.$store.dispatch('createPost', {data: field, type: 1})
+            .then(function () {
+              if (self.$store.state.status.includes('post-created')) {
+                self.$emit('refresh-posts');
+
+                return self.$emit('show-modal');
+              }
+
+            })
+        }
+
+      }
+
     },
     onFileSelected(event) {
       this.imageUrl = event.target.files[0];

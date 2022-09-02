@@ -9,10 +9,8 @@ instance.interceptors.response.use(response => {
 }, error => {
     
     if (error.response.status == 401){
-
         store.commit('logout')
-         
-        
+        return Promise.reject(error)
     }
 })
 

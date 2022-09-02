@@ -44,7 +44,7 @@
             <div class="post__footer__border"></div>
             <div class="post__footer">
                 <div class="post__container__btn__like">
-                    <button class="post__btn__like" type="button">
+                    <button class="post__btn__like" type="button" @click="like(post.usersLiked, post._id)">
                         <FontAwesome class="fa__like" icon="fa-solid fa-thumbs-up" />
                     </button>
                 </div>
@@ -85,6 +85,18 @@ export default {
         deletePost: function (postId) {
             this.$emit('delete-post', postId);
         },
+        like: function (liker, postId){
+            console.log(liker)
+
+            let like
+            if(liker.includes(this.user.userId)){
+                like = 0;
+            }
+            else{
+                like = 1;
+            }
+            this.$store.dispatch('likePost', {id: postId, like: like})
+        }
     },
 
     

@@ -29,7 +29,7 @@ import ButtonCreatePost from '@/components/ButtonCreatePost.vue'
 import PostsComponent from '@/components/PostsComponent.vue'
 import FooterComponent from '@/components/FooterComponent.vue'
 
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'ProfilComponentView',
@@ -45,7 +45,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['postsUser', 'userInfos', 'user', 'date', 'status'])
+    ...mapGetters(['postsUser']),
+    ...mapState(['userInfos', 'user','status'])
   },
    beforeCreate: function () {
     if (!localStorage.getItem("user") || this.$store.state.user.userId == -1) {

@@ -20,7 +20,7 @@ import ButtonCreatePost from '@/components/ButtonCreatePost.vue'
 import CreatePostComponent from '@/components/CreatePostComponent.vue';
 import PostsComponent from '@/components/PostsComponent.vue'
 import FooterComponent from '@/components/FooterComponent.vue'
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'HomeView',
@@ -47,7 +47,8 @@ export default {
     }
   },
   computed: {
-    ...mapState(['posts', 'userInfos', 'user', 'date', 'status'])
+    ...mapGetters(['posts']),
+    ...mapState(['userInfos', 'user','status'])
   },
   methods: {
     refreshHome: function () {
@@ -59,12 +60,12 @@ export default {
     },
     deletePost: function (postId) {
       this.$store.dispatch('deletePost', postId)
-        .then(() => {
-          this.$store.dispatch('getAllPosts');
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+        // .then(() => {
+        //   this.$store.dispatch('getAllPosts');
+        // })
+        // .catch((error) => {
+        //   console.log(error);
+        // });
     },
     showModal: function () {
       this.showCreatePost = !this.showCreatePost

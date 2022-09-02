@@ -32,7 +32,16 @@ const store = createStore({
     posts: [],
     postsUser: [],
   },
+  getters: {
+    posts (state) {
+      return state.posts.sort((a,b) =>  new Date(b.date) - new Date(a.date));
+    },
+    postsUser (state) {
+      return state.postsUser.sort((a,b) =>  new Date(b.date) - new Date(a.date));
+    },
+  },
   mutations: {
+    
     addStatus: function (state, status) {
       state.status.push(status);
     },
@@ -64,9 +73,19 @@ const store = createStore({
     postsUser: function (state, posts){
       state.postsUser = posts;
     },
+    deletePost: function (state, postId){
+      state.posts = state.posts.filter(post => {
+        return post._id != postId;
+      });
+      state.postsUser = state.postsUser.filter(post => {
+        return post._id != postId;
+      });
+    }
   },
   actions: {
     /***** USER METHODS *****/
+
+    //LOGIN
     login: ({commit}, userForm) => {
       commit('addStatus', 'loading-login');
       return new Promise((resolve, reject) => {
@@ -90,6 +109,7 @@ const store = createStore({
         });
       });
     },
+    //CREATE ACCOUNT
     createAccount: ({commit}, userForm) => {
       commit('addStatus', 'loading-account');
       return new Promise((resolve, reject) => {
@@ -118,6 +138,7 @@ const store = createStore({
         });
       });
     },
+    //GET USER INFOS
     getUserInfos: ({commit}, id) => {
       commit('addStatus', 'loading-userInfos');
         instance.get("/auth/user/" + id)
@@ -136,8 +157,10 @@ const store = createStore({
             commit('removeStatus', 'error_userInfos');
           }, 2000)
         });
-    /****** POSTS METHODS *****/
     },
+     /****** POSTS METHODS *****/
+    
+    //GET USER POSTS
     getUserFeed: ({ commit }, id) => {
       commit('addStatus', 'loading-posts-user');
       instance.get("/posts/user/" + id)
@@ -148,7 +171,7 @@ const store = createStore({
           setTimeout (function(){
             commit('removeStatus', 'get_posts_user');
           },2000)
-          console.log('oui ça marche user')
+          
         })
         .catch(function () {
           commit('removeStatus', 'loading-posts');
@@ -159,7 +182,7 @@ const store = createStore({
 
         });
     },
-    
+    //GET ALL POSTS
     getAllPosts: ({ commit }) => {
       commit('addStatus', 'loading-posts');
       instance.get('/posts')
@@ -180,11 +203,42 @@ const store = createStore({
           },2000)
         });
     },
-    createPost: ({commit}, FormData) => {
+    //GET ONE POST
+    getOnePost: ({commit}, postId) => {
+      commit('addStatus', 'loading-onePost');
+      return new Promise((resolve, reject) => {
+        instance.get('/posts' + postId)
+        .then(function (response) {
+          commit('removeStatus', 'loading-onePost');
+          commit('addStatus', 'post-get');
+          setTimeout(function () {
+            commit('removeStatus', 'post-get');
+          }, 2000)
+          resolve(response);
+        })
+        .catch(function (error) {
+          commit('removeStatus', 'loading-onePost');
+          commit('addStatus', 'post_error_get');
+          setTimeout(function () {
+            commit('removeStatus', 'post_error_get');
+          }, 2000)
+          reject(error);
+        });
+      });
+    },
+    //CREATE POST
+    createPost: ({commit}, {data, type}) => {
+      let headers
+      if(type === 1){
+        headers = {'Content-Type': 'application/json'};
+      }
+      else {
+        headers = {'Content-Type': 'multipart/form-data'};
+      }
       commit('addStatus', 'loading-createPost');
       return new Promise((resolve, reject) => {
-        instance.post('/posts', FormData, {
-          headers: { 'Content-Type': 'multipart/form-data' },
+        instance.post('/posts', data, {
+          headers: headers,
         })
         .then(function (response) {
           commit('removeStatus', 'loading-createPost');
@@ -204,31 +258,7 @@ const store = createStore({
         });
       });
     },
-    createPostFormData: ({commit}, postFormData) => {
-      commit('addStatus', 'loading-createPost');
-      console.log(postFormData)
-      return new Promise((resolve, reject) => {
-        instance.post('/posts', postFormData, {
-          headers: {"Content-Type": "multipart/form-data"}
-        })
-        .then(function (response) {
-          commit('removeStatus', 'loading-createPost');
-          commit('addStatus', 'post-created');
-          setTimeout(function () {
-            commit('removeStatus', 'post-created');
-          }, 2000)
-          resolve(response);
-        })
-        .catch(function (error) {
-          commit('removeStatus', 'loading-createPost');
-          commit('addStatus', 'post_error_create');
-          setTimeout(function () {
-            commit('removeStatus', 'post_error_create');
-          }, 2000)
-          reject(error);
-        });
-      });
-    },
+    //MODIFY POST
     modifyPost: ({commit}, postId, postForm) => {
       commit('addStatus', 'loading-modifyPost');
       return new Promise((resolve, reject) => {
@@ -255,11 +285,13 @@ const store = createStore({
         });
       });
     },
+    //DELETE POST
     deletePost: ({commit}, postId) => {
       commit('addStatus', 'loading-delete-post');
       return new Promise((resolve, reject) => {
         instance.delete("/posts/" + postId)
         .then(function (response) {
+          commit('deletePost', postId);
           commit('removeStatus', 'loading-delete-post');
           commit('addStatus', 'post_deleted');
           setTimeout (function(){
@@ -277,26 +309,31 @@ const store = createStore({
         });
       });
     },
-    postLike: ({commit}, params, like) => {
+    //LIKE POST
+    likePost: ({commit}, {id, like}) => {
       commit('addStatus', 'loading-like');
+      console.log(id)
+      console.log(like)
+      let sendLike = {
+        like: like
+      }
+      console.log(like)
       return new Promise((resolve, reject) => {
-        instance.delete('/posts/like', like, {
-          params: {
-            params,
-          }
-        })
+        instance.post(`/posts/${id}/like`, sendLike)
         .then(function (response) {
           commit('removeStatus', 'loading-like');
-          commit('addStatus', 'liked');
-          commit('addStatus', 'unliked');
-          commit('addStatus', 'disliked');
+          console.log(response)
+          // commit('addStatus', 'liked');
+          // commit('addStatus', 'unliked');
+          // commit('addStatus', 'disliked');
           resolve(response);
         })
         .catch(function (error) {
+          console.log(error)
           commit('removeStatus', 'loading-like');
-          commit('addStatus', 'error_likeDislike');
+          commit('addStatus', 'error_like');
           setTimeout(function () {
-            commit('removeStatus', 'error_likeDislike');
+            commit('removeStatus', 'error_like');
           }, 2000)
           reject(error);
         });
