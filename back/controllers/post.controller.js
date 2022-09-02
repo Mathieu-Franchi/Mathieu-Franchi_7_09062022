@@ -85,7 +85,7 @@ exports.getOnePost = (req, res, next) => {
 //get all
 exports.getAllPosts = (req, res, next) => {
     //récupère tout les posts de la base de donnée
-    Post.find().sort({date: -1})
+    Post.find()
         .then(posts => res.status(200).json(posts))
         .catch(error => res.status(400).json({ error }));
 };
@@ -96,7 +96,7 @@ exports.getUserFeed = (req, res, next) => {
     res.status(401).json({ message: 'Not authorized' });
   } else {
 
-    Post.find({ userId: req.params.id }).sort({date: -1})
+    Post.find({ userId: req.params.id })
       .then(posts => res.status(200).json(posts))
       .catch(error => res.status(400).json({ error }));
   }
@@ -105,11 +105,13 @@ exports.getUserFeed = (req, res, next) => {
 // LIKE DISLIKE
 exports.likePosts = (req, res, next) => {
     //const pour simplifier la lisibilitée du code
-    const name = req.body.name + ' ' + req.body.lastname;
     const like = req.body.like;
+    console.log(like)
     const postId = req.params.id;
+    console.log(postId)
     const userId = req.auth.userId;
-    //on trouve le post grace à l'id recupéré dans l'url du front
+    console.log(userId)
+    //on trouve le post grace à l'id recupéré dans les paramètres
     Post.findOne({ _id: postId })
     .then(function (post) {
       switch (like) {
@@ -120,24 +122,10 @@ exports.likePosts = (req, res, next) => {
             //si userId n'est pas inclus  et que le front renvoie like = 1
             Post.updateOne({ _id: postId },
               { //on incrémente les likes et on push userId dans le tableau des users ayant liké
-                $inc: { likes: 1 }, $push: { usersLiked: {userId, name} }
+                $inc: { likes: 1 }, $push: { usersLiked: userId }
               })
               .then(function () {
                 res.status(201).json({ message: "like" });
-              })
-              .catch(function (error) {
-                res.status(400).json({ error: error });
-              });
-          }
-          break;
-        // L'utilisateur n'aime pas le post 
-        case -1:
-          if (!post.usersDisliked.includes(userId) && like === -1) {
-            Post.updateOne({ _id: postId },
-              { $inc: { dislikes: 1 }, $push: { usersDisliked: userId }, }
-            )
-              .then(function () {
-                res.status(201).json({ message: "dislike" });
               })
               .catch(function (error) {
                 res.status(400).json({ error: error });
@@ -152,19 +140,6 @@ exports.likePosts = (req, res, next) => {
             )
               .then(function () {
                 res.status(201).json({ message: "like annulé" });
-              })
-              .catch(function (error) {
-                res.status(400).json({ error: error });
-              });
-          }
-          // Annulation du dislike 
-          if (post.usersDisliked.includes(userId)) {
-            Post.updateOne(
-              { _id: postId },
-              { $inc: { dislikes: -1 }, $pull: { usersDisliked: userId }, }
-            )
-              .then(function () {
-                res.status(201).json({ message: "dislike annulé" });
               })
               .catch(function (error) {
                 res.status(400).json({ error: error });
