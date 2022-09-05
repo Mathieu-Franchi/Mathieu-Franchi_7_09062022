@@ -60,12 +60,6 @@ export default {
     },
     deletePost: function (postId) {
       this.$store.dispatch('deletePost', postId)
-        // .then(() => {
-        //   this.$store.dispatch('getAllPosts');
-        // })
-        // .catch((error) => {
-        //   console.log(error);
-        // });
     },
     showModal: function () {
       this.showCreatePost = !this.showCreatePost

@@ -80,6 +80,36 @@ const store = createStore({
       state.postsUser = state.postsUser.filter(post => {
         return post._id != postId;
       });
+    },
+    postLike: function (state, postId) {
+
+      let post = state.posts.find(post => post._id === postId);
+      if (post) {
+        post.usersLiked.push(state.user.userId);
+        post.likes += 1;
+      }
+
+      let postUser = state.postsUser.find(postUser => postUser._id === postId);
+      if (postUser) {
+        postUser.usersLiked.push(state.user.userId);
+        postUser.likes += 1;
+      }
+
+    },
+    postUnlike: function (state, postId) {
+
+      let post = state.posts.find(post => post._id === postId);
+      if (post) {
+        post.usersLiked = post.usersLiked.filter(usersId => usersId != state.user.userId);
+        post.likes -= 1;
+      }
+      let postUser = state.postsUser.find(postUser => postUser._id === postId);
+      if (postUser) {
+        postUser.usersLiked = postUser.usersLiked.filter(usersId => usersId != state.user.userId);
+
+        postUser.likes -= 1;
+      }
+
     }
   },
   actions: {
@@ -312,24 +342,27 @@ const store = createStore({
     //LIKE POST
     likePost: ({commit}, {id, like}) => {
       commit('addStatus', 'loading-like');
-      console.log(id)
-      console.log(like)
-      let sendLike = {
-        like: like
-      }
-      console.log(like)
       return new Promise((resolve, reject) => {
-        instance.post(`/posts/${id}/like`, sendLike)
+        instance.post(`/posts/${id}/like`, like)
         .then(function (response) {
           commit('removeStatus', 'loading-like');
-          console.log(response)
-          // commit('addStatus', 'liked');
-          // commit('addStatus', 'unliked');
-          // commit('addStatus', 'disliked');
+          if(like.like == 0){
+            commit('postUnlike', id)
+            commit('addStatus', 'unlike')
+            setTimeout(function () {
+              commit('removeStatus', 'unlike');
+            }, 2000)
+          }
+          else {
+            commit('postLike', id)
+            commit('addStatus', 'like')
+            setTimeout(function () {
+              commit('removeStatus', 'like');
+            }, 2000)
+          }
           resolve(response);
         })
         .catch(function (error) {
-          console.log(error)
           commit('removeStatus', 'loading-like');
           commit('addStatus', 'error_like');
           setTimeout(function () {

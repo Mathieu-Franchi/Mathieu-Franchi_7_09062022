@@ -37,7 +37,7 @@
 
             <!-- Number of likes -->
             <div class="post__number__likes">
-                <FontAwesome class="fa__like__counter" icon="fa-solid fa-thumbs-up" />
+                <FontAwesome class="fa__like__counter" icon="fa-solid fa-thumbs-up" :style="{color: post.usersLiked.includes(this.user.userId) ? '#FD2D01' : ''}" />
                 <p class="post__counter__likes">{{ post.likes }}</p>
             </div>
             <!-- footer of the post -->
@@ -45,18 +45,15 @@
             <div class="post__footer">
                 <div class="post__container__btn__like">
                     <button class="post__btn__like" type="button" @click="like(post.usersLiked, post._id)">
-                        <FontAwesome class="fa__like" icon="fa-solid fa-thumbs-up" />
+                        <FontAwesome class="fa__like" :style="{color: post.usersLiked.includes(this.user.userId) ? '#FD2D01' : ''}" icon="fa-solid fa-thumbs-up" />
                     </button>
                 </div>
-                <div class="post__container__btn__comment">
+                <!-- <div class="post__container__btn__comment">
                     <button class="post__btn__comment" type="button">
                         <FontAwesome class="fa__comment" icon="fa-solid fa-comment-dots" />
                     </button>
-                </div>
+                </div> -->
             </div>
-            <div class="post__comment__section">
-            </div>
-
         </div>
 </template>
 
@@ -79,6 +76,9 @@ export default {
         post: function () {
             return this.posts
         },
+        test: function() {
+            return true
+        },
         ...mapState(['user','status','userInfos'])
     },
     methods: {
@@ -86,14 +86,12 @@ export default {
             this.$emit('delete-post', postId);
         },
         like: function (liker, postId){
-            console.log(liker)
-
             let like
             if(liker.includes(this.user.userId)){
-                like = 0;
+                like = {like: 0};
             }
             else{
-                like = 1;
+                like = {like: 1};
             }
             this.$store.dispatch('likePost', {id: postId, like: like})
         }
@@ -281,6 +279,10 @@ export default {
     .post__btn__comment:active, .post__btn__like:active{
 
         transform: scale(0.95);
+    }
+    .liked {    
+        background-color: $secondary-color;
+        color: $primary-color;
     }
     
 }
