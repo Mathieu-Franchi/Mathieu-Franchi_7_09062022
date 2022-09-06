@@ -280,11 +280,6 @@ export default {
 
         transform: scale(0.95);
     }
-    .liked {    
-        background-color: $secondary-color;
-        color: $primary-color;
-    }
-    
 }
 
     

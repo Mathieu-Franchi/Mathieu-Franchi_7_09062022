@@ -257,14 +257,7 @@ const store = createStore({
       });
     },
     //CREATE POST
-    createPost: ({commit}, {data, type}) => {
-      let headers
-      if(type === 1){
-        headers = {'Content-Type': 'application/json'};
-      }
-      else {
-        headers = {'Content-Type': 'multipart/form-data'};
-      }
+    createPost: ({commit}, {data, headers}) => {
       commit('addStatus', 'loading-createPost');
       return new Promise((resolve, reject) => {
         instance.post('/posts', data, {

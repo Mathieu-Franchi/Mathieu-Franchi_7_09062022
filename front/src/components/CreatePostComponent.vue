@@ -33,7 +33,7 @@
           <input type="file" style="display: none;" @change="onFileSelected" ref="inputFile" class="button__file">
         </div>
         <button @click="$refs.inputFile.click()" class="button__file">
-          <span v-if="this.imageUrl != null">Image chargé !</span>
+          <span v-if="this.imageUrl != null">Image chargée !</span>
           <span v-else>Choisir une image</span>
         </button>
         <button @click="publishPost()" class="button__publish" :class="{ 'button--disabled': !validatedFields }">
@@ -79,22 +79,26 @@ export default {
   methods: {
     publishPost: function () {
       if (this.validatedFields) {
+        //Pour pouvoir acceder au this deeper in the code
         const self = this;
-
-        if (this.imageUrl != null && this.description != '') {
-          let field = {
+        //headers par default
+        let headers = {'Content-Type': 'multipart/form-data'};
+        //objet key values du post
+        let field = {
             name: this.userInfos.name,
             lastname: this.userInfos.lastname,
-            description: this.description,
             photo: this.userInfos.photo,
+            description: this.description
+        }
 
-          }
+        if (this.imageUrl != null && this.description != '') {
+          
           field = JSON.stringify(field)
           const fd = new FormData();
           fd.append('image', this.imageUrl);
           fd.append('post', field)
           
-          this.$store.dispatch('createPost', {data: fd, type: 0})
+          this.$store.dispatch('createPost', {data: fd, headers: headers})
             .then(function () {
               if (self.$store.state.status.includes('post-created')) {
                 self.$emit('refresh-posts');
@@ -107,17 +111,13 @@ export default {
         }
         if (this.imageUrl != null && this.description === '') {
           
-          let field = {
-            name: this.userInfos.name,
-            lastname: this.userInfos.lastname,
-            photo: this.userInfos.photo,
-
-          }
+          delete field.description
+          
           field = JSON.stringify(field)
           const fd = new FormData();
           fd.append('image', this.imageUrl);
           fd.append('post', field);
-          this.$store.dispatch('createPost', {data: fd, type: 0})
+          this.$store.dispatch('createPost', {data: fd, headers: headers})
             .then(function () {
               if (self.$store.state.status.includes('post-created')) {
                 self.$emit('refresh-posts');
@@ -129,13 +129,9 @@ export default {
         }
         if (this.imageUrl === null && this.description != ''){
           
-          let field = {
-            name: this.userInfos.name,
-            lastname: this.userInfos.lastname,
-            photo: this.userInfos.photo,
-            description: this.description
-          }
-          this.$store.dispatch('createPost', {data: field, type: 1})
+          headers = {'Content-Type': 'application/json'};
+          
+          this.$store.dispatch('createPost', {data: field, headers: headers})
             .then(function () {
               if (self.$store.state.status.includes('post-created')) {
                 self.$emit('refresh-posts');
@@ -150,8 +146,7 @@ export default {
 
     },
     onFileSelected(event) {
-      this.imageUrl = event.target.files[0];
-      console.log(this.imageUrl);
+      this.imageUrl = event.target.files[0]; 
     },
    
   },
