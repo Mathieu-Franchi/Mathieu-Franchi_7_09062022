@@ -22,6 +22,7 @@ if (!user) {
 const store = createStore({
   state: {
     status: [],
+    notifications: [],
     user: user,
     userInfos: {
       name:'',
@@ -41,7 +42,17 @@ const store = createStore({
     },
   },
   mutations: {
-    
+    addNotification: function (state, notification) {
+      state.notifications.push({
+        ...notification,
+        id: (Math.random().toString(36) + Date.now().toString(36)).substring(2)
+      })
+    },
+    removeNotification: function (state, notificationToRemove) {
+      state.notifications = state.notifications.filter(notification => {
+        return notification.id != notificationToRemove.id;
+      })
+    },
     addStatus: function (state, status) {
       state.status.push(status);
     },
@@ -174,18 +185,10 @@ const store = createStore({
         instance.get("/auth/user/" + id)
         .then(function (response) {
           commit('removeStatus', 'loading-userInfos');
-          commit('addStatus', 'get_userInfos');
           commit('userInfos', response.data);
-          setTimeout (function(){
-               commit('removeStatus', 'get_userInfos');
-          },2000)
         })
         .catch(function () {
           commit('removeStatus', 'loading-userInfos');
-          commit('addStatus', 'error_userInfos');
-          setTimeout(function () {
-            commit('removeStatus', 'error_userInfos');
-          }, 2000)
         });
     },
      /****** POSTS METHODS *****/
@@ -196,20 +199,11 @@ const store = createStore({
       instance.get("/posts/user/" + id)
         .then(function (response) {
           commit('removeStatus', 'loading-posts-user');
-          commit('addStatus', 'get_posts_user');
           commit('postsUser', response.data);
-          setTimeout (function(){
-            commit('removeStatus', 'get_posts_user');
-          },2000)
           
         })
         .catch(function () {
           commit('removeStatus', 'loading-posts');
-          commit('addStatus', 'error_get_posts_user');
-          setTimeout (function(){
-            commit('removeStatus', 'error_get_posts_user');
-          },2000)
-
         });
     },
     //GET ALL POSTS
@@ -218,19 +212,11 @@ const store = createStore({
       instance.get('/posts')
         .then(function (response) {
           commit('removeStatus', 'loading-posts');
-          commit('addStatus', 'get_posts');
           commit('posts', response.data);
-          setTimeout (function(){
-            commit('removeStatus', 'get_posts');
-          },2000)
           console.log(response.data)
         })
         .catch(function () {
           commit('removeStatus', 'loading-posts');
-          commit('addStatus', 'error_get_posts');
-          setTimeout (function(){
-            commit('removeStatus', 'error_get_posts');
-          },2000)
         });
     },
     //GET ONE POST
@@ -240,18 +226,10 @@ const store = createStore({
         instance.get('/posts' + postId)
         .then(function (response) {
           commit('removeStatus', 'loading-onePost');
-          commit('addStatus', 'post-get');
-          setTimeout(function () {
-            commit('removeStatus', 'post-get');
-          }, 2000)
           resolve(response);
         })
         .catch(function (error) {
           commit('removeStatus', 'loading-onePost');
-          commit('addStatus', 'post_error_get');
-          setTimeout(function () {
-            commit('removeStatus', 'post_error_get');
-          }, 2000)
           reject(error);
         });
       });
@@ -265,18 +243,12 @@ const store = createStore({
         })
         .then(function (response) {
           commit('removeStatus', 'loading-createPost');
-          commit('addStatus', 'post-created');
-          setTimeout(function () {
-            commit('removeStatus', 'post-created');
-          }, 2000)
+          commit('addNotification', {type: 'success', message: 'post créé !'})
           resolve(response);
         })
         .catch(function (error) {
           commit('removeStatus', 'loading-createPost');
-          commit('addStatus', 'post_error_create');
-          setTimeout(function () {
-            commit('removeStatus', 'post_error_create');
-          }, 2000)
+          commit('addNotification', {type: 'failure', message: 'erreur lors de la création du post'})
           reject(error);
         });
       });
@@ -292,18 +264,12 @@ const store = createStore({
         })
         .then(function (response) {
           commit('removeStatus', 'loading-modifyPost');
-          commit('addStatus', 'post-modified');
-          setTimeout(function () {
-            commit('removeStatus', 'post-modified');
-          }, 2000)
+          commit('addNotification', {type: 'success', message: 'post modifié !'})
           resolve(response);
         })
         .catch(function (error) {
           commit('removeStatus', 'loading-createPost');
-          commit('addStatus', 'post_error_create');
-          setTimeout(function () {
-            commit('removeStatus', 'post_error_create');
-          }, 2000)
+          commit('addNotification', {type: 'failure', message: 'erreur lors de la modification du post'})
           reject(error);
         });
       });
@@ -316,18 +282,12 @@ const store = createStore({
         .then(function (response) {
           commit('deletePost', postId);
           commit('removeStatus', 'loading-delete-post');
-          commit('addStatus', 'post_deleted');
-          setTimeout (function(){
-              commit('removeStatus', 'post_deleted');
-          },2000)
+          commit('addNotification', {type: 'success', message: 'post supprimé !'})
           resolve(response);
         })
         .catch(function (error) {
           commit('removeStatus', 'loading-delete-post');
-          commit('addStatus', 'post_error_deleted');
-          setTimeout(function () {
-            commit('removeStatus', 'post_error_deleted');
-          }, 2000)
+          commit('addNotification', {type: 'failure', message: 'erreur lors de la suppression du post'})
           reject(error);
         });
       });
@@ -341,26 +301,14 @@ const store = createStore({
           commit('removeStatus', 'loading-like');
           if(like.like == 0){
             commit('postUnlike', id)
-            commit('addStatus', 'unlike')
-            setTimeout(function () {
-              commit('removeStatus', 'unlike');
-            }, 2000)
           }
           else {
             commit('postLike', id)
-            commit('addStatus', 'like')
-            setTimeout(function () {
-              commit('removeStatus', 'like');
-            }, 2000)
           }
           resolve(response);
         })
         .catch(function (error) {
           commit('removeStatus', 'loading-like');
-          commit('addStatus', 'error_like');
-          setTimeout(function () {
-            commit('removeStatus', 'error_like');
-          }, 2000)
           reject(error);
         });
       });

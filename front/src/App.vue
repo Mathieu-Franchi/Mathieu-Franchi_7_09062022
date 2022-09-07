@@ -1,8 +1,15 @@
 <template>
+  <NotificationBar/>
   <router-view></router-view>
 </template>
 
 <script>
+  import NotificationBar from '@/components/NotificationBar.vue'
+  export default {
+    components: {
+      NotificationBar
+    }
+  }
 </script>
 
 <style lang="scss">

@@ -33,7 +33,7 @@
           <input type="file" style="display: none;" @change="onFileSelected" ref="inputFile" class="button__file">
         </div>
         <button @click="$refs.inputFile.click()" class="button__file">
-          <span v-if="this.imageUrl != null">Image chargée !</span>
+          <span v-if="this.imageUrl != null">{{this.imageUrl.name}}</span>
           <span v-else>Choisir une image</span>
         </button>
         <button @click="publishPost()" class="button__publish" :class="{ 'button--disabled': !validatedFields }">
@@ -100,12 +100,9 @@ export default {
           
           this.$store.dispatch('createPost', {data: fd, headers: headers})
             .then(function () {
-              if (self.$store.state.status.includes('post-created')) {
-                self.$emit('refresh-posts');
-
-                return self.$emit('show-modal');
-              }
-
+          
+              self.$emit('refresh-posts');
+              return self.$emit('show-modal');
             })
 
         }
@@ -119,12 +116,9 @@ export default {
           fd.append('post', field);
           this.$store.dispatch('createPost', {data: fd, headers: headers})
             .then(function () {
-              if (self.$store.state.status.includes('post-created')) {
-                self.$emit('refresh-posts');
-
-                return self.$emit('show-modal');
-              }
-
+              
+              self.$emit('refresh-posts');
+              return self.$emit('show-modal');
             })
         }
         if (this.imageUrl === null && this.description != ''){
@@ -133,11 +127,11 @@ export default {
           
           this.$store.dispatch('createPost', {data: field, headers: headers})
             .then(function () {
-              if (self.$store.state.status.includes('post-created')) {
+              
                 self.$emit('refresh-posts');
 
                 return self.$emit('show-modal');
-              }
+              
 
             })
         }
