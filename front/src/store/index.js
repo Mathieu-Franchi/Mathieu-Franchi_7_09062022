@@ -277,7 +277,7 @@ const store = createStore({
     deletePost: ({commit}, postId) => {
       commit('addStatus', 'loading-delete-post');
       return new Promise((resolve, reject) => {
-        instance.delete("/posts/" + postId+'ypo')
+        instance.delete("/posts/" + postId)
         .then(function (response) {
           commit('deletePost', postId);
           commit('removeStatus', 'loading-delete-post');
