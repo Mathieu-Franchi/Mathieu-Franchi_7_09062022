@@ -1,7 +1,11 @@
 <template>
     <div class="notif_list">
-        <NotificationMessage v-for="notification in notifications" 
-        :key="notification.id" :notification="notification" />
+        <TransitionGroup name="fade">
+        <template v-if="this.notifications != []">
+            <NotificationMessage v-for="notification in notifications" 
+            :key="notification.id" :notification="notification" />
+        </template>
+        </TransitionGroup>
     </div>
 
 </template>
@@ -23,26 +27,35 @@ export default {
 
 <style scoped lang="scss">
 @import '../variables';
-.notif_list{
+.notif_list {
     position: fixed;
     left: 0px;
     bottom: 15px;
     margin-left: 15px;
-    
+
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 
-}
-@media all and (max-width: 1400px){
-.notif_list{
-    right: 0;
-    max-width: 320px;
-    margin: auto;
-    
-}
+    .fade-enter-active,
+    .fade-leave-active {
+        transition: opacity 0.5s ease;
+    }
+
+    .fade-enter-from,
+    .fade-leave-to {
+        opacity: 0;
+    }
+
 }
 
+@media all and (max-width: 1400px) {
+    .notif_list {
+        right: 0;
+        max-width: 320px;
+        margin: auto;
 
+    }
+}
 </style>

@@ -125,7 +125,6 @@ const store = createStore({
   },
   actions: {
     /***** USER METHODS *****/
-
     //LOGIN
     login: ({commit}, userForm) => {
       commit('addStatus', 'loading-login');
@@ -243,14 +242,14 @@ const store = createStore({
         })
         .then(function (response) {
           commit('removeStatus', 'loading-createPost');
-          commit('addNotification', {type: 'success', message: 'post créé !'})
+          commit('addNotification', {type: 'success', message: 'Post créé !'})
           resolve(response);
         })
         .catch(function (error) {
           commit('removeStatus', 'loading-createPost');
-          commit('addNotification', {type: 'failure', message: 'erreur lors de la création du post'})
+          commit('addNotification', {type: 'failure', message: 'Erreur lors de la création du post'})
           reject(error);
-        });
+        })
       });
     },
     //MODIFY POST
@@ -264,12 +263,12 @@ const store = createStore({
         })
         .then(function (response) {
           commit('removeStatus', 'loading-modifyPost');
-          commit('addNotification', {type: 'success', message: 'post modifié !'})
+          commit('addNotification', {type: 'success', message: 'Post modifié !'})
           resolve(response);
         })
         .catch(function (error) {
           commit('removeStatus', 'loading-createPost');
-          commit('addNotification', {type: 'failure', message: 'erreur lors de la modification du post'})
+          commit('addNotification', {type: 'failure', message: 'Erreur lors de la modification du post'})
           reject(error);
         });
       });
@@ -278,16 +277,16 @@ const store = createStore({
     deletePost: ({commit}, postId) => {
       commit('addStatus', 'loading-delete-post');
       return new Promise((resolve, reject) => {
-        instance.delete("/posts/" + postId)
+        instance.delete("/posts/" + postId+'ypo')
         .then(function (response) {
           commit('deletePost', postId);
           commit('removeStatus', 'loading-delete-post');
-          commit('addNotification', {type: 'success', message: 'post supprimé !'})
+          commit('addNotification', {type: 'success', message: 'Post supprimé !'})
           resolve(response);
         })
         .catch(function (error) {
           commit('removeStatus', 'loading-delete-post');
-          commit('addNotification', {type: 'failure', message: 'erreur lors de la suppression du post'})
+          commit('addNotification', {type: 'failure', message: 'Erreur lors de la suppression du post'})
           reject(error);
         });
       });
