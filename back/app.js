@@ -1,6 +1,6 @@
 // pour utiliser le fichier .env pour cacher le compte de la base de donnée
 require('dotenv').config();
-
+// const jwt = require('jsonwebtoken');
 // On importe express
 const express = require('express');
 // On importe helmet 
@@ -65,6 +65,36 @@ app.use('/api/auth', userRoutes);
 //post
 app.use('/api/posts', postRoutes);
 
+//refreshToken
+//import models
+// const User = require('./models/User');
+// app.use('/api/refreshToken', (req, res) => {
+//   const authHeader = req.headers['authorization'];
+//   try {
+
+//     const token = authHeader && authHeader.split(' ')[1];
+//     const decodedRefreshToken = jwt.verify(token, process.env.REFRESH_TOKEN)
+//     // User.findOne({ _id: decodedRefreshToken.userId })
+//     // .then(user => {
+//     //   if (user._id != decodedRefreshToken.userId && req.auth.isAdmin === false) {
+//     //     res.status(401).json({ message: 'Not authorized' });
+//     //   } 
+//     // })
+//     // .catch(error => {
+//     //   res.status(404).json({ error });
+//     // });
+//     delete decodedRefreshToken.iat;
+//     delete decodedRefreshToken.exp;
+//     const refreshedToken = jwt.sign(decodedRefreshToken, process.env.TOKEN, { expiresIn: '24h' });
+//     res.status(200).json({
+//       token: refreshedToken
+//     });
+//   }
+//   catch (error) {
+//     res.status(401).json({ error: error | 'Requête non authentifiée !' });
+//   }
+
+// });
 
 // on exporte l'app pour y accéder depuis les autres fichier du projet
 module.exports = app;

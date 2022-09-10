@@ -92,25 +92,18 @@ exports.getAllPosts = (req, res, next) => {
 
 //get user feed
 exports.getUserFeed = (req, res, next) => {
-  if (req.params.id != req.auth.userId && req.auth.isAdmin === false) {
-    res.status(401).json({ message: 'Not authorized' });
-  } else {
-
-    Post.find({ userId: req.params.id })
-      .then(posts => res.status(200).json(posts))
-      .catch(error => res.status(400).json({ error }));
-  }
+  //récupère tout les posts du user concerné de la base de donnée
+  Post.find({ userId: req.params.id })
+    .then(posts => res.status(200).json(posts))
+    .catch(error => res.status(400).json({ error }));
 };
 
 // LIKE DISLIKE
 exports.likePosts = (req, res, next) => {
     //const pour simplifier la lisibilitée du code
     const like = req.body.like;
-    console.log(like)
     const postId = req.params.id;
-    console.log(postId)
     const userId = req.auth.userId;
-    console.log(userId)
     //on trouve le post grace à l'id recupéré dans les paramètres
     Post.findOne({ _id: postId })
     .then(function (post) {

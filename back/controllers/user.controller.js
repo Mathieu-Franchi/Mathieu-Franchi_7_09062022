@@ -48,7 +48,14 @@ exports.login = (req, res, next) => {
               },
               process.env.TOKEN,
               { expiresIn: '24h' }
-            )
+            ),
+            // refreshToken: jwt.sign(
+            //   { userId: user._id,
+            //     isAdmin: user.isAdmin
+            //   },
+            //   process.env.REFRESH_TOKEN,
+            //   { expiresIn: '1y' }
+            // )
           });
         })
         .catch(error => res.status(500).json({ error }));
