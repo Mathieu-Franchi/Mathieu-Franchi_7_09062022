@@ -22,7 +22,7 @@ export default {
     created() {
     this.timeout = setTimeout(() => {
             this.$store.commit('removeNotification', this.notification)
-        }, 6000000);
+        }, 3000);
     },
     beforeUnmount(){
         clearTimeout(this.timeout);
@@ -40,7 +40,6 @@ export default {
     background-color: #36454F;
     border-radius: 8px;
     box-shadow: 0 3px 7px rgba(81, 255, 65, 0.575);
-    // box-shadow: 0 3px 7px rgba(255, 65, 65, 0.575);
     margin-top: 10px;
 
     position: relative;
@@ -63,12 +62,6 @@ export default {
     box-shadow: 0 3px 7px rgba(255, 65, 65, 0.575);
 }
 @media all and (max-width: 1400px) {
-    .alert {
-        min-width: 200px;
-
-    }
-}
-@media all and (max-width: 450px) {
     .alert {
         min-width: 200px;
 

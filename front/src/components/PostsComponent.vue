@@ -9,7 +9,7 @@
                         <img class="post__profil__img" crossorigin="anonymous" :src="post.photo" alt="Photo de profil du post" />
                     </div>
                     <div class="post__name__date">
-                        <h2 class="post__name">
+                        <h2 class="post__name" @click="modifyPost(post._id)">
                             {{ post.name + ' ' + post.lastname }}
                         </h2>
                         <p class="post__date">{{dayjs(post.date).fromNow()}}</p>
@@ -85,13 +85,22 @@ export default {
         deletePost: function (postId) {
             this.$emit('delete-post', postId);
         },
+        modifyPost: function (postId){
+            console.log(postId)
+        },
         like: function (liker, postId){
             let like
             if(liker.includes(this.user.userId)){
-                like = {like: 0};
+                like = {
+                    like: 0,
+                    userId: this.user.userId
+                };
             }
             else{
-                like = {like: 1};
+                like = {
+                    like: 1,
+                    userId: this.user.userId
+                };
             }
             this.$store.dispatch('likePost', {id: postId, like: like})
         }
@@ -272,10 +281,10 @@ export default {
         background-color: $secondary-color;
         
     }
-    .post__btn__like:hover .fa__like, .post__btn__comment:hover .fa__comment {
-        color: $primary-color;
+    // .post__btn__like:hover .fa__like, .post__btn__comment:hover .fa__comment {
+    //     color: $primary-color;
         
-    }
+    // }
     .post__btn__comment:active, .post__btn__like:active{
 
         transform: scale(0.95);

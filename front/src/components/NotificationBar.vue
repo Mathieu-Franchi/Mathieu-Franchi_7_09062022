@@ -28,6 +28,7 @@ export default {
 <style scoped lang="scss">
 @import '../variables';
 .notif_list {
+    z-index: 20;
     position: fixed;
     left: 0px;
     bottom: 15px;
@@ -47,7 +48,6 @@ export default {
     .fade-leave-to {
         opacity: 0;
     }
-
 }
 
 @media all and (max-width: 1400px) {

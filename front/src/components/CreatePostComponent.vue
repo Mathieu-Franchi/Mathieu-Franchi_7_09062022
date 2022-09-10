@@ -74,7 +74,7 @@ export default {
 
     },
          
-    ...mapState(['userInfos', 'status'])
+    ...mapState(['userInfos','user', 'status'])
   },
   methods: {
     publishPost: function () {
@@ -85,6 +85,7 @@ export default {
         let headers = {'Content-Type': 'multipart/form-data'};
         //objet key values du post
         let field = {
+            userId: this.user.userId,
             name: this.userInfos.name,
             lastname: this.userInfos.lastname,
             photo: this.userInfos.photo,
@@ -128,16 +129,11 @@ export default {
           this.$store.dispatch('createPost', {data: field, headers: headers})
             .then(function () {
               
-                self.$emit('refresh-posts');
-
-                return self.$emit('show-modal');
-              
-
+              self.$emit('refresh-posts');
+              return self.$emit('show-modal');
             })
         }
-
       }
-
     },
     onFileSelected(event) {
       this.imageUrl = event.target.files[0]; 
