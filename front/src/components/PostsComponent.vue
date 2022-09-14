@@ -9,7 +9,7 @@
                         <img class="post__profil__img" crossorigin="anonymous" :src="post.photo" alt="Photo de profil du post" />
                     </div>
                     <div class="post__name__date">
-                        <h2 class="post__name" @click="modifyPost(post._id)">
+                        <h2 class="post__name">
                             {{ post.name + ' ' + post.lastname }}
                         </h2>
                         <p class="post__date">{{dayjs(post.date).fromNow()}}</p>
@@ -18,14 +18,35 @@
                 <!-- profil img + name and date -->
 
                 <!-- btn modify  -->
-                <div class="post__btn__modify" @click="deletePost(post._id);" v-if="post.userId === user.userId || userInfos.isAdmin === true">
-                    <button class="btn__modify" type="button">
+                <div class="post__btn__modify"  v-if="post.userId === user.userId || userInfos.isAdmin === true">
+                    <button class="btn__modify" type="button" @click="openPopup(post._id)">
                         <FontAwesome class="fa__ellipsis" icon="fa-solid fa-ellipsis" />
                     </button>
+                    <!-- EDIT OPTIONS -->
+                    <OptionsComponent :show="this.popup.includes(post._id)" class="option_modal">
+                        <template v-slot:li__1>
+                            <li class="option__li">
+                                <button class="option__button" @click="modifyPost(post._id);">
+                                    <FontAwesome class="option__icon" icon="fa-regular fa-pen-to-square" />
+                                    <div class="option__text">Modifier</div>
+                                </button>
+                            </li>
+                            <div class="line"></div>
+                        </template>
+                        <template v-slot:li__2>
+                            <li class="option__li">
+                                <button class="option__button" @click="deletePost(post._id);">
+                                    <FontAwesome class="option__icon" icon="fa-solid fa-trash" />
+                                    <div class="option__text">Supprimer</div>
+                                </button>
+                            </li>
+                        </template>
+                    </OptionsComponent>
+                    <!-- OVERLAY EDIT OPTIONS -->
+                    <OverlayComponent class="overlay__edit" :show="this.popup.includes(post._id)" @toggle-modal="openPopup(post._id)"/>
+            
                 </div>
-
             </div>
-            <!-- header of the post -->
 
             <!-- main content of the post -->
             <div class="post__main">
@@ -60,53 +81,58 @@
 <script>
 import dayjs from '@/_services/dayjs';
 import { mapState } from 'vuex';
+import OptionsComponent from './OptionsComponent.vue';
+import OverlayComponent from './OverlayComponent.vue';
 
 export default {
-    name: 'PostsComponent',
-    components: {},
-    props: ['posts'],
-    emits: ["delete-post","refresh-post"],
+    name: "PostsComponent",
+    components: { OptionsComponent, OverlayComponent },
+    props: ["posts"],
+    emits: ["delete-post", "refresh-post"],
     data: function () {
         return {
-            dayjs
-            
-        }
+            dayjs,
+            popup: []
+        };
     },
-    computed:{
+    computed: {
         post: function () {
-            return this.posts
+            return this.posts;
         },
-        test: function() {
-            return true
-        },
-        ...mapState(['user','status','userInfos'])
+        ...mapState(["user", "status", "userInfos"])
     },
     methods: {
+        openPopup(postId) {
+            if (this.popup.includes(postId)) {
+                this.popup.length = 0;
+            }
+            else {
+                this.popup.push(postId);
+            }
+        },
         deletePost: function (postId) {
-            this.$emit('delete-post', postId);
+            this.$emit("delete-post", postId);
         },
-        modifyPost: function (postId){
-            console.log(postId)
+        modifyPost: function (postId) {
+            console.log(postId);
         },
-        like: function (liker, postId){
-            let like
-            if(liker.includes(this.user.userId)){
+        like: function (liker, postId) {
+            let like;
+            if (liker.includes(this.user.userId)) {
                 like = {
                     like: 0,
                     userId: this.user.userId
                 };
             }
-            else{
+            else {
                 like = {
                     like: 1,
                     userId: this.user.userId
                 };
             }
-            this.$store.dispatch('likePost', {id: postId, like: like})
+            this.$store.dispatch("likePost", { id: postId, like: like });
         }
     },
-
-    
 }
 
 </script>
@@ -117,7 +143,6 @@ export default {
     max-width: 700px;
     width: 100%;
     height: auto;
-    
     border: solid 1px $primary-color;
     border-radius: 5px;
     background-color: #ffffff;
@@ -163,8 +188,8 @@ export default {
         width: 40px;
         height: 40px;
         flex-shrink: 0;
-        
-    
+        position: relative;
+
         .btn__modify {
             width: 100%;
             height: 100%;
@@ -187,6 +212,68 @@ export default {
         .btn__modify:active{
             transform: scale(0.95);
         }
+        .overlay__edit {
+    z-index: 8;
+}
+
+.option_modal {
+    position: absolute;
+    padding: 5px;
+    top: 10px;
+    right: 40px;
+    z-index: 9;
+    border-radius: 4px;
+    min-width: 160px;
+    box-shadow: 0px 2px 4px gray;
+
+    .option__li:hover {
+        background-color: $secondary-color;
+        border-radius: 5px;
+    }
+
+    .option__li:active {
+        transform: scale(0.98);
+    }
+    .option__li {
+
+        display: inline-block;
+
+
+        .option__button {
+            cursor: pointer;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            background: none;
+            border: none;
+            outline: none;
+
+            .option__icon {
+                display: inline-block;
+                font-size: 1.6em;
+                padding: 0px 10px 0px 0px;
+            }
+
+            .option__text {
+                font-size: 16px;
+                user-select: none;
+            }
+
+        }
+
+        .line {
+            height: 1px;
+            background-color: $primary-color;
+            width: 98%;
+            margin: 0 auto;
+
+        }
+
+
+
+
+    }
+}
     }
   
 }
@@ -290,8 +377,4 @@ export default {
         transform: scale(0.95);
     }
 }
-
-    
-
-
 </style>

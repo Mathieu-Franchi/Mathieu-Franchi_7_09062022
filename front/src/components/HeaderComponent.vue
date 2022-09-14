@@ -1,7 +1,5 @@
 <template>
     <header>
-
-
         <h1 class="logo__h1__header">
             <router-link class="logo__link" to="/" @click="this.$emit('refresh-home');"><img class="logo__img" alt="Groupomania logo" src="../assets/logos/icon-left-font.png">
             </router-link>
@@ -24,27 +22,42 @@
                     <router-link class="nav__a" to="/auth" @click="logout">Déconnexion</router-link>
                 </li>
             </ul>
-            <div v-if="showNav" @click="toggleNav" class="overlayNav"></div>
-            <NavComponent v-if="showNav" class="NavComponent" 
-            @refresh-home="this.$emit('refresh-home');" 
-            @refresh-profil="this.$emit('refresh-profil');"
-            />
-
+            <OverlayComponent :show="showNav" @toggle-modal="toggleNav()" class="overlayNav"/>
+            <transition name="fade">
+                <OptionsComponent :show="showNav" class="NavComponent">
+                    <template v-slot:li__1>
+                        <li class="options__li">
+                            <router-link class="options" to="/" @click="this.$emit('refresh-home');">Accueil</router-link>
+                        </li>
+                    </template>
+                    <template v-slot:li__2>
+                        <li class="options__li">
+                            <router-link class="options" to="/profil" @click="this.$emit('refresh-profil');">Profil</router-link>
+                        </li>
+                    </template>
+                    <template v-slot:li__3>
+                        <li class="options__li">
+                            <span class="options" @click="logout">Déconnexion</span>
+                        </li>
+                    </template>
+                </OptionsComponent>
+            </transition>
         </nav>
     </header>
 </template>
 
 <script>
- 
-import NavComponent from './NavComponent.vue';
+import OptionsComponent from './OptionsComponent.vue';
+import OverlayComponent from './OverlayComponent.vue';
     export default {
     name: "HeaderComponent",
+    components: { OptionsComponent, OverlayComponent },
+    emits: ["refresh-home","refresh-profil"],
     data: function () {
         return {
             showNav: false,//For show NAV
         }
     },
-    components: { NavComponent },
     
     methods: {
         toggleNav: function () {
@@ -59,13 +72,48 @@ import NavComponent from './NavComponent.vue';
 </script>
 <style scoped lang="scss">
 @import '../variables';
-.overlayNav {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+
+.NavComponent {
+    border-top: none;
+    border-radius: 0px 0px 10px 10px;
+    top: 70px;
+    right: 0;
+    min-width: 200px;
+    z-index: 10;
+
 }
+.options__li {
+    display: inline-block;
+
+    .options {
+        
+        text-decoration: none;
+        color: black;
+        font-size: 20px;
+        display: block;
+        padding: 20px;
+        border-radius: 10px;
+        
+
+    }
+
+    .options:hover {
+        background-color: $secondary-color;
+        border-radius: 5px;
+        transition: all 0.1s;
+        color: $primary-color;
+    }
+}
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
 header {
 
     display: flex;
@@ -180,6 +228,7 @@ header {
     background: #ffffff;
     align-items: center;
     position: relative;
+    z-index: 10;
   }
   .burger__btn span {
     display: block;
@@ -211,26 +260,26 @@ header {
     transform: translate(0) rotate(-135deg);
   }
 }
-@media all and (max-width: 1600px){
+@media all and (max-width: 1600px) {
     header {
         height: 70px;
     }
+
     .logo__h1__header {
-    height: 68px;
-    }
-    .nav__burger__list {
-        top: 70px
+        height: 68px;
     }
 }
-@media all and (max-width: 900px){
-#nav__header {
-    height: 68px;
+
+@media all and (max-width: 900px) {
+    #nav__header {
+        height: 68px;
     }
 }
+
 //cant have the menu burger when
-@media all and (min-width: 900px){
-    .NavComponent {
+@media all and (min-width: 901px) {
+    .NavComponent, .overlayNav {
         display: none;
-     }
+    }
 }
 </style>
