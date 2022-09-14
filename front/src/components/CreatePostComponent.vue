@@ -38,7 +38,6 @@
         </button>
         <button @click="publishPost()" class="button__publish" :class="{ 'button--disabled': !validatedFields }">
           <span v-if="status.includes('loading-createPost')">Publication en cours...</span>
-          <span v-else-if="status.includes('post-created')">Post créé !</span>
           <span v-else>Publier</span>
         </button>
       </div>
@@ -161,7 +160,6 @@ export default {
 .overlay {
   position: fixed;
   inset: 0px;
-  background: #333333d3;
 }
 
 .modal {

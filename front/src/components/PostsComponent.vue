@@ -157,10 +157,12 @@ export default {
     .post__profil {
         display: flex;
         width: 100%;
+
         .post__profil__img__container {
-                width: 50px;
-                height: 50px;
-                margin-right: 20px;
+            width: 50px;
+            height: 50px;
+            margin-right: 20px;
+
             .post__profil__img {
                 width: 50px;
                 height: 50px;
@@ -168,23 +170,25 @@ export default {
                 border: solid 1px #FFD7D7;
                 border-radius: 50%;
             }
-                
-                
-            }
-        .post__name__date{
-                .post__name{
-                    font-size: 20px;
-                    word-break: break-word;
 
-                }
-                .post__date{
-                    font-size: 12px;
-                    color: #b0b3b8;
-                }
+
+        }
+
+        .post__name__date {
+            .post__name {
+                font-size: 20px;
+                word-break: break-word;
+
+            }
+
+            .post__date {
+                font-size: 12px;
+                color: #b0b3b8;
+            }
         }
     }
-    
-    .post__btn__modify{
+
+    .post__btn__modify {
         width: 40px;
         height: 40px;
         flex-shrink: 0;
@@ -201,64 +205,22 @@ export default {
             align-items: center;
             border-radius: 50%;
             transition: background 0.2s ease-in-out, transform 0.01s ease-in-out;
-            
-                .fa__ellipsis {
-                    font-size: 2.1em;
-                }
+
+            .fa__ellipsis {
+                font-size: 2.1em;
+            }
         }
-        .btn__modify:hover{
+
+        .btn__modify:hover {
             background: $secondary-color;
         }
-        .btn__modify:active{
+
+        .btn__modify:active {
             transform: scale(0.95);
         }
+
         .overlay__edit {
-    z-index: 8;
-}
-
-.option_modal {
-    position: absolute;
-    padding: 5px;
-    top: 10px;
-    right: 40px;
-    z-index: 9;
-    border-radius: 4px;
-    min-width: 160px;
-    box-shadow: 0px 2px 4px gray;
-
-    .option__li:hover {
-        background-color: $secondary-color;
-        border-radius: 5px;
-    }
-
-    .option__li:active {
-        transform: scale(0.98);
-    }
-    .option__li {
-
-        display: inline-block;
-
-
-        .option__button {
-            cursor: pointer;
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            background: none;
-            border: none;
-            outline: none;
-
-            .option__icon {
-                display: inline-block;
-                font-size: 1.6em;
-                padding: 0px 10px 0px 0px;
-            }
-
-            .option__text {
-                font-size: 16px;
-                user-select: none;
-            }
-
+            z-index: 8;
         }
 
         .line {
@@ -269,13 +231,57 @@ export default {
 
         }
 
+        .option_modal {
+            position: absolute;
+            padding: 5px;
+            top: 10px;
+            right: 40px;
+            z-index: 9;
+            border-radius: 4px;
+            min-width: 160px;
+            box-shadow: 0px 2px 4px gray;
+            user-select: none;
+
+            .option__li:hover {
+                background-color: $secondary-color;
+                border-radius: 5px;
+            }
+
+            .option__li:active {
+                transform: scale(0.98);
+            }
+
+            .option__li {
+
+                display: inline-block;
+                
 
 
+                .option__button {
+                    cursor: pointer;
+                    padding: 10px;
+                    display: flex;
+                    align-items: center;
+                    background: none;
+                    border: none;
+                    outline: none;
+                    
 
+                    .option__icon {
+                        display: inline-block;
+                        font-size: 1.6em;
+                        padding: 0px 10px 0px 0px;
+                    }
+
+                    .option__text {
+                        font-size: 16px;
+                        
+                    }
+
+                }
+            }
+        }
     }
-}
-    }
-  
 }
 
 //MAIN SECTION (DESCRIPTION + IMG)
