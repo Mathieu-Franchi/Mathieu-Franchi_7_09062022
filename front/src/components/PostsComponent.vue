@@ -255,8 +255,6 @@ export default {
 
                 display: inline-block;
                 
-
-
                 .option__button {
                     cursor: pointer;
                     padding: 10px;
@@ -381,6 +379,27 @@ export default {
     .post__btn__comment:active, .post__btn__like:active{
 
         transform: scale(0.95);
+    }
+}
+@media all and (max-width: 600px) {
+    .post__header{
+        padding: 15px 10px 10px 15px !important;
+    }
+    .post__name {
+        font-size: 16px !important;
+    }
+    .post__date {
+        font-size: 11px !important;
+    }
+    .post__profil__img__container{
+        width: 40px;
+        height: 40px;
+        margin-right: 10px !important;
+        .post__profil__img{
+            width: 40px !important;
+            height: 40px !important;
+            
+        }
     }
 }
 </style>

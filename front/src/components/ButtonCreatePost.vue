@@ -29,7 +29,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     width: 100%;
-    height: 70px;
+    height: auto;
     padding: 10px;
     max-width: 700px;
     background-color: white;
@@ -56,7 +56,8 @@ export default {
         padding: 15px;
         align-items: center;
         width: 100%;
-        height: 50px;
+        overflow: hidden;
+        height: auto;
         border: none;
         outline: none;
         cursor: pointer;
@@ -69,6 +70,10 @@ export default {
             display: inline-block;
             font-size: 20px ;
             transition: letter-spacing 0.2s ease;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            word-break: break-word;
            
         }
     }
@@ -78,6 +83,11 @@ export default {
     .create__btn:hover .create__btn__text{
         letter-spacing: 1px;
         
+    }
+}
+@media all and (max-width: 600px) {
+    .create__btn__text {
+       font-size: 16px !important;
     }
 }
 
