@@ -61,6 +61,10 @@ const store = createStore({
         return status != statusToRemove;
       });
     },
+    clearStatus: function (state) {
+      state.status.length = 0;
+      console.log('testcomit')
+    },
     logUser: function (state, user) {
       instance.defaults.headers.common['Authorization'] = 'bearer ' + user.token;
       localStorage.setItem('user', JSON.stringify(user));
@@ -142,9 +146,6 @@ const store = createStore({
         .catch(function (error) {
           commit('removeStatus', 'loading-login');
           commit('addStatus', 'error_login');
-          setTimeout(function () {
-            commit('removeStatus', 'error_login');
-          }, 3500)
           reject(error);
         });
       });
@@ -164,17 +165,13 @@ const store = createStore({
         })
         .catch(function (error) {
           commit('removeStatus', 'loading-account');
-          commit('addStatus', 'error_create');
-          setTimeout(function () {
-            commit('removeStatus', 'error_create');
-          }, 3500)
-          reject(error);
           if(error.response.data.error.errors.email.kind == 'unique'){
             commit('addStatus', 'error_unique')
-            setTimeout(function () {
-              commit('removeStatus', 'error_unique');
-            }, 3500)
           }
+          else{
+            commit('addStatus', 'error_create');
+          }
+          reject(error);
         });
       });
     },

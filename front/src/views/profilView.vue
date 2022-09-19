@@ -63,7 +63,7 @@ export default {
   },
    beforeCreate: function () {
     if (!localStorage.getItem("user") || this.$store.state.user.userId == -1) {
-      this.$router.push('/auth');
+      this.$router.push('/authentification');
     }
     return;
   },

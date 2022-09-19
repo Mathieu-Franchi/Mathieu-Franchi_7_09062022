@@ -17,7 +17,7 @@ const routes = [
      
   },
   {
-    path: '/auth',
+    path: '/authentification',
     name: 'loginRegister',
     component: LoginRegisterView,
     meta: {

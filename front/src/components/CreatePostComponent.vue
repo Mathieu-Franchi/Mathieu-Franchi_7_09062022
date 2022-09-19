@@ -311,6 +311,9 @@ export default {
     cursor:not-allowed;
     background:#cecece;
   }
+  .button--disabled:active {
+    transform: none;
+  }
 }
 .slide-enter-active,
 .slide-leave-active {

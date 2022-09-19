@@ -6,21 +6,21 @@
             <h2 class="card__title" v-if="mode == 'login'">Connexion</h2>
             <h2 class="card__title" v-else>Inscription</h2>
             <p class="card__subtitle" v-if="mode == 'login'">Tu n'as pas encore de compte ? <span class="card__action"
-                    @click="switchToCreateAccount()">Créer un compte</span></p>
+                    @click="switchToCreateAccount(); ">Créer un compte</span></p>
             <p class="card__subtitle" v-else>Tu as déjà un compte ? <span class="card__action"
                     @click="switchToLogin()">Se
                     connecter</span></p>
             <form  v-on:submit.prevent="whatForm()">
             
                 <div class="form-row">
-                    <input v-model="email" @focusout="mailTest()" class="form-row__input" type="text" placeholder="Adresse mail" />
+                    <input v-model="email" @focusout="mailTest()" @keyup="this.$store.commit('clearStatus')" required class="form-row__input" type="text" placeholder="Adresse mail" />
                 </div>
                 <div class="form-row" v-if="mode == 'create'">
-                    <input v-model="name" @focusout="nameTest()" minlength="2" maxlength="26" class="form-row__input" type="text" placeholder="Prénom" />
-                    <input v-model="lastname" @focusout="lastnameTest()" minlength="2" maxlength="16" class="form-row__input" type="text" placeholder="Nom" />
+                    <input v-model="name" @focusout="nameTest()" @keyup="this.$store.commit('clearStatus')" required minlength="1" maxlength="26" class="form-row__input" type="text" placeholder="Prénom" />
+                    <input v-model="lastname" @focusout="lastnameTest()" @keyup="this.$store.commit('clearStatus')" required minlength="2" maxlength="16" class="form-row__input" type="text" placeholder="Nom" />
                 </div>
                 <div class="form-row">
-                    <input v-model="password" @focusout="passwordTest()" class="form-row__input password__type" type="password"
+                    <input v-model="password" @focusout="passwordTest()" @keyup="this.$store.commit('clearStatus')" required class="form-row__input password__type" type="password"
                         aria-label="Password" placeholder="Mot de passe" />
                     <button @click="toggleMaskPassword" class="eye__button" type="button">
                         <FontAwesome v-if="toggleMask" class="fa__eye__mask" aria-hidden="true"
@@ -40,6 +40,43 @@
                 <div class="form-row" style="color: red;" v-if="mode == 'create' && status.includes('error_create')">
                     Champs invalide
                 </div>
+                <div class="form-row" style="justify-content: flex-start; flex-direction: column; align-items: flex-start;" v-if="mode == 'create' && this.password != ''">
+                    <div class="regex" :style="{color: regexMinimum.test(password) ? 'green' : 'red'}">
+                        Minimum 6 caractères &nbsp;
+                        <FontAwesome v-if="regexMinimum.test(password)" icon="fa-solid fa-circle-check"/>
+                        <FontAwesome v-else icon="fa-solid fa-circle-xmark" />
+                    </div>
+                    <div class="regex" :style="{color: regexMaximum.test(password) ? 'green' : 'red'}">
+                        Maximum 32 caractères &nbsp;
+                        <FontAwesome v-if="regexMaximum.test(password)" icon="fa-solid fa-circle-check"/>
+                        <FontAwesome v-else icon="fa-solid fa-circle-xmark" />
+                    </div>
+                    <div class="regex" :style="{color: regexNumber.test(password) ? 'green' : 'red'}">
+                        Minimum 1 chiffre &nbsp;
+                        <FontAwesome v-if="regexNumber.test(password)" icon="fa-solid fa-circle-check"/>
+                        <FontAwesome v-else icon="fa-solid fa-circle-xmark" />
+                    </div>
+                    <div class="regex" :style="{color: regexLowercase.test(password) ? 'green' : 'red'}">
+                        Minimum 1 lettre minuscule &nbsp;
+                        <FontAwesome v-if="regexLowercase.test(password)" icon="fa-solid fa-circle-check"/>
+                        <FontAwesome v-else icon="fa-solid fa-circle-xmark" />
+                    </div>
+                    <div class="regex" :style="{color: regexUppercase.test(password) ? 'green' : 'red'}">
+                        Minimum 1 lettre majuscule &nbsp;
+                        <FontAwesome v-if="regexUppercase.test(password)" icon="fa-solid fa-circle-check"/>
+                        <FontAwesome v-else icon="fa-solid fa-circle-xmark" />
+                    </div>
+                    <div class="regex" :style="{color: regexSpecial.test(password) ? 'green' : 'red'}">
+                        Minimum 1 caractère spécial &nbsp;
+                        <FontAwesome v-if="regexSpecial.test(password)" icon="fa-solid fa-circle-check"/>
+                        <FontAwesome v-else icon="fa-solid fa-circle-xmark"/>
+                        </div>
+                    <div class="regex" :style="{color: regexSpace.test(password) ? 'green' : 'red'}">
+                        Ne doit pas contenir d'espace &nbsp;
+                        <FontAwesome v-if="regexSpace.test(password)" icon="fa-solid fa-circle-check"/>
+                        <FontAwesome v-else icon="fa-solid fa-circle-xmark"/>
+                    </div>
+                </div>
                 <div class="form-row">
                     <button @click="login()" class="button" :class="{ 'button--disabled': !validatedFields || !regexFields }"
                         v-if="mode == 'login'">
@@ -58,7 +95,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapState, mapMutations } from 'vuex'
 export default {
     name: 'LoginRegister',
     data: function () {
@@ -72,13 +109,22 @@ export default {
             password: '',
             //For toggle mask password text
             toggleMask: false,
+            /*------- REGEX --------*/
             //regex mail
             regexMail: new RegExp (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/),
             //regex name
-            regexName: new RegExp (/^[a-z ,.'-]+$/i),
+            regexName: new RegExp (/^(?=.{1,26}$)[a-zA-Zçäãâàáéêèëïìíîüùúûæöóòôñ]+(?:[-'\s][a-zA-Zçäãâàáéêèëïìíîüùúûöóòôæñ]+)*$/),
+            regexLastname: new RegExp (/^(?=.{2,16}$)[a-zA-Zçäãâàáéèêëïìíîüùúûæöóòôñ]+(?:[-'\s][a-zA-Zçäãâàáéêèëïìíîüùúûöóòôæñ]+)*$/),
             //regex password
             regexPassword: new RegExp (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,32}$/),
-            checkingPassword: false,
+            /*------- REGEX ISOLATE --------*/
+            regexMinimum: new RegExp (/^.{6,}$/),
+            regexMaximum: new RegExp (/^.{0,32}$/),
+            regexNumber: new RegExp (/.*[0-9].*/),
+            regexLowercase: new RegExp (/.*[a-z].*/),
+            regexUppercase: new RegExp (/.*[A-Z].*/),
+            regexSpecial: new RegExp (/.*[@$!%*?&].*/),
+            regexSpace: new RegExp(/^\S*$/),
         }
     },
   
@@ -122,6 +168,7 @@ export default {
          ...mapState(['status'])
     },
     methods: {
+        ...mapMutations(['addStatus','removeStatus']),
         switchToCreateAccount: function () {
             this.mode = 'create';
         },
@@ -220,7 +267,7 @@ export default {
             }
         },
         lastnameTest: function (){
-            let test = this.regexName.test(this.lastname);
+            let test = this.regexLastname.test(this.lastname);
             console.log(test + 'lastname')
             if(test === true)
             {
@@ -358,9 +405,15 @@ export default {
     cursor:pointer;
     background: $secondary-color;
   }
+  .button:active {
+    transform: scale(0.96);
+  }
   .button--disabled {
     background:#cecece;
-    color:#ececec
+    color:#ececec;
+  }
+  .button--disabled:active{
+    transform: none;
   }
   .button--disabled:hover {
     cursor:not-allowed;
@@ -382,6 +435,10 @@ export default {
 .card__title{
     font-size: 20px;
 }
-  }
+.card{
+        padding: 20px;
+    }
+}
+
 
 </style>
