@@ -1,36 +1,78 @@
 <template>
+    <!-- BODY BACKGROUND -->
     <div id="body">
+        <!-- CARD -->
         <div class="card">
-            <h1 class="logo__h1"><img class="logo__img" alt="Groupomania logo"
-                    src="../assets/logos/icon-left-font-modif.png"></h1>
+            <!-- LOGO -->
+            <h1 class="logo__h1">
+                <img class="logo__img" alt="Groupomania logo"
+                src="../assets/logos/icon-left-font-modif.png">
+            </h1>
+            <!-- CARD TITLE -->
             <h2 class="card__title" v-if="mode == 'login'">Connexion</h2>
             <h2 class="card__title" v-else>Inscription</h2>
-            <p class="card__subtitle" v-if="mode == 'login'">Tu n'as pas encore de compte ? <span class="card__action"
-                    @click="switchToCreateAccount(); ">Créer un compte</span></p>
-            <p class="card__subtitle" v-else>Tu as déjà un compte ? <span class="card__action"
-                    @click="switchToLogin()">Se
-                    connecter</span></p>
-            <form  v-on:submit.prevent="whatForm()">
-            
+            <!-- SWITCH MODE -->
+            <p class="card__subtitle" v-if="mode == 'login'">Tu n'as pas encore de compte ? 
+                <span class="card__action" @click="switchToCreateAccount();">
+                    Créer un compte
+                </span>
+            </p>
+            <p class="card__subtitle" v-else>Tu as déjà un compte ? 
+                <span class="card__action" @click="switchToLogin()">
+                    Se connecter
+                </span>
+            </p>
+            <!-- FORM -->
+            <form  v-on:submit.prevent="whatForm()"> 
+                <!-- EMAIL -->
                 <div class="form-row">
-                    <input v-model="email" @focusout="mailTest()" @keyup="this.$store.commit('clearStatus')" required class="form-row__input" type="text" placeholder="Adresse mail" />
+                    <div class="input__error">
+
+                        <input v-model="email" @focusout="mailTest()"
+                        required
+                        :style="{outline: 'solid 2px' + mailOutline}"
+                        class="form-row__input" 
+                        type="text" 
+                        aria-label="Email" placeholder="Adresse mail" />
+                        <p class="errorMsg">{{mailError}}</p>
+                    </div>
                 </div>
+                <!-- NAME LASTNAME -->
                 <div class="form-row" v-if="mode == 'create'">
-                    <input v-model="name" @focusout="nameTest()" @keyup="this.$store.commit('clearStatus')" required minlength="1" maxlength="26" class="form-row__input" type="text" placeholder="Prénom" />
-                    <input v-model="lastname" @focusout="lastnameTest()" @keyup="this.$store.commit('clearStatus')" required minlength="2" maxlength="16" class="form-row__input" type="text" placeholder="Nom" />
+                    <div class="input__error">
+
+                        <input v-model="name" @focusout="nameTest()" 
+                        required minlength="1" maxlength="16" 
+                        class="form-row__input" type="text" 
+                        aria-label="Name" placeholder="Prénom" />
+                        <p class="errorMsg">Veuillez saisir votre vrai nom</p>
+                    </div>
+                    <div class="input__error">
+                        <input v-model="lastname" @focusout="lastnameTest()" 
+                        required minlength="2" maxlength="16" 
+                        class="form-row__input"
+                        type="text" 
+                        aria-label="Lastname" placeholder="Nom" />
+                        <p class="errorMsg">Veuillez saisir votre vrai nom</p>
+                    </div>
                 </div>
+                <!-- PASSWORD -->
                 <div class="form-row">
-                    <input v-model="password" @focusout="passwordTest()" @keyup="this.$store.commit('clearStatus')" required class="form-row__input password__type" type="password"
-                        aria-label="Password" placeholder="Mot de passe" />
-                    <button @click="toggleMaskPassword" class="eye__button" type="button">
-                        <FontAwesome v-if="toggleMask" class="fa__eye__mask" aria-hidden="true"
-                            icon="fa-solid fa-eye-slash" />
-                        <FontAwesome v-else class="fa__eye" aria-hidden="true" icon="fa-solid fa-eye" />
-                    </button>
+                    <div class="input__error">
+                        <div class="relative" style="position: relative; width: 100%;">
+                            <input v-model="password" @focusout="passwordTest()" required maxlength="32"
+                                style="padding-right: 66px; width: 100%;" class="form-row__input password__type" type="password"
+                                aria-label="Password" placeholder="Mot de passe" />
+                            <!-- BUTTON UNMASK PASSWORD -->
+                            <button @click="toggleMaskPassword" class="eye__button" type="button">
+                                <FontAwesome v-if="toggleMask" class="fa__eye__mask" aria-hidden="true" icon="fa-solid fa-eye-slash" />
+                                <FontAwesome v-else class="fa__eye" aria-hidden="true" icon="fa-solid fa-eye" />
+                            </button>
+                        </div>
+                        <div class="errorMsg">Veuillez saisir votre vrai nom</div>
+                    </div>
                 </div>
-                <div class="regex-mdp" v-if="mode == 'create'">
-                    <div class="msg"></div>
-                </div>
+                <!-- MESSAGE ERROR -->
                 <div class="form-row" style="color: red;" v-if="mode == 'login' && status.includes('error_login')">
                     Adresse mail et/ou mot de passe invalide
                 </div>
@@ -40,7 +82,8 @@
                 <div class="form-row" style="color: red;" v-if="mode == 'create' && status.includes('error_create')">
                     Champs invalide
                 </div>
-                <div class="form-row" style="justify-content: flex-start; flex-direction: column; align-items: flex-start;" v-if="mode == 'create' && this.password != ''">
+                <!-- REGEX PASSWORD VALIDATION -->
+                <div class="form-row" style="flex-direction: column; align-items: flex-start;" v-if="mode == 'create' && this.password != ''">
                     <div class="regex" :style="{color: regexMinimum.test(password) ? 'green' : 'red'}">
                         Minimum 6 caractères &nbsp;
                         <FontAwesome v-if="regexMinimum.test(password)" icon="fa-solid fa-circle-check"/>
@@ -67,7 +110,7 @@
                         <FontAwesome v-else icon="fa-solid fa-circle-xmark" />
                     </div>
                     <div class="regex" :style="{color: regexSpecial.test(password) ? 'green' : 'red'}">
-                        Minimum 1 caractère spécial &nbsp;
+                        Minimum 1 caractère spécial : [@$!%*?&] &nbsp;
                         <FontAwesome v-if="regexSpecial.test(password)" icon="fa-solid fa-circle-check"/>
                         <FontAwesome v-else icon="fa-solid fa-circle-xmark"/>
                         </div>
@@ -77,13 +120,14 @@
                         <FontAwesome v-else icon="fa-solid fa-circle-xmark"/>
                     </div>
                 </div>
+                <!-- BUTTON SUBMIT -->
                 <div class="form-row">
-                    <button @click="login()" class="button" :class="{ 'button--disabled': !validatedFields || !regexFields }"
+                    <button @click="login($event)" class="button" :class="{ 'button--disabled': !regexFields }"
                         v-if="mode == 'login'">
                         <span v-if="status.includes('loading-login')">Connexion en cours...</span>
                         <span v-else>Connexion</span>
                     </button>
-                    <button @click="createAccount()" class="button" :class="{ 'button--disabled': !validatedFields || !regexFields }"
+                    <button @click="createAccount($event)" class="button" :class="{ 'button--disabled': !regexFields }"
                         v-else>
                         <span v-if="status.includes('loading-account')">Création en cours...</span>
                         <span v-else>Créer mon compte</span>
@@ -95,7 +139,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapState } from 'vuex'
 export default {
     name: 'LoginRegister',
     data: function () {
@@ -109,15 +153,18 @@ export default {
             password: '',
             //For toggle mask password text
             toggleMask: false,
+            //For unshow error when typing
+            showError: false,
             /*------- REGEX --------*/
             //regex mail
             regexMail: new RegExp (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/),
             //regex name
             regexName: new RegExp (/^(?=.{1,26}$)[a-zA-Zçäãâàáéêèëïìíîüùúûæöóòôñ]+(?:[-'\s][a-zA-Zçäãâàáéêèëïìíîüùúûöóòôæñ]+)*$/),
+            //regex lastname
             regexLastname: new RegExp (/^(?=.{2,16}$)[a-zA-Zçäãâàáéèêëïìíîüùúûæöóòôñ]+(?:[-'\s][a-zA-Zçäãâàáéêèëïìíîüùúûöóòôæñ]+)*$/),
             //regex password
             regexPassword: new RegExp (/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,32}$/),
-            /*------- REGEX ISOLATE --------*/
+            /*------- REGEX ISOLATE PASSWORD --------*/
             regexMinimum: new RegExp (/^.{6,}$/),
             regexMaximum: new RegExp (/^.{0,32}$/),
             regexNumber: new RegExp (/.*[0-9].*/),
@@ -125,32 +172,19 @@ export default {
             regexUppercase: new RegExp (/.*[A-Z].*/),
             regexSpecial: new RegExp (/.*[@$!%*?&].*/),
             regexSpace: new RegExp(/^\S*$/),
+            //field style error
+            errorColor: '#FF0000',
+            succeedColor: '#4CBB17',
+            mailOutline: undefined,
+            mailTyping: false,
         }
     },
   
     computed: {
-        validatedFields: function () {
-            
-            if (this.mode == 'create') {
-                if (this.email != "" && this.name != "" && this.lastname != "" && this.password != "") {
-                    return true;
-                } else {
-                    
-                    return false;
-                }
-            } else {
-                if (this.email != "" && this.password != "") {
-                    return true;
-                } else {
-                    
-                    return false;
-                }
-            }
-        },
         regexFields: function() {
             if (this.mode == 'create') {
                 if (this.regexMail.test(this.email) === true && this.regexPassword.test(this.password) === true
-                && this.regexName.test(this.name) === true && this.regexName.test(this.name) === true) {
+                && this.regexName.test(this.name) === true && this.regexLastname.test(this.lastname) === true) {
                     return true;
                 } else {
                     
@@ -168,13 +202,11 @@ export default {
          ...mapState(['status'])
     },
     methods: {
-        ...mapMutations(['addStatus','removeStatus']),
         switchToCreateAccount: function () {
             this.mode = 'create';
         },
         switchToLogin: function () {
             this.mode = 'login';
-
         },
         whatForm: function () {
             if (this.mode == 'login'){
@@ -185,7 +217,8 @@ export default {
             }
         },
         
-        login: function () {
+        login: function (event) {
+            event.preventDefault();
             if(this.regexFields == true){
 
                 const self = this;
@@ -194,15 +227,11 @@ export default {
                     password: this.password,
                 }).then(function () {
                     self.$router.push('/');
-                }, function (error) {
-                    console.log(error);
                 })
             }
-            else{
-                console.log('nope-login');
-            }
         },
-        createAccount: function () {
+        createAccount: function (event) {
+            event.preventDefault();
             if (this.regexFields == true) {
                 const self = this;
                 this.$store.dispatch('createAccount', {
@@ -212,12 +241,7 @@ export default {
                     lastname: this.lastname,
                 }).then(function () {
                     self.login();
-                }, function (error) {
-                    console.log(error);
                 })
-            }
-            else {
-                console.log('nope-create');
             }
         },
         toggleMaskPassword: function () {
@@ -233,10 +257,55 @@ export default {
             }
         },
         /******REGEX TEST ******/
+        mailTest: function (){
+            // if(this.mailTyping == false){
+                
+            //     this.mailTyping = true;
+                let test = this.regexMail.test(this.email);
+                if(test)
+                {
+                    this.mailOutline = this.succeedColor;
+                    
+                }
+                else{
+                    this.mailOutline = this.errorColor
+                    if (this.email.length == 0) {
+                        this.mailError = 'Veuillez remplir le champ'
+                    }
+                    else{
+                        this.mailError = 'Veuillez saisir une vrai adresse email'
+                    }
+                }
+            // }else{
+            //     return;
+            // }
+            
+        },
+        // mailTestTyping: function (){
+        //     if(this.mailTyping){
+        //         let test = this.regexMail.test(this.email);
+        //         if(test)
+        //         {
+        //             this.mailOutline = this.succeedColor;
+                    
+        //         }
+        //         else{
+                    
+                    
+
+        //                 this.mailOutline = this.errorColor
+        //                 this.mailError = 'Veuillez saisir une vrai adresse email'
+                    
+        //         }
+        //     }else{
+        //         return;
+        //     }
+            
+        // },
         passwordTest: function (){
             let test = this.regexPassword.test(this.password);
             console.log(test + 'password')
-            if(this.regexPassword.test(this.password) === true)
+            if(test)
             {
                 return true;
             }
@@ -244,21 +313,11 @@ export default {
                 return false;
             }
         },
-        mailTest: function (){
-            let test = this.regexMail.test(this.email);
-            console.log(test + 'mail')
-            if(test === true)
-            {
-                return true;
-            }
-            else{
-                return false;
-            }
-        },
+        
         nameTest: function (){
             let test = this.regexName.test(this.name);
             console.log(test + 'name')
-            if(test === true)
+            if(test)
             {
                 return true;
             }
@@ -269,7 +328,7 @@ export default {
         lastnameTest: function (){
             let test = this.regexLastname.test(this.lastname);
             console.log(test + 'lastname')
-            if(test === true)
+            if(test)
             {
                 return true;
             }
@@ -302,7 +361,15 @@ export default {
     margin: 16px 0px;
     gap: 16px;
     flex-wrap: wrap;
-    position: relative;
+    .input__error{
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        .errorMsg{
+            color: #E34234;
+            font-size: 13px;
+        }
+    }
 }
 .logo__h1 {
     
@@ -335,7 +402,6 @@ export default {
     flex: 1;
     min-width: 100px;
     color: black;
-    
 }
 .eye__button{
     position: absolute;
@@ -344,9 +410,10 @@ export default {
     border: none;
     border-radius: 0px 8px 8px 0px;
     height: 32px;
-    width: 70px;
+    width: 65px;
     background-color: rgb(242, 242, 242);
     right: 1px;
+    top: 2px;
     cursor: pointer;
 }
 .fa__eye {
@@ -439,6 +506,4 @@ export default {
         padding: 20px;
     }
 }
-
-
 </style>

@@ -6,7 +6,7 @@
   <!-- TRANSITION MODAL CREATEPOST -->
   <transition name="slider">
     <!-- MODAL CREATE POST -->
-    <CreatePostComponent v-show="showCreatePost" 
+    <CreatePostComponent v-if="showCreatePost" 
     @refresh-posts="this.$store.dispatch('getUserFeed', user.userId);"
     @show-modal="showModalCreatePost()" />
   </transition>
@@ -86,9 +86,6 @@ export default {
         .then(() => {
           this.$store.dispatch('getUserFeed', this.user.userId);
         })
-        .catch((error) => {
-          console.log(error);
-        });
     },
     showModalCreatePost: function () {
       this.showCreatePost = !this.showCreatePost

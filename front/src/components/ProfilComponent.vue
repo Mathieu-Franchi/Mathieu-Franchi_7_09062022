@@ -6,7 +6,7 @@
         <div class="input-group">
           <input type="file" class="profil__img__file" aria-label="Upload">
           <button class="btn__file" type="button">
-            <!-- <FontAwesome class="fa__img" :icon="{ prefix: 'fas', iconName: 'bars' }" /> -->
+            
           </button>
           <div class="fields">{{userInfos.email}}</div>
           <div class="fields">{{userInfos.name}}</div>

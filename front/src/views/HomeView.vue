@@ -7,7 +7,7 @@
   <transition name="slider">
     <!-- MODAL CREATE POST -->
     <CreatePostComponent 
-    v-show="showCreatePost"
+    v-if="showCreatePost"
     @refresh-posts="this.$store.dispatch('getAllPosts');" 
     @show-modal="showModalCreatePost()"/>
   </transition>
@@ -85,16 +85,16 @@ export default {
 
 <style lang="scss">
 @import '../variables';
-
+//animation createPost
 .slider-enter-active,
 .slider-leave-active {
   transform: translateY(0%);
-    transition: transform 0.2s ease-in-out;
+  transition: transform 0.2s ease-in-out;
 }
 
 .slider-enter-from,
 .slider-leave-to {
-    transform: translateY(-100%);
+  transform: translateY(-100%);
 }
 //BODY
 #body_posts {

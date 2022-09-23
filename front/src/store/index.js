@@ -61,10 +61,6 @@ const store = createStore({
         return status != statusToRemove;
       });
     },
-    clearStatus: function (state) {
-      state.status.length = 0;
-      console.log('testcomit')
-    },
     logUser: function (state, user) {
       instance.defaults.headers.common['Authorization'] = 'bearer ' + user.token;
       localStorage.setItem('user', JSON.stringify(user));
