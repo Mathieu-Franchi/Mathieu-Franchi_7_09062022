@@ -27,8 +27,7 @@
                 <!-- EMAIL -->
                 <div class="form-row">
                     <div class="input__error">
-
-                        <input v-model="email" @focusout="mailTest()"
+                        <input v-model="email" @focusout="mailTest()" @keyup="mailTestTyping()"
                         required
                         :style="{outline: 'solid 2px' + mailOutline}"
                         class="form-row__input" 
@@ -39,37 +38,44 @@
                 </div>
                 <!-- NAME LASTNAME -->
                 <div class="form-row" v-if="mode == 'create'">
-                    <div class="input__error">
+                    <div class="input__error" style="align-self: self-start;">
 
-                        <input v-model="name" @focusout="nameTest()" 
-                        required minlength="1" maxlength="16" 
+                        <input v-model="name" @focusout="nameTest()" @keyup="nameTestTyping()"
+                        required 
+                        minlength="1" maxlength="16"
+                        :style="{outline: 'solid 2px' + nameOutline}"
                         class="form-row__input" type="text" 
                         aria-label="Name" placeholder="Prénom" />
-                        <p class="errorMsg">Veuillez saisir votre vrai nom</p>
+                        <p class="errorMsg">{{nameError}}</p>
                     </div>
-                    <div class="input__error">
-                        <input v-model="lastname" @focusout="lastnameTest()" 
-                        required minlength="2" maxlength="16" 
+                    <div class="input__error" style="align-self: self-start;">
+                        <input v-model="lastname" @focusout="lastnameTest()" @keyup="lastnameTestTyping()"
+                        required 
+                        minlength="2" maxlength="16"
+                        :style="{outline: 'solid 2px' + lastnameOutline}"
                         class="form-row__input"
                         type="text" 
                         aria-label="Lastname" placeholder="Nom" />
-                        <p class="errorMsg">Veuillez saisir votre vrai nom</p>
+                        <p class="errorMsg">{{lastnameError}}</p>
                     </div>
                 </div>
                 <!-- PASSWORD -->
                 <div class="form-row">
                     <div class="input__error">
                         <div class="relative" style="position: relative; width: 100%;">
-                            <input v-model="password" @focusout="passwordTest()" required maxlength="32"
-                                style="padding-right: 66px; width: 100%;" class="form-row__input password__type" type="password"
-                                aria-label="Password" placeholder="Mot de passe" />
+                            <input v-model="password" @focusout="passwordTest()" @keyup="passwordTestTyping()"
+                            :style="{outline: 'solid 2px' + passwordOutline}"
+                            required 
+                            maxlength="32"
+                            style="padding-right: 66px;" class="form-row__input password__type" type="password"
+                            aria-label="Password" placeholder="Mot de passe" />
                             <!-- BUTTON UNMASK PASSWORD -->
                             <button @click="toggleMaskPassword" class="eye__button" type="button">
                                 <FontAwesome v-if="toggleMask" class="fa__eye__mask" aria-hidden="true" icon="fa-solid fa-eye-slash" />
                                 <FontAwesome v-else class="fa__eye" aria-hidden="true" icon="fa-solid fa-eye" />
                             </button>
                         </div>
-                        <div class="errorMsg">Veuillez saisir votre vrai nom</div>
+                        <p class="errorMsg">{{passwordError}}</p> 
                     </div>
                 </div>
                 <!-- MESSAGE ERROR -->
@@ -78,9 +84,6 @@
                 </div>
                 <div class="form-row" style="color: red;" v-if="mode == 'create' && status.includes('error_unique')">
                     Adresse mail déjà utilisée
-                </div>
-                <div class="form-row" style="color: red;" v-if="mode == 'create' && status.includes('error_create')">
-                    Champs invalide
                 </div>
                 <!-- REGEX PASSWORD VALIDATION -->
                 <div class="form-row" style="flex-direction: column; align-items: flex-start;" v-if="mode == 'create' && this.password != ''">
@@ -122,12 +125,12 @@
                 </div>
                 <!-- BUTTON SUBMIT -->
                 <div class="form-row">
-                    <button @click="login($event)" class="button" :class="{ 'button--disabled': !regexFields }"
+                    <button @click="login()" class="button" :class="{ 'button--disabled': !regexFields }"
                         v-if="mode == 'login'">
                         <span v-if="status.includes('loading-login')">Connexion en cours...</span>
                         <span v-else>Connexion</span>
                     </button>
-                    <button @click="createAccount($event)" class="button" :class="{ 'button--disabled': !regexFields }"
+                    <button @click="createAccount()" class="button" :class="{ 'button--disabled': !regexFields }"
                         v-else>
                         <span v-if="status.includes('loading-account')">Création en cours...</span>
                         <span v-else>Créer mon compte</span>
@@ -172,26 +175,40 @@ export default {
             regexUppercase: new RegExp (/.*[A-Z].*/),
             regexSpecial: new RegExp (/.*[@$!%*?&].*/),
             regexSpace: new RegExp(/^\S*$/),
-            //field style error
+            //error handle
             errorColor: '#FF0000',
             succeedColor: '#4CBB17',
-            mailOutline: undefined,
+            //mail
+            mailOutline: null,
             mailTyping: false,
+            mailError: '',
+            //password
+            passwordOutline: null,
+            passwordTyping: false,
+            passwordError: '',
+            //name
+            nameOutline: null,
+            nameTyping: false,
+            nameError: '',
+            //lastname
+            lastnameOutline: null,
+            lastnameTyping: false,
+            lastnameError: '',
         }
     },
   
     computed: {
         regexFields: function() {
             if (this.mode == 'create') {
-                if (this.regexMail.test(this.email) === true && this.regexPassword.test(this.password) === true
-                && this.regexName.test(this.name) === true && this.regexLastname.test(this.lastname) === true) {
+                if (this.regexTest(this.regexMail, this.email) && this.regexTest(this.regexPassword, this.password)
+                && this.regexTest(this.regexName, this.name) && this.regexTest(this.regexLastname, this.lastname)) {
                     return true;
                 } else {
                     
                     return false;
                 }
             } else {
-                if (this.regexMail.test(this.email) === true && this.regexPassword.test(this.password) === true) {
+                if (this.regexTest(this.regexMail, this.email) && this.regexTest(this.regexPassword, this.password)) {
                     return true;
                 } else {
                     
@@ -202,6 +219,7 @@ export default {
          ...mapState(['status'])
     },
     methods: {
+        /* SWITCH MODE */
         switchToCreateAccount: function () {
             this.mode = 'create';
         },
@@ -216,34 +234,7 @@ export default {
                 this.createAccount;
             }
         },
-        
-        login: function (event) {
-            event.preventDefault();
-            if(this.regexFields == true){
-
-                const self = this;
-                this.$store.dispatch('login', {
-                    email: this.email,
-                    password: this.password,
-                }).then(function () {
-                    self.$router.push('/');
-                })
-            }
-        },
-        createAccount: function (event) {
-            event.preventDefault();
-            if (this.regexFields == true) {
-                const self = this;
-                this.$store.dispatch('createAccount', {
-                    email: this.email,
-                    password: this.password,
-                    name: this.name,
-                    lastname: this.lastname,
-                }).then(function () {
-                    self.login();
-                })
-            }
-        },
+        /* Toggle unmask password */
         toggleMaskPassword: function () {
             //Boolean Unmask and mask text password
             const passwordField = document.querySelector(".password__type")
@@ -256,85 +247,156 @@ export default {
                 this.toggleMask = false;
             }
         },
-        /******REGEX TEST ******/
-        mailTest: function (){
-            // if(this.mailTyping == false){
-                
-            //     this.mailTyping = true;
-                let test = this.regexMail.test(this.email);
-                if(test)
-                {
-                    this.mailOutline = this.succeedColor;
-                    
-                }
-                else{
-                    this.mailOutline = this.errorColor
-                    if (this.email.length == 0) {
-                        this.mailError = 'Veuillez remplir le champ'
-                    }
-                    else{
-                        this.mailError = 'Veuillez saisir une vrai adresse email'
-                    }
-                }
-            // }else{
-            //     return;
-            // }
-            
-        },
-        // mailTestTyping: function (){
-        //     if(this.mailTyping){
-        //         let test = this.regexMail.test(this.email);
-        //         if(test)
-        //         {
-        //             this.mailOutline = this.succeedColor;
-                    
-        //         }
-        //         else{
-                    
-                    
+        /* LOGIN & REGISTER */
+        login: function () {
+        
+            if(this.regexFields == true){
 
-        //                 this.mailOutline = this.errorColor
-        //                 this.mailError = 'Veuillez saisir une vrai adresse email'
-                    
-        //         }
-        //     }else{
-        //         return;
-        //     }
+                const self = this;
+                this.$store.dispatch('login', {
+                    email: this.email,
+                    password: this.password,
+                }).then(function () {
+                    self.$router.push('/');
+                })
+            }
+        },
+        createAccount: function () {
+            if (this.regexFields == true) {
+                const self = this;
+                this.$store.dispatch('createAccount', {
+                    email: this.email,
+                    password: this.password,
+                    name: this.name,
+                    lastname: this.lastname,
+                }).then(function () {
+                    self.login();
+                })
+            }
+        },
+        /******REGEX TEST ******/
+        regexTest: function(regex, field){  
+            return regex.test(field);
+        },
+        
+        mailTest: function (){
             
-        // },
-        passwordTest: function (){
-            let test = this.regexPassword.test(this.password);
-            console.log(test + 'password')
-            if(test)
+            if(this.mailTyping == false){
+                
+                this.mailTyping = true;
+                
+            }
+            
+            if(this.regexTest(this.regexMail, this.email))
             {
-                return true;
+                this.mailOutline = this.succeedColor;
+                this.mailError = ''
             }
             else{
-                return false;
+                this.mailOutline = this.errorColor
+                if (this.email == '') {
+                    this.mailError = 'Veuillez remplir ce champ'
+                }
+                else{
+                    this.mailError = 'Veuillez saisir une vraie adresse email'
+                }
+            }
+            
+            
+        },
+        mailTestTyping: function(){  
+            
+            if(this.mailTyping){
+                this.mailTest()
             }
         },
         
+        passwordTest: function (){
+            if(this.passwordTyping == false){
+                
+                this.passwordTyping = true;
+            }
+                if(this.regexTest(this.regexPassword, this.password))
+                {
+                    this.passwordOutline = this.succeedColor;
+                    this.passwordError = ''
+                }
+                else{
+                    this.passwordOutline = this.errorColor
+                    if (this.password == '') {
+                        this.passwordError = 'Veuillez remplir ce champ'
+                    }
+                    else{
+                        this.passwordError = 'Veuillez saisir un mot de passe valide'
+                    }
+                }
+            
+            
+        },
+        passwordTestTyping: function (){
+            if(this.passwordTyping){
+                this.passwordTest()
+            }
+            
+        },
+        
         nameTest: function (){
-            let test = this.regexName.test(this.name);
-            console.log(test + 'name')
-            if(test)
-            {
-                return true;
+            if(this.nameTyping == false){
+                
+                this.nameTyping = true;
             }
-            else{
-                return false;
+                if(this.regexTest(this.regexName, this.name))
+                {
+                    this.nameOutline = this.succeedColor;
+                    this.nameError = ''
+                }
+                else{
+                    this.nameOutline = this.errorColor
+                    if (this.name == '') {
+                        this.nameError = 'Veuillez remplir ce champ'
+                    }
+                    else{
+                        this.nameError = 'Veuillez saisir un vrai prénom'
+                    }
+                }
+            
+            
+        },
+        nameTestTyping: function (){
+            if(this.nameTyping){
+                 
+                this.nameTest()
             }
+            
         },
         lastnameTest: function (){
-            let test = this.regexLastname.test(this.lastname);
-            console.log(test + 'lastname')
-            if(test)
-            {
-                return true;
+            if(this.lastnameTyping == false){
+                
+                this.lastnameTyping = true;
             }
-            else{
-                return false;
+                if(this.regexTest(this.regexLastname, this.lastname))
+                {
+                    this.lastnameOutline = this.succeedColor;
+                    this.lastnameError = ''
+                }
+                else{
+                    this.lastnameOutline = this.errorColor
+                    if (this.lastname == '') {
+                        this.lastnameError = 'Veuillez remplir ce champ'
+                    }
+                    else{
+                        this.lastnameError = 'Veuillez saisir un vrai nom'
+                    }
+                }
+            
+            
+        },
+        lastnameTestTyping: function (){
+            if(this.lastnameTyping){
+                 
+                this.lastnameTest()
             }
+            
         },
 
         /******REGEX TEST ******/
@@ -366,6 +428,7 @@ export default {
         display: flex;
         flex-direction: column;
         .errorMsg{
+            padding-top: 4px;
             color: #E34234;
             font-size: 13px;
         }
@@ -392,7 +455,7 @@ export default {
     
 }
 .form-row__input {
-        
+    width: 100%;
     padding: 8px;
     border: none;
     border-radius: 8px;
