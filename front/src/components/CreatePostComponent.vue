@@ -28,10 +28,10 @@
       <!-- MODAL MAIN CONTENT -->
       <main class="post__content" :style="{'min-height': imageUrl != null ? '150px' : '70px'}">
         <textarea v-model="description" class="description" type="text" placeholder="Quoi de neuf ?"></textarea>
-        <div class="post__container__img" v-if="imageUrl != null">
-          <img class="post__img"  
-           src="../assets/Deepwood.jpg" alt="Image du post" />
-          <div class="post__img__cross" @click="$refs.inputFile.value = null; imageUrl = null">
+        <div class="post__container__img" v-if="imagePreview != null && imageUrl != null">
+          <img class="post__img" v-if="imagePreview != null && imageUrl != null"
+           :src="imagePreview" alt="Prévisualisation de l'image du post" />
+          <div class="post__img__cross" @click="$refs.inputFile.value = null; imagePreview = null, imageUrl = null">
             <FontAwesome class="cross__img" icon="fa-solid fa-xmark" />
           </div>
         </div>
@@ -69,6 +69,7 @@ export default {
     return {
       description: '',
       imageUrl: null,
+      imagePreview: null,
       dayjs,
     }
   },
@@ -80,12 +81,16 @@ export default {
       else {
         return false;
       }
-
+      
     },
-         
+    
     ...mapState(['userInfos','user', 'status'])
   },
   methods: {
+    onFileSelected(event) {
+      this.imageUrl = event.target.files[0];
+      this.imagePreview = URL.createObjectURL(this.imageUrl); 
+    },
     publishPost: function () {
       if (this.validatedFields) {
         //Pour pouvoir acceder au this deeper in the code
@@ -143,9 +148,6 @@ export default {
             })
         }
       }
-    },
-    onFileSelected(event) {
-      this.imageUrl = event.target.files[0]; 
     },
    
   },
@@ -307,6 +309,9 @@ export default {
     }
     .post__img__cross:hover{
       filter: brightness(118%)
+    }
+    .post__img__cross:active{
+      transform: scale(0.96);
     }
   }
 }
