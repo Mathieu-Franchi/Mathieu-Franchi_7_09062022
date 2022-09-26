@@ -7,7 +7,7 @@
   <transition name="slider">
     <!-- MODAL CREATE POST -->
     <CreatePostComponent 
-    v-if="showCreatePost"
+    v-show="showCreatePost"
     @refresh-posts="this.$store.dispatch('getAllPosts');" 
     @show-modal="showModalCreatePost()"/>
   </transition>

@@ -26,14 +26,24 @@
         </div>
       </div>
       <!-- MODAL MAIN CONTENT -->
-      <textarea v-model="description" class="description" type="text" placeholder="Quoi de neuf ?"></textarea>
+      <main class="post__content" :style="{'min-height': imageUrl != null ? '150px' : '70px'}">
+        <textarea v-model="description" class="description" type="text" placeholder="Quoi de neuf ?"></textarea>
+        <div class="post__container__img" v-if="imageUrl != null">
+          <img class="post__img"  
+           src="../assets/Deepwood.jpg" alt="Image du post" />
+          <div class="post__img__cross" @click="$refs.inputFile.value = null; imageUrl = null">
+            <FontAwesome class="cross__img" icon="fa-solid fa-xmark" />
+          </div>
+        </div>
+
+      </main>
       <!-- button choose file + publish container -->
       <div class="buttons__container">
         <div class="drop_img">
-          <input type="file" style="display: none;" @change="onFileSelected" ref="inputFile" class="button__file">
+          <input type="file" style="display: none;" @change="onFileSelected($event)" ref="inputFile" class="button__file">
         </div>
         <button @click="$refs.inputFile.click()" class="button__file">
-          <span v-if="this.imageUrl != null">{{this.imageUrl.name}}</span>
+          <span style="overflow: hidden; text-overflow: ellipsis;" v-if="imageUrl != null">{{this.imageUrl.name}}</span>
           <span v-else>Choisir une image</span>
         </button>
         <button @click="publishPost()" class="button__publish" :class="{ 'button--disabled': !validatedFields }">
@@ -166,6 +176,8 @@ export default {
   width: 100%;
   height: auto;
   max-width: 600px;
+  overflow: hidden auto;
+  max-height: 90%;
   border: solid 1px $primary-color;
   background: #fff;
   border-radius: 5px;
@@ -180,6 +192,7 @@ export default {
 .modal__header{
   width: 100%;
   height: 70px;
+  min-height: 65px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -243,21 +256,59 @@ export default {
   }
 }
 //MAIN CONTENT DESCRIPTION + IMAGE
-.description{
-  width: 100%;
-  border: none;
-  outline: none;
-  overflow-x: hidden;
-  overflow-y: auto;
-  overscroll-behavior-y: contain;
-  height: auto;
-  user-select: text;
-  white-space: pre-wrap;
-  word-break: break-word;
-  resize: none;
-  font-size: 20px;
-  padding: 10px;
-  
+.post__content{
+    overflow: hidden auto;
+    overscroll-behavior-y: contain;
+    max-height: 300px;
+  .description{
+    width: 100%;
+    border: none;
+    outline: none;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    height: auto;
+    user-select: text;
+    white-space: pre-wrap;
+    word-break: break-word;
+    resize: none;
+    font-size: 20px;
+    padding: 10px;
+    
+  }
+  .post__container__img{
+    padding: 10px;
+    position: relative;
+    .post__img{
+      width: 100%;
+      object-fit: cover;
+      border: solid 1px #FFD7D7;
+      border-radius: 10px;
+      padding: 5px;
+    }
+    .post__img__cross{
+      position: absolute;
+      top: 30px;
+      right: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 8px;
+      width: 36px;
+      height: 36px;
+      background-color: $third-color;
+      cursor: pointer;
+      border-radius: 50%;
+      .cross__img{
+        color: #b9bdc4;
+        width: 100%;
+        height: 100%;
+      }
+    }
+    .post__img__cross:hover{
+      filter: brightness(118%)
+    }
+  }
 }
 .buttons__container {
   display: flex;
@@ -343,5 +394,4 @@ export default {
   max-width: 450px;
 }
 }
-
 </style>

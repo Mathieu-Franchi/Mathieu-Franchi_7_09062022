@@ -142,6 +142,9 @@ const store = createStore({
         .catch(function (error) {
           commit('removeStatus', 'loading-login');
           commit('addStatus', 'error_login');
+          setTimeout(function () {
+            commit('removeStatus', 'error_login');
+          }, 3500)
           reject(error);
         });
       });
@@ -163,6 +166,9 @@ const store = createStore({
           commit('removeStatus', 'loading-account');
           if(error.response.data.error.errors.email.kind == 'unique'){
             commit('addStatus', 'error_unique')
+            setTimeout(function () {
+              commit('removeStatus', 'error_unique');
+            }, 3500)
           }
           else{
             commit('addStatus', 'error_create');

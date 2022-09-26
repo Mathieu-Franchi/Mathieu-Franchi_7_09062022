@@ -241,6 +241,7 @@ export default {
             min-width: 160px;
             box-shadow: 0px 2px 4px gray;
             user-select: none;
+            
 
             .option__li:hover {
                 background-color: $secondary-color;
@@ -252,11 +253,12 @@ export default {
             }
 
             .option__li {
-
+                
                 display: inline-block;
                 
                 .option__button {
                     cursor: pointer;
+                    width: 100%;
                     padding: 10px;
                     display: flex;
                     align-items: center;

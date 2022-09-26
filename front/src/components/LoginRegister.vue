@@ -29,7 +29,7 @@
                     <div class="input__error">
                         <input v-model="email" @focusout="mailTest()" @keyup="mailTestTyping()"
                         required
-                        :style="{outline: 'solid 2px' + mailOutline}"
+                        :style="{outline: mailOutline != null ? 'solid 2px' + mailOutline : ''}"
                         class="form-row__input" 
                         type="text" 
                         aria-label="Email" placeholder="Adresse mail" />
@@ -43,7 +43,7 @@
                         <input v-model="name" @focusout="nameTest()" @keyup="nameTestTyping()"
                         required 
                         minlength="1" maxlength="16"
-                        :style="{outline: 'solid 2px' + nameOutline}"
+                        :style="{outline: nameOutline != null ? 'solid 2px' + nameOutline : ''}"
                         class="form-row__input" type="text" 
                         aria-label="Name" placeholder="Prénom" />
                         <p class="errorMsg">{{nameError}}</p>
@@ -52,7 +52,7 @@
                         <input v-model="lastname" @focusout="lastnameTest()" @keyup="lastnameTestTyping()"
                         required 
                         minlength="2" maxlength="16"
-                        :style="{outline: 'solid 2px' + lastnameOutline}"
+                        :style="{outline: lastnameOutline != null ? 'solid 2px' + lastnameOutline : ''}"
                         class="form-row__input"
                         type="text" 
                         aria-label="Lastname" placeholder="Nom" />
@@ -64,7 +64,7 @@
                     <div class="input__error">
                         <div class="relative" style="position: relative; width: 100%;">
                             <input v-model="password" @focusout="passwordTest()" @keyup="passwordTestTyping()"
-                            :style="{outline: 'solid 2px' + passwordOutline}"
+                            :style="{outline: passwordOutline != null ? 'solid 2px' + passwordOutline : ''}"
                             required 
                             maxlength="32"
                             style="padding-right: 66px;" class="form-row__input password__type" type="password"
