@@ -89,7 +89,8 @@ export default {
   methods: {
     onFileSelected(event) {
       this.imageUrl = event.target.files[0];
-      this.imagePreview = URL.createObjectURL(this.imageUrl); 
+      this.imagePreview = URL.createObjectURL(this.imageUrl);
+      URL.revokeObjectURL(this.imageUrl); 
     },
     publishPost: function () {
       if (this.validatedFields) {

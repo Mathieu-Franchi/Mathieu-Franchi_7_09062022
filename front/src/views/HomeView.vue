@@ -38,9 +38,8 @@ export default {
   name: 'HomeView',
   beforeCreate: function () {
     if (!localStorage.getItem("user") || this.$store.state.user.userId == -1) {
-      this.$router.push('/authentification');
+      return this.$router.push('/authentification');
     }
-    return;
   },
   created: function () {
     this.$store.dispatch('getAllPosts');

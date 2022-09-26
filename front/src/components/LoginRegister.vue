@@ -160,7 +160,7 @@ export default {
             showError: false,
             /*------- REGEX --------*/
             //regex mail
-            regexMail: new RegExp (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/),
+            regexMail: new RegExp (/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/),
             //regex name
             regexName: new RegExp (/^(?=.{1,26}$)[a-zA-Zçäãâàáéêèëïìíîüùúûæöóòôñ]+(?:[-'\s][a-zA-Zçäãâàáéêèëïìíîüùúûöóòôæñ]+)*$/),
             //regex lastname

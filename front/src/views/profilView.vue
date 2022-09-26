@@ -62,10 +62,10 @@ export default {
     ...mapState(['userInfos', 'user','status'])
   },
    beforeCreate: function () {
-    if (!localStorage.getItem("user") || this.$store.state.user.userId == -1) {
-      this.$router.push('/authentification');
+    if (localStorage.getItem("user") || this.$store.state.user.userId != -1) {
+      return this.$router.push('/');
     }
-    return;
+    
   },
   created: function () {
     this.$store.dispatch('getUserInfos', this.user.userId);
