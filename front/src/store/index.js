@@ -32,6 +32,7 @@ const store = createStore({
     },
     posts: [],
     postsUser: [],
+    mode: 'create',
   },
   getters: {
     posts (state) {
@@ -120,7 +121,9 @@ const store = createStore({
 
         postUser.likes -= 1;
       }
-
+    },
+    switchMode: function (state, mode){
+      state.mode = mode;
     }
   },
   actions: {

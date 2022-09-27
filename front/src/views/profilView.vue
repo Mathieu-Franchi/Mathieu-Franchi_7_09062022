@@ -12,18 +12,21 @@
   </transition>
   <!-- PROFIL POSTS CONTAINER -->
   <div id="body_posts_profil">
-    <!-- PROFIL CONTAINER -->
-    <div class="profil_container">
-      <ProfilComponent />
-    </div>
-    <!-- POSTS CONTAINER -->
-    <div class="posts_container">
-      <!-- BUTTON SHOW CREATE POST -->
-      <ButtonCreatePost @show-modal="showModalCreatePost()"/>
-      <!-- POST COMPONENT -->
-      <PostsComponent :posts="this.postsUser"
-      @delete-post="deletePost($event)" 
-      @refresh-post="this.$store.dispatch('getUserFeed');"/>
+    <div class="row_posts_profil">
+
+      <!-- PROFIL CONTAINER -->
+      <div class="profil_container">
+        <ProfilComponent />
+      </div>
+      <!-- POSTS CONTAINER -->
+      <div class="posts_container">
+        <!-- BUTTON SHOW CREATE POST -->
+        <ButtonCreatePost @show-modal="showModalCreatePost()"/>
+        <!-- POST COMPONENT -->
+        <PostsComponent :posts="this.postsUser"
+        @delete-post="deletePost($event)" 
+        @refresh-post="this.$store.dispatch('getUserFeed');"/>
+      </div>
     </div>
   </div>
   <!-- FOOTER -->
@@ -62,10 +65,9 @@ export default {
     ...mapState(['userInfos', 'user','status'])
   },
    beforeCreate: function () {
-    if (localStorage.getItem("user") || this.$store.state.user.userId != -1) {
-      return this.$router.push('/');
+    if (!localStorage.getItem("user") || this.$store.state.user.userId == -1) {
+      return this.$router.push('/authentification');
     }
-    
   },
   created: function () {
     this.$store.dispatch('getUserInfos', this.user.userId);
@@ -114,16 +116,35 @@ export default {
 //BODY
 #body_posts_profil {
   background-image: linear-gradient(90deg, $third-color 0%, $secondary-color 50%, $third-color 100%);
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  min-height: 100vh;
-  padding:30px;
+  .row_posts_profil{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    min-height: 100vh;
+    padding:30px;
+  }
     .profil_container{
-      flex: 1;
+      margin-bottom: 10px;
+      max-width: 680px;
+      margin-right: 10px;
+      width: 100%;
     }
     .posts_container{
-        flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 680px;
     }
+}
+@media all and (max-width: 900px){
+  .profil_container{
+      margin-right: 0px !important;
+    }
+    .row_posts_profil{
+      align-items: center !important;
+      flex-direction: column !important;
+  }
 }
 </style>

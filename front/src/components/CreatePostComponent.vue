@@ -10,7 +10,10 @@
         <button aria-label="close modal" class="close-modal modal-trigger" @click="this.$emit('show-modal')">
           <FontAwesome style="color: white;" icon="fa-solid fa-xmark" />
         </button>
-        <h3 class="modal__title fontsize__titles">Créer une publication</h3>
+        <h3 v-if="mode == 'edit'" class="modal__title fontsize__titles">Modifier la publication</h3>
+        <h3 v-else class="modal__title fontsize__titles">Créer une publication</h3>
+        
+
       </div>
       <!-- MODAL PROFIL -->
       <div class="post__profil">
@@ -84,7 +87,7 @@ export default {
       
     },
     
-    ...mapState(['userInfos','user', 'status'])
+    ...mapState(['mode','userInfos','user', 'status'])
   },
   methods: {
     onFileSelected(event) {
