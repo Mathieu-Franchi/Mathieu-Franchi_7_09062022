@@ -19,7 +19,7 @@
 
                 <!-- btn modify  -->
                 <div class="post__btn__modify"  v-if="post.userId === user.userId || userInfos.isAdmin === true">
-                    <button class="btn__modify" type="button" @click="openPopup(post._id)">
+                    <button class="btn__modify" type="button" aria-label="Show options" @click="openPopup(post._id)">
                         <FontAwesome class="fa__ellipsis" icon="fa-solid fa-ellipsis" />
                     </button>
                     <!-- EDIT OPTIONS -->
@@ -65,7 +65,7 @@
             <div class="post__footer__border"></div>
             <div class="post__footer">
                 <div class="post__container__btn__like">
-                    <button class="post__btn__like" type="button" @click="like(post.usersLiked, post._id)">
+                    <button class="post__btn__like" type="button" aria-label="like" @click="like(post.usersLiked, post._id)">
                         <FontAwesome class="fa__like" :style="{color: post.usersLiked.includes(this.user.userId) ? '#FD2D01' : ''}" icon="fa-solid fa-thumbs-up" />
                     </button>
                 </div>
@@ -88,7 +88,7 @@ export default {
     name: "PostsComponent",
     components: { OptionsComponent, OverlayComponent },
     props: ["posts"],
-    emits: ["delete-post", "refresh-post"],
+    emits: ["delete-post", "refresh-post", "modify-post"],
     data: function () {
         return {
             dayjs,
@@ -99,7 +99,7 @@ export default {
         post: function () {
             return this.posts;
         },
-        ...mapState(["user", "status", "userInfos"])
+        ...mapState(["user", "userInfos"])
     },
     methods: {
         openPopup(postId) {
@@ -114,7 +114,7 @@ export default {
             this.$emit("delete-post", postId);
         },
         modifyPost: function (postId) {
-            console.log(postId);
+            this.$emit("modify-post", postId);
         },
         like: function (liker, postId) {
             let like;

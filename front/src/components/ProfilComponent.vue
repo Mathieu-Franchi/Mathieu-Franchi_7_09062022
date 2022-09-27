@@ -1,13 +1,14 @@
 <template>
   <section id="profil__section">
-    <div class="profil__img__container" v-if="userInfos.photo != null">
-      <img class="profil__img" crossorigin="anonymous" :src="userInfos.photo" alt="Votre photo de profil"
-        v-if="userInfos.photo != null" />
+    <div class="profil__img__btn" v-if="userInfos.photo != null">
+      <div class="profil__img__container" >
+        <img class="profil__img" crossorigin="anonymous" :src="userInfos.photo" alt="Votre photo de profil" />
+      </div>
+      <input style="display: none;" type="file" class="profil__img__file" ref="inputFileProfil" aria-label="Upload">
+      <button  @click="$refs.inputFileProfil.click()" class="btn__file" type="button">
+        <FontAwesome class="icon-camera" icon="fa-solid fa-camera" />
+      </button>
     </div>
-    <input style="display: none;" type="file" class="profil__img__file" ref="inputFileProfil" aria-label="Upload">
-    <button v-if="userInfos.photo != null" @click="$refs.inputFileProfil.click()" class="btn__file" type="button">
-      <FontAwesome class="icon-camera" icon="fa-solid fa-camera" />
-    </button>
     <div class="field-group">
       <div class="field">Email:</div>
       <div class="fields">{{userInfos.email}}</div>
@@ -50,6 +51,17 @@ export default {
   align-items: center;
   flex-direction: column;
 }
+.profil__img__btn{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 650px;
+  background-color: $third-color;
+  border: solid 1px $primary-color;
+  border-radius: 5px;
+  margin-bottom: 5px;
+}
 .profil__img__container{
   width: 100%;
     max-width: 150px;
@@ -70,10 +82,10 @@ export default {
   cursor: pointer;
   border: solid 1px $primary-color;
   border-radius: 50%;
-  background-color: $third-color;
+  background-color: white;
   margin-bottom: 10px;
   .icon-camera{
-    color: white;
+    font-size: 20px;
   }
 }
 .field-group {
@@ -93,9 +105,11 @@ export default {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    word-break: break-word;
+    font-size: 22px;
   }
   .field{
-    font-size: 14px;
+    font-size: 16px;
     margin-bottom: 5px;
   }
 }

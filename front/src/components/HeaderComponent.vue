@@ -19,7 +19,7 @@
                     <router-link class="nav__a" to="/profil" @click="this.$emit('refresh-profil');">Profil</router-link>
                 </li>
                 <li class="nav__li">
-                    <router-link class="nav__a" to="/auth" @click="logout">Déconnexion</router-link>
+                    <span class="nav__a" style="cursor: pointer;" @click="logout">Déconnexion</span>
                 </li>
             </ul>
             <OverlayComponent :show="showNav" @toggle-modal="toggleNav()" class="overlayNav"/>

@@ -76,7 +76,7 @@ const store = createStore({
         token: '',
       }
       localStorage.removeItem('user');
-      router.push('/auth');
+      router.push('/authentification');
       delete instance.defaults.headers.common['Authorization'];
     },
     posts: function (state, posts){
@@ -221,20 +221,20 @@ const store = createStore({
         });
     },
     //GET ONE POST
-    getOnePost: ({commit}, postId) => {
-      commit('addStatus', 'loading-onePost');
-      return new Promise((resolve, reject) => {
-        instance.get('/posts' + postId)
-        .then(function (response) {
-          commit('removeStatus', 'loading-onePost');
-          resolve(response);
-        })
-        .catch(function (error) {
-          commit('removeStatus', 'loading-onePost');
-          reject(error);
-        });
-      });
-    },
+    // getOnePost: ({commit}, postId) => {
+    //   commit('addStatus', 'loading-onePost');
+    //   return new Promise((resolve, reject) => {
+    //     instance.get('/posts' + postId)
+    //     .then(function (response) {
+    //       commit('removeStatus', 'loading-onePost');
+    //       resolve(response);
+    //     })
+    //     .catch(function (error) {
+    //       commit('removeStatus', 'loading-onePost');
+    //       reject(error);
+    //     });
+    //   });
+    // },
     //CREATE POST
     createPost: ({commit}, {data, headers}) => {
       commit('addStatus', 'loading-createPost');
@@ -255,13 +255,11 @@ const store = createStore({
       });
     },
     //MODIFY POST
-    modifyPost: ({commit}, postId, postForm) => {
+    modifyPost: ({commit},{data, headers}) => {
       commit('addStatus', 'loading-modifyPost');
       return new Promise((resolve, reject) => {
-        instance.put("/posts/" + postId, {
-          headers:  {
-            postForm,
-          }
+        instance.put("/posts/" + data.postId, data.data, {
+          headers: headers,
         })
         .then(function (response) {
           commit('removeStatus', 'loading-modifyPost');
