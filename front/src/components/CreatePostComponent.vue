@@ -154,6 +154,7 @@ export default {
         //reset fields after publish
         this.description = '';
         this.imageUrl = null;
+        this.$refs.inputFile.value = null;
         this.imagePreview = null;
       }
     },

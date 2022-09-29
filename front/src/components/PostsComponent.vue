@@ -227,7 +227,7 @@ export default {
             height: 1px;
             background-color: $primary-color;
             width: 98%;
-            margin: 0 auto;
+            margin: 3px auto;
 
         }
 
@@ -249,7 +249,7 @@ export default {
             }
 
             .option__li:active {
-                transform: scale(0.98);
+                transform: scale(0.96);
             }
 
             .option__li {
@@ -271,6 +271,7 @@ export default {
                         display: inline-block;
                         font-size: 1.6em;
                         padding: 0px 10px 0px 0px;
+                        color: $third-color;
                     }
 
                     .option__text {

@@ -37,7 +37,7 @@
                     </template>
                     <template v-slot:li__3>
                         <li class="options__li">
-                            <span class="options" @click="logout">Déconnexion</span>
+                            <span class="options" style="cursor: pointer;" @click="logout">Déconnexion</span>
                         </li>
                     </template>
                 </OptionsComponent>

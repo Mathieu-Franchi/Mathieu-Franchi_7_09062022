@@ -27,7 +27,7 @@
                 <!-- EMAIL -->
                 <div class="form-row">
                     <div class="input__error">
-                        <input v-model="email" @focusout="mailTest()" @keyup="mailTestTyping()"
+                        <input v-model="email" @focusout.once="mailTest()" @keyup="mailTyping ? mailTest() : ''"
                         required
                         :style="{outline: mailOutline != null ? 'solid 2px' + mailOutline : ''}"
                         class="form-row__input" 
@@ -40,7 +40,7 @@
                 <div class="form-row" v-if="mode == 'create'">
                     <div class="input__error" style="align-self: self-start;">
 
-                        <input v-model="name" @focusout="nameTest()" @keyup="nameTestTyping()"
+                        <input v-model="name" @focusout.once="nameTest()" @keyup="nameTyping ? nameTest() : ''"
                         required 
                         minlength="1" maxlength="16"
                         :style="{outline: nameOutline != null ? 'solid 2px' + nameOutline : ''}"
@@ -49,7 +49,7 @@
                         <p class="errorMsg">{{nameError}}</p>
                     </div>
                     <div class="input__error" style="align-self: self-start;">
-                        <input v-model="lastname" @focusout="lastnameTest()" @keyup="lastnameTestTyping()"
+                        <input v-model="lastname" @focusout.once="lastnameTest()" @keyup="lastnameTyping ? lastnameTest() : ''"
                         required 
                         minlength="2" maxlength="16"
                         :style="{outline: lastnameOutline != null ? 'solid 2px' + lastnameOutline : ''}"
@@ -63,7 +63,7 @@
                 <div class="form-row">
                     <div class="input__error">
                         <div class="relative" style="position: relative; width: 100%;">
-                            <input v-model="password" @focusout="passwordTest()" @keyup="passwordTestTyping()"
+                            <input v-model="password" @focusout.once="passwordTest()" @keyup="passwordTyping ? passwordTest() : ''"
                             :style="{outline: passwordOutline != null ? 'solid 2px' + passwordOutline : ''}"
                             required 
                             maxlength="32"
@@ -156,8 +156,6 @@ export default {
             password: '',
             //For toggle mask password text
             toggleMask: false,
-            //For unshow error when typing
-            showError: false,
             /*------- REGEX --------*/
             //regex mail
             regexMail: new RegExp (/^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/),
@@ -278,9 +276,8 @@ export default {
         regexTest: function(regex, field){  
             return regex.test(field);
         },
-        
+        //MAIL
         mailTest: function (){
-            
             if(this.mailTyping == false){
                 
                 this.mailTyping = true;
@@ -301,16 +298,8 @@ export default {
                     this.mailError = 'Veuillez saisir une vraie adresse email'
                 }
             }
-            
-            
         },
-        mailTestTyping: function(){  
-            
-            if(this.mailTyping){
-                this.mailTest()
-            }
-        },
-        
+        //PASSWORD
         passwordTest: function (){
             if(this.passwordTyping == false){
                 
@@ -333,13 +322,7 @@ export default {
             
             
         },
-        passwordTestTyping: function (){
-            if(this.passwordTyping){
-                this.passwordTest()
-            }
-            
-        },
-        
+        //NAME
         nameTest: function (){
             if(this.nameTyping == false){
                 
@@ -359,16 +342,8 @@ export default {
                         this.nameError = 'Veuillez saisir un vrai prénom'
                     }
                 }
-            
-            
         },
-        nameTestTyping: function (){
-            if(this.nameTyping){
-                 
-                this.nameTest()
-            }
-            
-        },
+        //LASTNAME
         lastnameTest: function (){
             if(this.lastnameTyping == false){
                 
@@ -388,17 +363,7 @@ export default {
                         this.lastnameError = 'Veuillez saisir un vrai nom'
                     }
                 }
-            
-            
         },
-        lastnameTestTyping: function (){
-            if(this.lastnameTyping){
-                 
-                this.lastnameTest()
-            }
-            
-        },
-
         /******REGEX TEST ******/
     }
 }
