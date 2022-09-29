@@ -6,7 +6,7 @@
                 <!-- profil img + name and date -->
                 <div class="post__profil">
                     <div class="post__profil__img__container" v-if="post.photo != null">
-                        <img class="post__profil__img" crossorigin="anonymous" :src="post.photo" alt="Photo de profil du post" />
+                        <img class="post__profil__img" :src="post.photo" alt="Photo de profil du post" crossorigin="process.env.VUE_APP_BACK" />
                     </div>
                     <div class="post__name__date">
                         <h2 class="post__name">
@@ -52,7 +52,7 @@
             <div class="post__main">
                 <h3 class="post__description">{{ post.description }}</h3>
                 <div class="post__main__img__container" v-if="post.imageUrl != null">
-                    <img class="post__img" v-if="post.imageUrl != null" crossorigin="anonymous" :src="post.imageUrl" alt="Image du post" />
+                    <img class="post__img" v-if="post.imageUrl != null" :src="post.imageUrl" alt="Image du post" crossorigin="process.env.VUE_APP_BACK" />
                 </div>
             </div>
 
@@ -290,9 +290,9 @@ export default {
         height: 100%;
         width: 100%;
         .post__img{
-            
             width: 100%;
             height: 100%;
+            max-height: 3000px;
             object-fit: contain;
             border-top: 1px solid $secondary-color;
             border-bottom: 1px solid $secondary-color;

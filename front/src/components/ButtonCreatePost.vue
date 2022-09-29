@@ -1,7 +1,7 @@
 <template>
     <div class="create__post">
         <div v-if="userInfos.photo != null" class="create__profil__img__container">
-            <img class="create__profil__img" crossorigin="http://localhost:3000/" :src="userInfos.photo"
+            <img class="create__profil__img" :src="userInfos.photo" crossorigin="process.env.VUE_APP_BACK" 
                 alt="Photo de profil" />
         </div>
         <button class="create__btn modal-trigger" @click="this.$emit('show-modal')" type="button">

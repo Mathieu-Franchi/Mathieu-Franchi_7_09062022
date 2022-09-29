@@ -18,7 +18,7 @@
       <!-- MODAL PROFIL -->
       <div class="post__profil">
         <div v-if="userInfos.photo != null" class="post__profil__img__container">
-          <img class="post__profil__img" v-if="userInfos.photo != null" crossorigin="anonymous" :src="userInfos.photo"
+          <img class="post__profil__img" v-if="userInfos.photo != null" :src="userInfos.photo" crossorigin="process.env.VUE_APP_BACK"
             alt="Photo de profil" />
         </div>
         <div class="post__name__date">
@@ -97,11 +97,11 @@ export default {
     },
     publishPost: function () {
       if (this.validatedFields) {
-        //Pour pouvoir acceder au this deeper in the code
+        //access "this" deeper in the code
         const self = this;
-        //headers par default
+        //headers default
         let headers = {'Content-Type': 'multipart/form-data'};
-        //objet key values du post
+        //objet key values default
         let field = {
             userId: this.user.userId,
             name: this.userInfos.name,
@@ -151,6 +151,10 @@ export default {
               return self.$emit('show-modal');
             })
         }
+        //reset fields after publish
+        this.description = '';
+        this.imageUrl = null;
+        this.imagePreview = null;
       }
     },
    
@@ -383,24 +387,23 @@ export default {
 .slide-leave-to{
   transform: translateY(-50%) translateX(100vw);
 }
-  
 
+@media all and (max-width: 450px) {
+  .fontsize__titles {
+    font-size: 20px !important;
+  }
 
+  .fontsize__p {
+    font-size: 15px !important;
+  }
 
-@media all and (max-width: 450px){
-.fontsize__titles{
-  font-size: 20px !important;
+  .modal {
+    max-width: 320px !important;
+  }
 }
-.fontsize__p{
-  font-size: 15px !important;
-}
-.modal{
-  max-width: 320px !important;
-}
-}
-@media all and (max-width: 640px){
-.modal{
-  max-width: 450px;
-}
+@media all and (max-width: 640px) {
+  .modal {
+    max-width: 450px;
+  }
 }
 </style>
