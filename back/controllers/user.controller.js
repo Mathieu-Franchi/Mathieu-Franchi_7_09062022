@@ -49,6 +49,7 @@ exports.login = (req, res, next) => {
               process.env.TOKEN,
               { expiresIn: '24h' }
             ),
+            //test refresh token /* potential future project */
             // refreshToken: jwt.sign(
             //   { userId: user._id,
             //     isAdmin: user.isAdmin
@@ -85,57 +86,53 @@ exports.getUserInfos = (req, res, next) => {
     });
 
 };
+
+/* potential future project */
 //modify ONE user
-exports.modifyUser = (req, res, next) => {
-  const userInfos = req.file ? {
-    ...JSON.parse(req.body.user),
-    photo: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-  } : { ...req.body };
+// exports.modifyUser = (req, res, next) => {
+//   const userInfos = req.file ? {
+//     ...JSON.parse(req.body.user),
+//     photo: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+//   } : { ...req.body };
 
-  delete userInfos._id;
-  User.findOne({_id: req.params.id})
-  .then((user) => {
-    if (user._id != req.auth.userId && req.auth.isAdmin === false) {
-      res.status(401).json({ message: 'Not authorized' });
-    } else {
-      User.updateOne({ _id: req.auth.userId }, { ...userInfos, _id: req.auth.userId })
-        .then(() => res.status(200).json({ message: 'User modifié!' }))
-        .catch(error => res.status(401).json({ error }));
-    }
-  })
-  .catch((error) => {
-    res.status(400).json({ error });
-  });
-}
+//   delete userInfos._id;
+//   User.findOne({_id: req.params.id})
+//   .then((user) => {
+//     if (user._id != req.auth.userId && req.auth.isAdmin === false) {
+//       res.status(401).json({ message: 'Not authorized' });
+//     } else {
+//       User.updateOne({ _id: req.auth.userId }, { ...userInfos, _id: req.auth.userId })
+//         .then(() => res.status(200).json({ message: 'User modifié!' }))
+//         .catch(error => res.status(401).json({ error }));
+//     }
+//   })
+//   .catch((error) => {
+//     res.status(400).json({ error });
+//   });
+// }
 //Delete user
-exports.deleteUser = (req, res, next) => {
-  User.findOne({ _id: req.params.id })
-    .then(user => {
-      if (user.userId != req.auth.userId && req.auth.isAdmin === false) {
-        res.status(401).json({ message: 'Not authorized' });
-      } else {
-        if (user.photo) {
-          const filename = user.photo.split('/images/')[1];
-          fs.unlink(`images/${filename}`, () => {
-            User.deleteOne({ _id: req.params.id })
-              .then(() => res.status(200).json({ message: 'Utilisateur supprimé !' }))
-              .catch(error => res.status(400).json({ error }));
-          });
-        } else {
+// exports.deleteUser = (req, res, next) => {
+//   User.findOne({ _id: req.params.id })
+//     .then(user => {
+//       if (user.userId != req.auth.userId && req.auth.isAdmin === false) {
+//         res.status(401).json({ message: 'Not authorized' });
+//       } else {
+//         if (user.photo) {
+//           const filename = user.photo.split('/images/')[1];
+//           fs.unlink(`images/${filename}`, () => {
+//             User.deleteOne({ _id: req.params.id })
+//               .then(() => res.status(200).json({ message: 'Utilisateur supprimé !' }))
+//               .catch(error => res.status(400).json({ error }));
+//           });
+//         } else {
 
-          User.deleteOne({ _id: req.params.id })
-            .then(() => res.status(200).json({ message: 'Utilisateur supprimé !' }))
-            .catch(error => res.status(400).json({ error }));
-        }
-      }
+//           User.deleteOne({ _id: req.params.id })
+//             .then(() => res.status(200).json({ message: 'Utilisateur supprimé !' }))
+//             .catch(error => res.status(400).json({ error }));
+//         }
+//       }
 
-    })
-    .catch(error => res.status(500).json({ error }));
-};
-//All users
-// exports.getAllUsers = (req, res, next) => {
-//   //récupère tout les posts de la base de donnée
-//   User.find()
-//       .then(users => res.status(200).json(users))
-//       .catch(error => res.status(400).json({ error }));
+//     })
+//     .catch(error => res.status(500).json({ error }));
 // };
+

@@ -1,9 +1,5 @@
 const mongoose = require('mongoose');
-
-let ObjectLiked = new mongoose.Schema({
-  name: { type : String, match: /^[a-z ,.'-]+$/i },
-  userId: String,
-})
+/* potential future project */
 // let commentairePostSchema = new mongoose.Schema({
 //   userId: { type: String, required: true },
 //   name: { type : String, match: /^[a-z ,.'-]+$/i },
@@ -17,8 +13,8 @@ let ObjectLiked = new mongoose.Schema({
 const postSchema = mongoose.Schema({
   userId: { type: String, required: true },
   photo: {type: String },
-  name : { type : String, required: true, match: /^[a-z ,.'-]+$/i },
-  lastname : { type : String, required: true, match: /^[a-z ,.'-]+$/i },
+  name : { type : String, required: true, match: /^(?=.{1,26}$)[a-zA-Zçäãâàáéêèëïìíîüùúûæöóòôñ]+(?:[-'\s][a-zA-Zçäãâàáéêèëïìíîüùúûöóòôæñ]+)*$/ },
+  lastname : { type : String, required: true, match: /^(?=.{2,16}$)[a-zA-Zçäãâàáéèêëïìíîüùúûæöóòôñ]+(?:[-'\s][a-zA-Zçäãâàáéêèëïìíîüùúûöóòôæñ]+)*$/ },
   description: { type: String },
   imageUrl: { type: String },
   date: { type: Date, default: Date.now },
