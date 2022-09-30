@@ -43,7 +43,7 @@ exports.modifyPost = (req, res, next) => {
         res.status(401).json({ message: 'Not authorized' });
       } else {
         Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
-          .then(() => res.status(200).json({ message: 'Post modifié!' }))
+          .then(() => res.status(200).json({ message: 'Post modifié !' }))
           .catch(error => res.status(401).json({ error }));
       }
     })

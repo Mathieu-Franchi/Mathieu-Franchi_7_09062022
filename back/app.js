@@ -33,12 +33,10 @@ mongoose.connect(process.env.DATABASE_URI,
   .catch(() => console.log('Connexion à MongoDB échouée !'));
 //Middleware : intercepte pour la sécurité
 app.use(helmet());
-// helmet({
-//   crossOriginResourcePolicy: false,
-// })
 // Middleware  : réponse pour n'importe quelle requête
 app.use((req, res, next) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Cross-Origin-Resource-Policy','cross-origin');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization',
   'application/x-www-form-urlencoded','multipart/form-data');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
@@ -65,6 +63,7 @@ app.use('/api/auth', userRoutes);
 //post
 app.use('/api/posts', postRoutes);
 
+/* test refresh token futur project */
 //refreshToken
 //import models
 // const User = require('./models/User');
