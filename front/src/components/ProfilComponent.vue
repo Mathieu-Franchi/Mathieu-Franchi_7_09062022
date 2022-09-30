@@ -2,7 +2,7 @@
   <section id="profil__section">
     <div class="profil__img__btn" v-if="userInfos.photo != null">
       <div class="profil__img__container" >
-        <img class="profil__img" :src="userInfos.photo" alt="Votre photo de profil" crossorigin="process.env.VUE_APP_BACK" />
+        <img class="profil__img" :src="userInfos.photo" alt="Votre photo de profil"/>
       </div>
       <input style="display: none;" type="file" class="profil__img__file" ref="inputFileProfil" aria-label="Upload">
       <button  @click="$refs.inputFileProfil.click()" class="btn__file" type="button">
