@@ -1,7 +1,7 @@
 <template>
     <div class="notif_list">
         <TransitionGroup name="fade">
-        <template v-if="this.notifications != []">
+        <template v-if="this.notifications">
             <NotificationMessage v-for="notification in notifications" 
             :key="notification.id" :notification="notification" />
         </template>

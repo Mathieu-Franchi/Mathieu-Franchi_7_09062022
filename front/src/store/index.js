@@ -85,6 +85,10 @@ const store = createStore({
     postsUser: function (state, posts){
       state.postsUser = posts;
     },
+    pushPost: function (state, post){
+      state.posts.push(post);
+      state.postsUser.push(post);
+    },
     deletePost: function (state, postId){
       state.posts = state.posts.filter(post => {
         return post._id != postId;
@@ -214,7 +218,6 @@ const store = createStore({
         .then(function (response) {
           commit('removeStatus', 'loading-posts');
           commit('posts', response.data);
-          console.log(response.data)
         })
         .catch(function () {
           commit('removeStatus', 'loading-posts');
@@ -244,6 +247,7 @@ const store = createStore({
         })
         .then(function (response) {
           commit('removeStatus', 'loading-createPost');
+          commit('pushPost', response.data.post);
           commit('addNotification', {type: 'success', message: 'Post créé !'})
           resolve(response);
         })

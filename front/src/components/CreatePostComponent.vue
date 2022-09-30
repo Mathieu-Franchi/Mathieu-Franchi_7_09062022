@@ -119,8 +119,6 @@ export default {
           
           this.$store.dispatch('createPost', {data: fd, headers: headers})
             .then(function () {
-          
-              self.$emit('refresh-posts');
               return self.$emit('show-modal');
             })
 
@@ -135,8 +133,6 @@ export default {
           fd.append('post', field);
           this.$store.dispatch('createPost', {data: fd, headers: headers})
             .then(function () {
-              
-              self.$emit('refresh-posts');
               return self.$emit('show-modal');
             })
         }
@@ -146,8 +142,6 @@ export default {
           
           this.$store.dispatch('createPost', {data: field, headers: headers})
             .then(function () {
-              
-              self.$emit('refresh-posts');
               return self.$emit('show-modal');
             })
         }
@@ -270,7 +264,6 @@ export default {
 .post__content{
     overflow: hidden auto;
     overscroll-behavior-y: contain;
-    max-height: 300px;
   .description{
     width: 100%;
     border: none;
