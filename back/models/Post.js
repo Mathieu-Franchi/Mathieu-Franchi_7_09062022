@@ -16,7 +16,7 @@ const postSchema = mongoose.Schema({
   name : { type : String, required: true, match: /^(?=.{1,26}$)[a-zA-Zçäãâàáéêèëïìíîüùúûæöóòôñ]+(?:[-'\s][a-zA-Zçäãâàáéêèëïìíîüùúûöóòôæñ]+)*$/ },
   lastname : { type : String, required: true, match: /^(?=.{2,16}$)[a-zA-Zçäãâàáéèêëïìíîüùúûæöóòôñ]+(?:[-'\s][a-zA-Zçäãâàáéêèëïìíîüùúûöóòôæñ]+)*$/ },
   description: { type: String },
-  imageUrl: { type: String },
+  imageUrl: { type: String, default: null },
   date: { type: Date, default: Date.now },
   // comment: {commentairePostSchema},
   likes: { type: Number },

@@ -1,13 +1,27 @@
 const Post = require('../models/Post');
 const fs = require('fs');
 /*---------------- CRUD -----------------*/
+function checkDescription(value){
+  let onlySpace = new RegExp (/^\s*$/)
+  if(value == '' || value == undefined || onlySpace.test(value)){
+    return false
+  }
+  else {
+    return true
+  }
+}
 //post
 exports.createPost = (req, res, next) => {
-  if (req.body.description === '' && req.file === undefined) {
+  if(req.file && req.file.mimetype != 'image/jpeg' && req.file.mimetype != 'image/jpg' &&
+  req.file.mimetype != 'image/png' && req.file.mimetype != 'image/gif')
+  {
+    res.status(400).json({message: 'Format du fichier invalide'})
+  }
+  else if (checkDescription(req.body.description) == false && req.file == undefined ) 
+  {
     res.status(400).json({ message: 'Veuillez remplir au moins un champ' })
   }
   else {
-
     const postObject = req.file ?
       {
         ...JSON.parse(req.body.post),
@@ -22,7 +36,6 @@ exports.createPost = (req, res, next) => {
       ...postObject,
       userId: req.auth.userId,
       likes: 0,
-      dislikes: 0
     });
     post.save()
       .then((post) => res.status(201).json({ message: 'Post enregistré !', post: post }))
@@ -31,25 +44,36 @@ exports.createPost = (req, res, next) => {
 };
 //put
 exports.modifyPost = (req, res, next) => {
-  const postObject = req.file ? {
-    ...JSON.parse(req.body.post),
-    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-  } : { ...req.body };
-
-  delete postObject._userId;
-  Post.findOne({ _id: req.params.id })
-    .then((post) => {
-      if (post.userId != req.auth.userId && req.auth.isAdmin === false) {
-        res.status(401).json({ message: 'Not authorized' });
-      } else {
-        Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
-          .then(() => res.status(200).json({ message: 'Post modifié !' }))
-          .catch(error => res.status(401).json({ error }));
-      }
-    })
-    .catch((error) => {
-      res.status(400).json({ error });
-    });
+  if(req.file && req.file.mimetype != 'image/jpeg' && req.file.mimetype != 'image/jpg' &&
+  req.file.mimetype != 'image/png' && req.file.mimetype != 'image/gif')
+  {
+    res.status(400).json({message: 'Format du fichier invalide'})
+  }
+  else if (checkDescription(req.body.description) == false && req.file == undefined ) 
+  {
+    res.status(400).json({ message: 'Veuillez remplir au moins un champ' })
+  }
+  else {
+    const postObject = req.file ? {
+      ...JSON.parse(req.body.post),
+      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+    } : { ...req.body };
+    
+    delete postObject._userId;
+    Post.findOne({ _id: req.params.id })
+      .then((post) => {
+        if (post.userId != req.auth.userId && req.auth.isAdmin === false) {
+          res.status(401).json({ message: 'Not authorized' });
+        } else {
+          Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id })
+            .then(() => res.status(200).json({ message: 'Post modifié !' }))
+            .catch(error => res.status(401).json({ error }));
+        }
+      })
+      .catch((error) => {
+        res.status(400).json({ error });
+      });
+  }//else
 };
 //delete
 exports.deletePost = (req, res, next) => {
