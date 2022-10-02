@@ -1,8 +1,10 @@
 const Post = require('../models/Post');
 const fs = require('fs');
 /*---------------- CRUD -----------------*/
+// regex return true if only space in field
+let onlySpace = new RegExp (/^\s*$/) 
+//function check valid description
 function checkDescription(value){
-  let onlySpace = new RegExp (/^\s*$/)
   if(value == '' || value == undefined || onlySpace.test(value)){
     return false
   }
@@ -58,7 +60,7 @@ exports.modifyPost = (req, res, next) => {
       ...JSON.parse(req.body.post),
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
     } : { ...req.body };
-    
+
     delete postObject._userId;
     Post.findOne({ _id: req.params.id })
       .then((post) => {
