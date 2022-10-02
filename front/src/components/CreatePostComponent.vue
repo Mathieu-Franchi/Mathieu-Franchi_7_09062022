@@ -18,7 +18,7 @@
       <!-- MODAL PROFIL -->
       <div class="post__profil">
         <div v-if="userInfos.photo != null" class="post__profil__img__container">
-          <img class="post__profil__img" v-if="userInfos.photo != null" :src="userInfos.photo" crossorigin="process.env.VUE_APP_BACK"
+          <img class="post__profil__img" v-if="userInfos.photo != null" :src="userInfos.photo"
             alt="Photo de profil" />
         </div>
         <div class="post__name__date">
@@ -71,6 +71,7 @@ export default {
   data: function (){
     return {
       description: '',
+      onlySpace: new RegExp (/^\s*$/),
       imageUrl: null,
       imagePreview: null,
       dayjs,
@@ -78,7 +79,7 @@ export default {
   },
   computed: {
     validatedFields: function () {
-      if (this.description != '' || this.imageUrl != null) {
+      if (this.description != '' && this.onlySpace.test(this.description) != true || this.imageUrl != null) {
         return true;
       }
       else {
@@ -91,9 +92,18 @@ export default {
   },
   methods: {
     onFileSelected(event) {
-      this.imageUrl = event.target.files[0];
-      this.imagePreview = URL.createObjectURL(this.imageUrl);
-      URL.revokeObjectURL(this.imageUrl); 
+      if(event.target.files[0]['type']!= 'image/jpeg' && event.target.files[0]['type']!= 'image/jpg' &&
+        event.target.files[0]['type']!= 'image/png' && event.target.files[0]['type']!= 'image/gif')
+      {
+        this.$refs.inputFile.value = null;
+        this.$emit('show-modal');
+        return this.$store.commit('addNotification', {type: 'failure', message: 'Fichier image uniquemement'})
+      }
+      else{
+        this.imageUrl = event.target.files[0];
+        this.imagePreview = URL.createObjectURL(this.imageUrl);
+        URL.revokeObjectURL(this.imageUrl); 
+      }
     },
     publishPost: function () {
       if (this.validatedFields) {

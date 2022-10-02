@@ -7,8 +7,7 @@
   <transition name="slider">
     <!-- MODAL CREATE POST -->
     <CreatePostComponent 
-    v-show="showCreatePost"
-    @refresh-posts="this.$store.dispatch('getAllPosts');" 
+    v-show="showCreatePost" 
     @show-modal="showModalCreatePost()"/>
   </transition>
   <!-- WALL POSTS -->
@@ -17,9 +16,9 @@
     <ButtonCreatePost @show-modal="showModalCreatePost()"/>
     <!-- POST COMPONENT -->
     <PostsComponent 
-    :posts="this.posts" 
-    @delete-post="deletePost($event)"  
-    @refresh-post="this.$store.dispatch('getAllPosts');"/>
+    :posts="this.posts"
+    @modify-post="modifyPost($event)"
+    @delete-post="deletePost($event)"/>
   </main>
   <!-- FOOTER -->
   <FooterComponent />
@@ -69,6 +68,9 @@ export default {
         top: 0,
         left: 0,
       })
+    },
+    modifyPost: function (postId) {
+      return postId
     },
     deletePost: function (postId) {
       this.$store.dispatch('deletePost', postId)

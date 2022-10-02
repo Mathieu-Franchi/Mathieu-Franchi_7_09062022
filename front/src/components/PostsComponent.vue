@@ -88,7 +88,7 @@ export default {
     name: "PostsComponent",
     components: { OptionsComponent, OverlayComponent },
     props: ["posts"],
-    emits: ["delete-post", "refresh-post", "modify-post"],
+    emits: ["delete-post", "modify-post"],
     data: function () {
         return {
             dayjs,

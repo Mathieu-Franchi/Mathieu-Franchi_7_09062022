@@ -13,7 +13,6 @@
   <!-- PROFIL POSTS CONTAINER -->
   <div id="body_posts_profil">
     <div class="row_posts_profil">
-
       <!-- PROFIL CONTAINER -->
       <div class="profil_container">
         <ProfilComponent />
@@ -24,8 +23,7 @@
         <ButtonCreatePost @show-modal="showModalCreatePost()"/>
         <!-- POST COMPONENT -->
         <PostsComponent :posts="this.postsUser"
-        @delete-post="deletePost($event)" 
-        @refresh-post="this.$store.dispatch('getUserFeed');"/>
+        @delete-post="deletePost($event)"/>
       </div>
     </div>
   </div>
