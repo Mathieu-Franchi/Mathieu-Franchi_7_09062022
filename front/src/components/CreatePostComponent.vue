@@ -3,17 +3,66 @@
   <div class="modal-container">
     <!-- OVERLAY -->
     <div class="overlay modal-trigger" @click="this.$emit('show-modal')"></div>
-    <!-- MODAL -->
-    <div class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="dialogDesc">
+    <!-- MODAL EDIT -->
+    <div v-if="postToModif != null" class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="dialogDesc">
       <!-- MODAL HEADER -->
       <div class="modal__header">
         <button aria-label="close modal" class="close-modal modal-trigger" @click="this.$emit('show-modal')">
           <FontAwesome style="color: white;" icon="fa-solid fa-xmark" />
         </button>
-        <h3 v-if="mode == 'edit'" class="modal__title fontsize__titles">Modifier la publication</h3>
-        <h3 v-else class="modal__title fontsize__titles">Créer une publication</h3>
-        
+        <h3 class="modal__title fontsize__titles">Modifier la publication</h3>
+      </div>
+      <!-- MODAL PROFIL -->
+      <div class="post__profil">
+        <div v-if="postToModif.photo != null" class="post__profil__img__container">
+          <img class="post__profil__img" v-if="postToModif.photo != null" :src="postToModif.photo"
+            alt="Photo de profil" />
+        </div>
+        <div class="post__name__date">
+          <h2 class="post__name fontsize__p">
+            {{ postToModif.name + ' ' + postToModif.lastname }}
+          </h2>
+          <p class="post__date">{{ dayjs(postToModif.date).fromNow() }}</p>
+        </div>
+      </div>
+      <!-- MODAL MAIN CONTENT -->
+      <main class="post__content" :style="{'min-height': postToModif.imageUrl || imagePreview != null ? '150px' : '70px'}">
+        <textarea v-model="post.description" class="description" type="text" placeholder="Quoi de neuf ?">
+        </textarea>
+        <div class="post__container__img" v-if="postToModif.imageUrl != null || imagePreview != null">
+          <img class="post__img" v-if="postToModif.imageUrl != null || imagePreview != null"
+           :src="post.imageUrl || imagePreview" alt="Prévisualisation de l'image du post" />
+          <div class="post__img__cross" @click="$refs.inputFile.value = null; imagePreview = null, imageUrl = null">
+            <FontAwesome class="cross__img" icon="fa-solid fa-xmark" />
+          </div>
+        </div>
 
+      </main>
+      <!-- button choose file + publish container -->
+      <div class="buttons__container">
+        <div class="drop_img">
+          <input type="file" style="display: none;" @change="onFileSelected($event)" ref="inputFile" class="button__file">
+        </div>
+        <button v-if="imageUrl == null || imagePreview == null" @click="$refs.inputFile.click()" class="button__file">
+          <span style="overflow: hidden; text-overflow: ellipsis;" v-if="imagePreview != null">{{imageUrl.name}}</span>
+          <span v-if="imageUrl == null || imagePreview == null">Choisir une image</span>
+        </button>
+        <button @click="modifyPost()" class="button__publish" :class="{ 'button--disabled': changedFields }">
+          <span v-if="status.includes('loading-modifyPost')">Modification en cours...</span>
+          <span v-else>Enregistrer</span>
+        </button>
+      </div>
+      <!-- button choose file + publish container -->
+    </div>
+    <!-- MODAL EDIT -->
+    <!-- MODAL CREATE -->
+    <div v-else class="modal" role="dialog" aria-labelledby="modalTitle" aria-describedby="dialogDesc">
+      <!-- MODAL HEADER -->
+      <div class="modal__header">
+        <button aria-label="close modal" class="close-modal modal-trigger" @click="this.$emit('show-modal')">
+          <FontAwesome style="color: white;" icon="fa-solid fa-xmark" />
+        </button>
+        <h3 class="modal__title fontsize__titles">Créer une publication</h3>
       </div>
       <!-- MODAL PROFIL -->
       <div class="post__profil">
@@ -85,10 +134,22 @@ export default {
       else {
         return false;
       }
-      
     },
-    
-    ...mapState(['mode','userInfos','user', 'status'])
+    postToModif: function(){
+      return this.post;
+    },
+    changedFields: function(){
+      if(this.originalPost.description == this.post.description){
+        return false;
+      }
+      else{
+        return true;
+      }
+    },
+    test(){
+      return console.log(this.originalPost + ' originalPost'), console.log(this.post + ' post')
+    },
+    ...mapState(['userInfos','user', 'status','post','originalPost'])
   },
   methods: {
     onFileSelected(event) {

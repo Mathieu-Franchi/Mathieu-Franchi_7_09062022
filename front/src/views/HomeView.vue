@@ -2,13 +2,20 @@
   <!-- HEADER -->
   <HeaderComponent @refresh-home="refreshHome()" />
   <!-- OVERLAY -->
-  <OverlayComponent :show="showCreatePost" style="background-color: #333333d3; z-index: 20;" />
+  <OverlayComponent :show="showCreatePost || showEditPost" style="background-color: #333333d3; z-index: 20;" />
   <!-- TRANSITION MODAL CREATEPOST -->
   <transition name="slider">
     <!-- MODAL CREATE POST -->
     <CreatePostComponent 
     v-show="showCreatePost" 
     @show-modal="showModalCreatePost()"/>
+  </transition>
+    <!-- EDIT POST -->
+  <transition name="appear">
+    <CreatePostComponent 
+    v-if="showEditPost" 
+    @show-modal="showModalEditPost()"
+    />
   </transition>
   <!-- WALL POSTS -->
   <main id="body_posts">
@@ -18,7 +25,9 @@
     <PostsComponent 
     :posts="this.posts"
     @modify-post="modifyPost($event)"
-    @delete-post="deletePost($event)"/>
+    @delete-post="deletePost($event)"
+    @like-post="likePost"
+    />
   </main>
   <!-- FOOTER -->
   <FooterComponent />
@@ -54,7 +63,9 @@ export default {
 },
   data: function () {
     return {
-      showCreatePost: false
+      showCreatePost: false,
+      showEditPost: false,
+      postId: null,
     }
   },
   computed: {
@@ -69,15 +80,39 @@ export default {
         left: 0,
       })
     },
+    showModalCreatePost: function () {
+      this.showCreatePost = !this.showCreatePost
+    },
+    showModalEditPost: function () {
+      this.showEditPost = !this.showEditPost;
+      this.$store.commit('resetPost');
+    },
     modifyPost: function (postId) {
-      return postId
+      const self = this;
+      this.$store.dispatch('getOnePost', postId)
+      .then(function (){
+        self.showEditPost = !self.showEditPost;
+      });
     },
     deletePost: function (postId) {
       this.$store.dispatch('deletePost', postId)
     },
-    showModalCreatePost: function () {
-      this.showCreatePost = !this.showCreatePost
-    },
+    likePost: function(data){
+      let like;
+      if (data.likers.includes(this.user.userId)) {
+        like = {
+          like: 0,
+          userId: this.user.userId
+        };
+      }
+      else {
+        like = {
+          like: 1,
+          userId: this.user.userId
+        };
+      }
+      this.$store.dispatch("likePost", { id: data.postId, like: like });
+    }
 
 
   }

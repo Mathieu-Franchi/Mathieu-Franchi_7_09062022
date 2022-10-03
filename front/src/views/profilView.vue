@@ -23,7 +23,9 @@
         <ButtonCreatePost @show-modal="showModalCreatePost()"/>
         <!-- POST COMPONENT -->
         <PostsComponent :posts="this.postsUser"
-        @delete-post="deletePost($event)"/>
+        @delete-post="deletePost($event)"
+        @like-post="likePost"
+        />
       </div>
     </div>
   </div>
@@ -81,14 +83,30 @@ export default {
       this.$store.dispatch('getUserFeed', this.user.userId);
       this.$store.dispatch('getUserInfos', this.user.userId);
     },
+    showModalCreatePost: function () {
+      this.showCreatePost = !this.showCreatePost
+    },
     deletePost: function (postId) {
       this.$store.dispatch('deletePost', postId)
         .then(() => {
           this.$store.dispatch('getUserFeed', this.user.userId);
         })
     },
-    showModalCreatePost: function () {
-      this.showCreatePost = !this.showCreatePost
+    likePost: function(data){
+      let like;
+      if (data.likers.includes(this.user.userId)) {
+        like = {
+          like: 0,
+          userId: this.user.userId
+        };
+      }
+      else {
+        like = {
+          like: 1,
+          userId: this.user.userId
+        };
+      }
+      this.$store.dispatch("likePost", { id: data.postId, like: like });
     },
 
 

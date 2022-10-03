@@ -32,7 +32,8 @@ const store = createStore({
     },
     posts: [],
     postsUser: [],
-    mode: 'create',
+    post: null,
+    originalPost: null,
   },
   getters: {
     posts (state) {
@@ -43,6 +44,7 @@ const store = createStore({
     },
   },
   mutations: {
+    //Notif
     addNotification: function (state, notification) {
       state.notifications.push({
         ...notification,
@@ -54,6 +56,7 @@ const store = createStore({
         return notification.id != notificationToRemove.id;
       })
     },
+    //Status
     addStatus: function (state, status) {
       state.status.push(status);
     },
@@ -62,6 +65,7 @@ const store = createStore({
         return status != statusToRemove;
       });
     },
+    //User
     logUser: function (state, user) {
       instance.defaults.headers.common['Authorization'] = 'bearer ' + user.token;
       localStorage.setItem('user', JSON.stringify(user));
@@ -79,11 +83,20 @@ const store = createStore({
       router.push('/authentification');
       delete instance.defaults.headers.common['Authorization'];
     },
+    //Posts
     posts: function (state, posts){
       state.posts = posts;
     },
     postsUser: function (state, posts){
       state.postsUser = posts;
+    },
+    postToModif: function (state, post){
+      state.post = post;
+      state.originalPost = post;
+    },
+    resetPost: function (state){
+      state.post = null;
+      state.originalPost = null;
     },
     pushPost: function (state, post){
       state.posts.push(post);
@@ -126,9 +139,6 @@ const store = createStore({
         postUser.likes -= 1;
       }
     },
-    switchMode: function (state, mode){
-      state.mode = mode;
-    }
   },
   actions: {
     /***** USER METHODS *****/
@@ -224,20 +234,22 @@ const store = createStore({
         });
     },
     //GET ONE POST
-    // getOnePost: ({commit}, postId) => {
-    //   commit('addStatus', 'loading-onePost');
-    //   return new Promise((resolve, reject) => {
-    //     instance.get('/posts' + postId)
-    //     .then(function (response) {
-    //       commit('removeStatus', 'loading-onePost');
-    //       resolve(response);
-    //     })
-    //     .catch(function (error) {
-    //       commit('removeStatus', 'loading-onePost');
-    //       reject(error);
-    //     });
-    //   });
-    // },
+    getOnePost: ({commit}, postId) => {
+      commit('addStatus', 'loading-onePost');
+      return new Promise((resolve, reject) => {
+        instance.get("/posts/" + postId)
+        .then(function (response) {
+          commit('removeStatus', 'loading-onePost');
+          commit('postToModif', response.data);
+          console.log(response.data)
+          resolve(response);
+        })
+        .catch(function (error) {
+          commit('removeStatus', 'loading-onePost');
+          reject(error);
+        });
+      });
+    },
     //CREATE POST
     createPost: ({commit}, {data, headers}) => {
       commit('addStatus', 'loading-createPost');
@@ -271,7 +283,7 @@ const store = createStore({
           resolve(response);
         })
         .catch(function (error) {
-          commit('removeStatus', 'loading-createPost');
+          commit('removeStatus', 'loading-modifyPost');
           commit('addNotification', {type: 'failure', message: 'Erreur lors de la modification du post'})
           reject(error);
         });

@@ -65,7 +65,7 @@
             <div class="post__footer__border"></div>
             <div class="post__footer">
                 <div class="post__container__btn__like">
-                    <button class="post__btn__like" type="button" aria-label="like" @click="like(post.usersLiked, post._id)">
+                    <button class="post__btn__like" type="button" aria-label="like" @click="likePost(post.usersLiked, post._id)">
                         <FontAwesome class="fa__like" :style="{color: post.usersLiked.includes(this.user.userId) ? '#FD2D01' : ''}" icon="fa-solid fa-thumbs-up" />
                     </button>
                 </div>
@@ -88,7 +88,7 @@ export default {
     name: "PostsComponent",
     components: { OptionsComponent, OverlayComponent },
     props: ["posts"],
-    emits: ["delete-post", "modify-post"],
+    emits: ["delete-post", "modify-post", "like-post"],
     data: function () {
         return {
             dayjs,
@@ -115,22 +115,10 @@ export default {
         },
         modifyPost: function (postId) {
             this.$emit("modify-post", postId);
+            this.openPopup(postId);
         },
-        like: function (liker, postId) {
-            let like;
-            if (liker.includes(this.user.userId)) {
-                like = {
-                    like: 0,
-                    userId: this.user.userId
-                };
-            }
-            else {
-                like = {
-                    like: 1,
-                    userId: this.user.userId
-                };
-            }
-            this.$store.dispatch("likePost", { id: postId, like: like });
+        likePost: function (likers, postId) {
+            this.$emit("like-post", {likers: likers, postId: postId});
         }
     },
 }
