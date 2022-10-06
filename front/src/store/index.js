@@ -117,11 +117,10 @@ const store = createStore({
         post.usersLiked.push(state.user.userId);
         post.likes += 1;
       }
-
       let postUser = state.postsUser.find(postUser => postUser._id === postId);
       if (postUser) {
         postUser.usersLiked.push(state.user.userId);
-        postUser.likes += 1;
+        postUser.likes = post.likes;
       }
 
     },
@@ -135,8 +134,7 @@ const store = createStore({
       let postUser = state.postsUser.find(postUser => postUser._id === postId);
       if (postUser) {
         postUser.usersLiked = postUser.usersLiked.filter(usersId => usersId != state.user.userId);
-
-        postUser.likes -= 1;
+        postUser.likes = post.likes;
       }
     },
   },

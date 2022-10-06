@@ -96,9 +96,6 @@ export default {
         };
     },
     computed: {
-        post: function () {
-            return this.posts;
-        },
         ...mapState(["user", "userInfos"])
     },
     methods: {
