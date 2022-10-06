@@ -111,30 +111,44 @@ const store = createStore({
       });
     },
     postLike: function (state, postId) {
-
       let post = state.posts.find(post => post._id === postId);
-      if (post) {
+      let postUser = state.postsUser.find(postUser => postUser._id === postId);
+
+      if (postUser && post) {
+        post.usersLiked.push(state.user.userId);
+        postUser.usersLiked.push(state.user.userId);
+        post.likes += 1;
+        postUser.likes = post.likes;
+      }
+      if (post && postUser == undefined) {
         post.usersLiked.push(state.user.userId);
         post.likes += 1;
       }
-      let postUser = state.postsUser.find(postUser => postUser._id === postId);
-      if (postUser) {
-        postUser.usersLiked.push(state.user.userId);
-        postUser.likes = post.likes;
-      }
 
+      if(postUser && post == undefined){
+        postUser.usersLiked.push(state.user.userId);
+        postUser.likes += 1;
+      }
     },
     postUnlike: function (state, postId) {
-
       let post = state.posts.find(post => post._id === postId);
-      if (post) {
+      let postUser = state.postsUser.find(postUser => postUser._id === postId);
+
+      if (postUser && post) {
+        postUser.usersLiked = postUser.usersLiked.filter(usersId => usersId != state.user.userId);
+        post.usersLiked = post.usersLiked.filter(usersId => usersId != state.user.userId);
+
+        post.likes -= 1;
+        postUser.likes = post.likes;
+      }
+      if (post && postUser == undefined) {
         post.usersLiked = post.usersLiked.filter(usersId => usersId != state.user.userId);
         post.likes -= 1;
+
       }
-      let postUser = state.postsUser.find(postUser => postUser._id === postId);
-      if (postUser) {
+      if(postUser && post == undefined){
         postUser.usersLiked = postUser.usersLiked.filter(usersId => usersId != state.user.userId);
-        postUser.likes = post.likes;
+        postUser.likes -= 1;
       }
     },
   },
@@ -258,6 +272,7 @@ const store = createStore({
         .then(function (response) {
           commit('removeStatus', 'loading-createPost');
           commit('pushPost', response.data.post);
+          console.log(response.data.post)
           commit('addNotification', {type: 'success', message: 'Post créé !'})
           resolve(response);
         })
