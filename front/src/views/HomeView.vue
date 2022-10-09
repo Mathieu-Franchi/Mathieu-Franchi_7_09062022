@@ -65,7 +65,6 @@ export default {
     return {
       showCreatePost: false,
       showEditPost: false,
-      postId: null,
     }
   },
   computed: {

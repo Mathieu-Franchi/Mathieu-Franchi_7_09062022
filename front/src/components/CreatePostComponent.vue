@@ -27,27 +27,27 @@
       </div>
       <!-- MODAL MAIN CONTENT -->
       <main class="post__content" :style="{'min-height': postToModif.imageUrl || imagePreview != null ? '150px' : '70px'}">
-        <textarea v-model="post.description" class="description" type="text" placeholder="Quoi de neuf ?">
+        <textarea v-model="descriptionEdit" class="description" type="text" placeholder="Quoi de neuf ?">
         </textarea>
         <div class="post__container__img" v-if="postToModif.imageUrl != null || imagePreview != null">
           <img class="post__img" v-if="postToModif.imageUrl != null || imagePreview != null"
-           :src="post.imageUrl || imagePreview" alt="Prévisualisation de l'image du post" />
-          <div class="post__img__cross" @click="$refs.inputFile.value = null; imagePreview = null, imageUrl = null">
+           :src="postToModif.imageUrl || imagePreview" alt="Prévisualisation de l'image du post" />
+          <div class="post__img__cross" @click="$refs.inputFile.value = null, imagePreview = null, imageUrl = null, this.$store.commit('setImagePost', null)">
             <FontAwesome class="cross__img" icon="fa-solid fa-xmark" />
           </div>
         </div>
 
       </main>
       <!-- button choose file + publish container -->
-      <div class="buttons__container">
+      <div class="buttons__container" v-if="imageUrl == null || imagePreview == null || postToModif.imageUrl == null">
         <div class="drop_img">
           <input type="file" style="display: none;" @change="onFileSelected($event)" ref="inputFile" class="button__file">
         </div>
-        <button v-if="imageUrl == null || imagePreview == null" @click="$refs.inputFile.click()" class="button__file">
-          <span style="overflow: hidden; text-overflow: ellipsis;" v-if="imagePreview != null">{{imageUrl.name}}</span>
-          <span v-if="imageUrl == null || imagePreview == null">Choisir une image</span>
+        <button v-if="postToModif.imageUrl == null" @click="$refs.inputFile.click()" class="button__file">
+          <span style="overflow: hidden; text-overflow: ellipsis;" v-if="imagePreview != null && imageUrl != null">{{imageUrl.name}}</span>
+          <span v-if="postToModif.imageUrl == null && imagePreview == null && imageUrl == null">Choisir une image</span>
         </button>
-        <button @click="modifyPost()" class="button__publish" :class="{ 'button--disabled': changedFields }">
+        <button @click="modifyPost()" class="button__publish" :class="{ 'button--disabled': !changedFields }">
           <span v-if="status.includes('loading-modifyPost')">Modification en cours...</span>
           <span v-else>Enregistrer</span>
         </button>
@@ -116,7 +116,7 @@ import dayjs from '@/_services/dayjs';
 
 export default {
   name: 'CreatePostComponent',
-  emits: ["refresh-posts","show-modal"],
+  emits: ["show-modal"],
   data: function (){
     return {
       description: '',
@@ -138,16 +138,25 @@ export default {
     postToModif: function(){
       return this.post;
     },
+    descriptionEdit: {
+      get() {
+        return this.post.description
+      },
+      set(value) {
+        this.$store.commit('editDescription', value)
+      }
+    },
     changedFields: function(){
-      if(this.originalPost.description == this.post.description){
+      if(this.originalPost.description === this.postToModif.description 
+      && this.originalPost.imageUrl === this.postToModif.imageUrl 
+      && this.imageUrl === null 
+      || this.onlySpace.test(this.postToModif.description) == true && this.postToModif.description != this.originalPost.description 
+      && this.imageUrl === null){
         return false;
       }
       else{
         return true;
       }
-    },
-    test(){
-      return console.log(this.originalPost + ' originalPost'), console.log(this.post + ' post')
     },
     ...mapState(['userInfos','user', 'status','post','originalPost'])
   },
@@ -166,6 +175,7 @@ export default {
         URL.revokeObjectURL(this.imageUrl); 
       }
     },
+    //CREATE MODE : PUBLISH
     publishPost: function () {
       if (this.validatedFields) {
         //access "this" deeper in the code
@@ -223,6 +233,86 @@ export default {
         this.imagePreview = null;
       }
     },
+    //EDIT MODE : modifyPost
+    modifyPost(){
+      
+        //access "this" deeper in the code
+        const self = this;
+        //headers default
+        let headers = {'Content-Type': 'multipart/form-data'};
+        //objet key values default
+        let field = {
+            userId: this.user.userId,
+            description: this.postToModif.description,
+        }
+
+        if (this.imageUrl != null && this.postToModif.description != this.originalPost.description) {
+          console.log('image + description')
+          field = JSON.stringify(field)
+          const fd = new FormData();
+          fd.append('image', this.imageUrl);
+          fd.append('post', field)
+          
+          this.$store.dispatch('modifyPost', {data: fd, headers: headers})
+            .then(function () {
+              return self.$emit('show-modal');
+            })
+
+        }
+        if (this.imageUrl != null && this.postToModif.description === this.originalPost.description) {
+          
+          console.log('image')
+          delete field.description
+          
+          field = JSON.stringify(field)
+          const fd = new FormData();
+          fd.append('image', this.imageUrl);
+          fd.append('post', field);
+          this.$store.dispatch('modifyPost', {data: fd, headers: headers,})
+            .then(function () {
+              return self.$emit('show-modal');
+            })
+        }
+        if (this.postToModif.imageUrl === null && this.imageUrl == null && this.postToModif.description === this.originalPost.description){
+          console.log('image null')
+          field = {...field, imageUrl: null,}
+          headers = {'Content-Type': 'application/json'};
+          
+          this.$store.dispatch('modifyPost', {data: field, headers: headers})
+            .then(function () {
+              return self.$emit('show-modal');
+            })
+        }
+        if(this.postToModif.description != this.originalPost.description 
+        && this.onlySpace.test(this.postToModif.description) == false && this.imageUrl == null){
+          console.log('description')
+          headers = {'Content-Type': 'application/json'};
+          
+          this.$store.dispatch('modifyPost', {data: field, headers: headers})
+            .then(function () {
+              return self.$emit('show-modal');
+            })
+        }
+        if(this.onlySpace.test(this.postToModif.description) == true 
+        && this.postToModif.description != this.originalPost.description 
+        && this.postToModif.imageUrl != null){
+          console.log('no description')
+          headers = {'Content-Type': 'application/json'};
+          
+          this.$store.dispatch('modifyPost', {data: field, headers: headers})
+            .then(function () {
+              return self.$emit('show-modal');
+            })
+        }
+        if(this.onlySpace.test(this.postToModif.description) == true && this.imageUrl === null){
+          return;
+        }
+        //reset fields after saving
+        this.imageUrl = null;
+        this.$refs.inputFile.value = null;
+        this.imagePreview = null;
+      
+    }
    
   },
 

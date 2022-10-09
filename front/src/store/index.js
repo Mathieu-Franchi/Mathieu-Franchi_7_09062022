@@ -90,17 +90,52 @@ const store = createStore({
     postsUser: function (state, posts){
       state.postsUser = posts;
     },
+    /*---------- POST MODIFICATION ---------*/
     postToModif: function (state, post){
-      state.post = post;
-      state.originalPost = post;
+      let postToModif = {
+        ...post,
+      };
+      let originalPost =
+      {
+        ...post,
+      };
+      state.post = postToModif;
+      state.originalPost = originalPost;
+    },
+    editDescription: function (state, value){
+      state.post.description = value
+    },
+    setImagePost: function (state, image){
+      state.post.imageUrl = image
     },
     resetPost: function (state){
       state.post = null;
       state.originalPost = null;
     },
+    /*---------- POST MODIFICATION ---------*/
     pushPost: function (state, post){
       state.posts.push(post);
       state.postsUser.push(post);
+    },
+    modifyPost: function (state, postModified){
+      let post = state.posts.find(post => post._id === postModified._id);
+      let postUser = state.postsUser.find(postUser => postUser._id === postModified._id);
+
+      if (postUser && post) {
+        post.description = postModified.description
+        post.imageUrl = postModified.imageUrl
+        postUser.description = postModified.description
+        postUser.imageUrl = postModified.imageUrl
+      }
+      if (post && postUser == undefined) {
+        post.description = postModified.description
+        post.imageUrl = postModified.imageUrl
+      }
+
+      if(postUser && post == undefined){
+        postUser.description = postModified.description
+        postUser.imageUrl = postModified.imageUrl
+      }
     },
     deletePost: function (state, postId){
       state.posts = state.posts.filter(post => {
@@ -144,7 +179,6 @@ const store = createStore({
       if (post && postUser == undefined) {
         post.usersLiked = post.usersLiked.filter(usersId => usersId != state.user.userId);
         post.likes -= 1;
-
       }
       if(postUser && post == undefined){
         postUser.usersLiked = postUser.usersLiked.filter(usersId => usersId != state.user.userId);
@@ -272,7 +306,6 @@ const store = createStore({
         .then(function (response) {
           commit('removeStatus', 'loading-createPost');
           commit('pushPost', response.data.post);
-          console.log(response.data.post)
           commit('addNotification', {type: 'success', message: 'Post créé !'})
           resolve(response);
         })
@@ -284,14 +317,15 @@ const store = createStore({
       });
     },
     //MODIFY POST
-    modifyPost: ({commit},{data, headers}) => {
+    modifyPost: ({commit, state},{data, headers}) => {
       commit('addStatus', 'loading-modifyPost');
       return new Promise((resolve, reject) => {
-        instance.put("/posts/" + data.postId, data.data, {
+        instance.put("/posts/" + state.post._id, data, {
           headers: headers,
         })
         .then(function (response) {
           commit('removeStatus', 'loading-modifyPost');
+          commit('modifyPost', response.data.post);
           commit('addNotification', {type: 'success', message: 'Post modifié !'})
           resolve(response);
         })
@@ -327,11 +361,11 @@ const store = createStore({
         instance.post(`/posts/${id}/like`, like)
         .then(function (response) {
           commit('removeStatus', 'loading-like');
-          if(like.like == 0){
-            commit('postUnlike', id)
+          if(response.data.message == 'like'){
+            return commit('postLike', id)
           }
-          else {
-            commit('postLike', id)
+          if(response.data.message == 'like annulé') {
+            return commit('postUnlike', id)
           }
           resolve(response);
         })

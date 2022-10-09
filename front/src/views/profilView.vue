@@ -2,13 +2,20 @@
   <!-- HEADER -->
   <HeaderComponent @refresh-profil="refreshProfil()"/>
   <!-- OVERLAY -->
-  <OverlayComponent :show="showCreatePost" style="background-color: #333333d3; z-index: 20;" />
+  <OverlayComponent :show="showCreatePost || showEditPost" style="background-color: #333333d3; z-index: 20;" />
   <!-- TRANSITION MODAL CREATEPOST -->
   <transition name="slider">
     <!-- MODAL CREATE POST -->
-    <CreatePostComponent v-show="showCreatePost" 
-    @refresh-posts="this.$store.dispatch('getUserFeed', user.userId);"
+    <CreatePostComponent 
+    v-show="showCreatePost" 
     @show-modal="showModalCreatePost()" />
+  </transition>
+    <!-- EDIT POST -->
+  <transition name="appear">
+    <CreatePostComponent 
+    v-if="showEditPost" 
+    @show-modal="showModalEditPost()"
+    />
   </transition>
   <!-- PROFIL POSTS CONTAINER -->
   <div id="body_posts_profil">
@@ -23,6 +30,7 @@
         <ButtonCreatePost @show-modal="showModalCreatePost()"/>
         <!-- POST COMPONENT -->
         <PostsComponent :posts="this.postsUser"
+        @modify-post="modifyPost($event)"
         @delete-post="deletePost($event)"
         @like-post="likePost"
         />
@@ -57,7 +65,8 @@ export default {
   },
   data: function () {
     return {
-      showCreatePost: false
+      showCreatePost: false,
+      showEditPost: false,
     }
   },
   computed: {
@@ -85,6 +94,17 @@ export default {
     },
     showModalCreatePost: function () {
       this.showCreatePost = !this.showCreatePost
+    },
+    showModalEditPost: function () {
+      this.showEditPost = !this.showEditPost;
+      this.$store.commit('resetPost');
+    },
+    modifyPost: function (postId) {
+      const self = this;
+      this.$store.dispatch('getOnePost', postId)
+      .then(function (){
+        self.showEditPost = !self.showEditPost;
+      });
     },
     deletePost: function (postId) {
       this.$store.dispatch('deletePost', postId)
