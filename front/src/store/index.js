@@ -355,25 +355,30 @@ const store = createStore({
       });
     },
     //LIKE POST
-    likePost: ({commit}, {id, like}) => {
-      commit('addStatus', 'loading-like');
-      return new Promise((resolve, reject) => {
-        instance.post(`/posts/${id}/like`, like)
-        .then(function (response) {
-          commit('removeStatus', 'loading-like');
-          if(response.data.message == 'like'){
-            return commit('postLike', id)
-          }
-          if(response.data.message == 'like annulé') {
-            return commit('postUnlike', id)
-          }
-          resolve(response);
-        })
-        .catch(function (error) {
-          commit('removeStatus', 'loading-like');
-          reject(error);
+    likePost: ({commit, state}, {id, like}) => {
+      //avoid spam
+      if(state.status.includes('loading-like') == false){
+        commit('addStatus', 'loading-like');
+        return new Promise((resolve, reject) => {
+          instance.post(`/posts/${id}/like`, like)
+          .then(function (response) {
+            commit('removeStatus', 'loading-like');
+            if(response.data.message == 'like'){
+              return commit('postLike', id)
+            }
+            if(response.data.message == 'like annulé') {
+              return commit('postUnlike', id)
+            }
+            resolve(response);
+          })
+          .catch(function (error) {
+            commit('removeStatus', 'loading-like');
+            reject(error);
+          });
         });
-      });
+      }else{
+        return;
+      }
     },
   }
 })

@@ -147,15 +147,29 @@ export default {
       }
     },
     changedFields: function(){
-      if(this.originalPost.description === this.postToModif.description 
-      && this.originalPost.imageUrl === this.postToModif.imageUrl 
-      && this.imageUrl === null 
-      || this.onlySpace.test(this.postToModif.description) == true && this.postToModif.description != this.originalPost.description 
-      && this.imageUrl === null){
-        return false;
+      if(this.postToModif){
+        if(
+        //if no change at all
+        this.originalPost.description === this.postToModif.description && this.originalPost.imageUrl === this.postToModif.imageUrl 
+        && this.imageUrl === null 
+        //if modified description to onlyspace and no img at all
+        || this.onlySpace.test(this.postToModif.description) == true && this.postToModif.description != this.originalPost.description 
+        && this.imageUrl === null && this.postToModif.imageUrl == null
+        //if description '' && no image at all
+        || this.postToModif.description == '' && this.imageUrl == null && this.postToModif.imageUrl == null
+        //if only space && no image
+        || this.onlySpace.test(this.postToModif.description) == true && this.imageUrl == null && this.postToModif.imageUrl == null
+        //if description == '' && image not changed
+        || this.postToModif.description == '' && this.imageUrl == null && this.postToModif.imageUrl == null
+        ){
+          return false;
+        }
+        else{
+          return true;
+        }
       }
       else{
-        return true;
+        return false;
       }
     },
     ...mapState(['userInfos','user', 'status','post','originalPost'])
@@ -235,7 +249,7 @@ export default {
     },
     //EDIT MODE : modifyPost
     modifyPost(){
-      
+      if(this.changedFields){
         //access "this" deeper in the code
         const self = this;
         //headers default
@@ -295,7 +309,7 @@ export default {
         }
         if(this.onlySpace.test(this.postToModif.description) == true 
         && this.postToModif.description != this.originalPost.description 
-        && this.postToModif.imageUrl != null){
+        && this.postToModif.imageUrl != null && this.originalPost.imageUrl != null){
           console.log('no description')
           headers = {'Content-Type': 'application/json'};
           
@@ -304,13 +318,11 @@ export default {
               return self.$emit('show-modal');
             })
         }
-        if(this.onlySpace.test(this.postToModif.description) == true && this.imageUrl === null){
-          return;
-        }
         //reset fields after saving
         this.imageUrl = null;
         this.$refs.inputFile.value = null;
         this.imagePreview = null;
+      }
       
     }
    
