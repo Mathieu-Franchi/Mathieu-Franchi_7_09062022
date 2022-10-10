@@ -27,7 +27,7 @@
       </div>
       <!-- MODAL MAIN CONTENT -->
       <main class="post__content" :style="{'min-height': postToModif.imageUrl || imagePreview != null ? '150px' : '70px'}">
-        <textarea v-model="descriptionEdit" class="description" type="text" placeholder="Quoi de neuf ?">
+        <textarea maxlength="20000" v-model="descriptionEdit" class="description" type="text" placeholder="Quoi de neuf ?">
         </textarea>
         <div class="post__container__img" v-if="postToModif.imageUrl != null || imagePreview != null">
           <img class="post__img" v-if="postToModif.imageUrl != null || imagePreview != null"
@@ -79,7 +79,7 @@
       </div>
       <!-- MODAL MAIN CONTENT -->
       <main class="post__content" :style="{'min-height': imageUrl != null ? '150px' : '70px'}">
-        <textarea v-model="description" class="description" type="text" placeholder="Quoi de neuf ?"></textarea>
+        <textarea maxlength="20000" v-model="description" class="description" type="text" placeholder="Quoi de neuf ?"></textarea>
         <div class="post__container__img" v-if="imagePreview != null && imageUrl != null">
           <img class="post__img" v-if="imagePreview != null && imageUrl != null"
            :src="imagePreview" alt="Prévisualisation de l'image du post" />
@@ -120,7 +120,7 @@ export default {
   data: function (){
     return {
       description: '',
-      onlySpace: new RegExp (/^\s*$/),
+      emptyField: new RegExp (/^\s*$/),
       imageUrl: null,
       imagePreview: null,
       dayjs,
@@ -128,7 +128,7 @@ export default {
   },
   computed: {
     validatedFields: function () {
-      if (this.description != '' && this.onlySpace.test(this.description) != true || this.imageUrl != null) {
+      if (this.emptyField.test(this.description) != true && this.description.length < 20000 || this.imageUrl != null) {
         return true;
       }
       else {
@@ -146,29 +146,23 @@ export default {
         this.$store.commit('editDescription', value)
       }
     },
-    changedFields: function(){
-      if(this.postToModif){
-        if(
-        //if no change at all
-        this.originalPost.description === this.postToModif.description && this.originalPost.imageUrl === this.postToModif.imageUrl 
-        && this.imageUrl === null 
-        //if modified description to onlyspace and no img at all
-        || this.onlySpace.test(this.postToModif.description) == true && this.postToModif.description != this.originalPost.description 
-        && this.imageUrl === null && this.postToModif.imageUrl == null
-        //if description '' && no image at all
-        || this.postToModif.description == '' && this.imageUrl == null && this.postToModif.imageUrl == null
-        //if only space && no image
-        || this.onlySpace.test(this.postToModif.description) == true && this.imageUrl == null && this.postToModif.imageUrl == null
-        //if description == '' && image not changed
-        || this.postToModif.description == '' && this.imageUrl == null && this.postToModif.imageUrl == null
-        ){
+    changedFields: function () {
+      if (this.postToModif) {
+        if (
+          //if no change at all
+          this.originalPost.description === this.postToModif.description && this.originalPost.imageUrl === this.postToModif.imageUrl
+          && this.imageUrl === null
+          //if only space && no image at all
+          || this.emptyField.test(this.postToModif.description) == true && this.imageUrl == null && this.postToModif.imageUrl == null
+          || this.postToModif.description.length > 20000
+        ) {
           return false;
         }
-        else{
+        else {
           return true;
         }
       }
-      else{
+      else {
         return false;
       }
     },
@@ -204,7 +198,7 @@ export default {
             photo: this.userInfos.photo,
             description: this.description
         }
-
+        //if image selected and description != ''
         if (this.imageUrl != null && this.description != '') {
           
           field = JSON.stringify(field)
@@ -218,6 +212,7 @@ export default {
             })
 
         }
+        //if image selected and no description 
         if (this.imageUrl != null && this.description === '') {
           
           delete field.description
@@ -231,6 +226,7 @@ export default {
               return self.$emit('show-modal');
             })
         }
+        //if no image and description != ''
         if (this.imageUrl === null && this.description != ''){
           
           headers = {'Content-Type': 'application/json'};
@@ -248,82 +244,104 @@ export default {
       }
     },
     //EDIT MODE : modifyPost
-    modifyPost(){
-      if(this.changedFields){
+    modifyPost() {
+      if (this.changedFields) {
         //access "this" deeper in the code
         const self = this;
         //headers default
-        let headers = {'Content-Type': 'multipart/form-data'};
+        let headers = { 'Content-Type': 'multipart/form-data' };
         //objet key values default
         let field = {
-            userId: this.user.userId,
-            description: this.postToModif.description,
+          userId: this.user.userId,
+          description: this.postToModif.description,
         }
-
+        //if image selected and description changed
         if (this.imageUrl != null && this.postToModif.description != this.originalPost.description) {
           console.log('image + description')
           field = JSON.stringify(field)
           const fd = new FormData();
           fd.append('image', this.imageUrl);
           fd.append('post', field)
-          
-          this.$store.dispatch('modifyPost', {data: fd, headers: headers})
+
+          this.$store.dispatch('modifyPost', { data: fd, headers: headers })
             .then(function () {
               return self.$emit('show-modal');
             })
 
         }
+        //if image selected and description not changed
         if (this.imageUrl != null && this.postToModif.description === this.originalPost.description) {
-          
+
           console.log('image')
           delete field.description
-          
+
           field = JSON.stringify(field)
           const fd = new FormData();
           fd.append('image', this.imageUrl);
           fd.append('post', field);
-          this.$store.dispatch('modifyPost', {data: fd, headers: headers,})
+          this.$store.dispatch('modifyPost', { data: fd, headers: headers, })
             .then(function () {
               return self.$emit('show-modal');
             })
         }
-        if (this.postToModif.imageUrl === null && this.imageUrl == null && this.postToModif.description === this.originalPost.description){
+        //if image deleted and description not changed
+        if (this.postToModif.imageUrl === null
+          && this.originalPost.imageUrl != this.postToModif.imageUrl
+          && this.imageUrl == null && this.postToModif.description === this.originalPost.description) {
           console.log('image null')
-          field = {...field, imageUrl: null,}
-          headers = {'Content-Type': 'application/json'};
-          
-          this.$store.dispatch('modifyPost', {data: field, headers: headers})
+          field = { ...field, imageUrl: null, }
+          headers = { 'Content-Type': 'application/json' };
+
+          this.$store.dispatch('modifyPost', { data: field, headers: headers })
             .then(function () {
               return self.$emit('show-modal');
             })
         }
-        if(this.postToModif.description != this.originalPost.description 
-        && this.onlySpace.test(this.postToModif.description) == false && this.imageUrl == null){
+        //if description changed && no image changed at all
+        if (this.postToModif.description != this.originalPost.description
+          && this.emptyField.test(this.postToModif.description) == false && this.imageUrl == null
+          && this.postToModif.imageUrl === this.originalPost.imageUrl) {
           console.log('description')
-          headers = {'Content-Type': 'application/json'};
-          
-          this.$store.dispatch('modifyPost', {data: field, headers: headers})
+          headers = { 'Content-Type': 'application/json' };
+
+          this.$store.dispatch('modifyPost', { data: field, headers: headers })
             .then(function () {
               return self.$emit('show-modal');
             })
         }
-        if(this.onlySpace.test(this.postToModif.description) == true 
-        && this.postToModif.description != this.originalPost.description 
-        && this.postToModif.imageUrl != null && this.originalPost.imageUrl != null){
+        //if no description but image is still up
+        if (this.emptyField.test(this.postToModif.description) == true
+          && this.postToModif.description != this.originalPost.description
+          && this.postToModif.imageUrl != null && this.originalPost.imageUrl != null) {
           console.log('no description')
-          headers = {'Content-Type': 'application/json'};
-          
-          this.$store.dispatch('modifyPost', {data: field, headers: headers})
+          headers = { 'Content-Type': 'application/json' };
+
+          this.$store.dispatch('modifyPost', { data: field, headers: headers })
             .then(function () {
               return self.$emit('show-modal');
             })
+        }
+        if (this.postToModif.imageUrl == null
+          && this.originalPost.imageUrl != this.postToModif.imageUrl
+          && this.imageUrl == null
+          && this.postToModif.description != this.originalPost.description
+          && this.emptyField.test(this.postToModif.description) == false) {
+          console.log('image null')
+          field = { ...field, imageUrl: null, }
+          headers = { 'Content-Type': 'application/json' };
+
+          this.$store.dispatch('modifyPost', { data: field, headers: headers })
+            .then(function () {
+              return self.$emit('show-modal');
+            })
+
         }
         //reset fields after saving
         this.imageUrl = null;
         this.$refs.inputFile.value = null;
         this.imagePreview = null;
       }
-      
+
     }
    
   },
