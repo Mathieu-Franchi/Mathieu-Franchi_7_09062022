@@ -51,10 +51,6 @@ exports.modifyPost = (req, res, next) => {
   {
     res.status(400).json({message: 'Format du fichier invalide'})
   }
-  else if (checkDescription(req.body.description) == false && req.file == undefined && req.body.imageUrl != null) 
-  {
-    res.status(400).json({ message: 'Veuillez remplir au moins un champ' })
-  }
   else {
     const postObject = req.file ? {
       ...JSON.parse(req.body.post),
@@ -66,7 +62,8 @@ exports.modifyPost = (req, res, next) => {
       .then((post) => {
         if (post.userId != req.auth.userId && req.auth.isAdmin === false) {
           res.status(401).json({ message: 'Not authorized' });
-        } else {
+        } 
+        else {
           Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id, })
             .then(() => {
               Post.findOne({_id: post._id})
