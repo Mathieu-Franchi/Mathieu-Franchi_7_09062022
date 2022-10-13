@@ -46,12 +46,7 @@ exports.createPost = (req, res, next) => {
 };
 //put
 exports.modifyPost = (req, res, next) => {
-  if(req.file && req.file.mimetype != 'image/jpeg' && req.file.mimetype != 'image/jpg' &&
-  req.file.mimetype != 'image/png' && req.file.mimetype != 'image/gif')
-  {
-    res.status(400).json({message: 'Format du fichier invalide'})
-  }
-  else {
+
     const postObject = req.file ? {
       ...JSON.parse(req.body.post),
       imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
@@ -64,6 +59,16 @@ exports.modifyPost = (req, res, next) => {
           res.status(401).json({ message: 'Not authorized' });
         } 
         else {
+          if (post.imageUrl != null && req.file || req.body.imageUrl === null ) {
+            const filename = post.imageUrl.split('/images/')[1];
+            fs.unlink(`images/${filename}`, (err) => {
+              if(err){
+                throw err
+              }else{
+                console.log('succeed')
+              }
+            });
+          } 
           Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id, })
             .then(() => {
               Post.findOne({_id: post._id})
@@ -77,7 +82,7 @@ exports.modifyPost = (req, res, next) => {
       .catch((error) => {
         res.status(400).json({ error });
       });
-  }//else
+  
 };
 //delete
 exports.deletePost = (req, res, next) => {
