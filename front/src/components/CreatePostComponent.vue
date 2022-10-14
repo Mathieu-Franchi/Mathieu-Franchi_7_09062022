@@ -147,7 +147,6 @@ export default {
       }
     },
     changedFields: function () {
-      if (this.postToModif) {
         if (
           //if no change at all
           this.originalPost.description === this.postToModif.description && this.originalPost.imageUrl === this.postToModif.imageUrl
@@ -161,10 +160,6 @@ export default {
         else {
           return true;
         }
-      }
-      else {
-        return false;
-      }
     },
     ...mapState(['userInfos','user', 'status','post','originalPost'])
   },
@@ -188,6 +183,11 @@ export default {
       if (this.validatedFields) {
         //access "this" deeper in the code
         const self = this;
+        //same use cases
+        const createPost = (fd, headers) => this.$store.dispatch('createPost', { data: fd, headers: headers })
+          .then(function () {
+            return self.$emit('show-modal');
+          })
         //headers default
         let headers = {'Content-Type': 'multipart/form-data'};
         //objet key values default
@@ -205,12 +205,8 @@ export default {
           const fd = new FormData();
           fd.append('image', this.imageUrl);
           fd.append('post', field)
-          
-          this.$store.dispatch('createPost', {data: fd, headers: headers})
-            .then(function () {
-              return self.$emit('show-modal');
-            })
 
+          createPost(fd, headers)
         }
         //if image selected and no description 
         if (this.imageUrl != null && this.description === '') {
@@ -221,20 +217,13 @@ export default {
           const fd = new FormData();
           fd.append('image', this.imageUrl);
           fd.append('post', field);
-          this.$store.dispatch('createPost', {data: fd, headers: headers})
-            .then(function () {
-              return self.$emit('show-modal');
-            })
+          createPost(fd, headers)
         }
         //if no image and description != ''
         if (this.imageUrl === null && this.description != ''){
           
           headers = {'Content-Type': 'application/json'};
-          
-          this.$store.dispatch('createPost', {data: field, headers: headers})
-            .then(function () {
-              return self.$emit('show-modal');
-            })
+          createPost(field, headers)
         }
         //reset fields after publish
         this.description = '';
@@ -248,6 +237,11 @@ export default {
       if (this.changedFields) {
         //access "this" deeper in the code
         const self = this;
+        //same use cases
+        const modifyPost = (fd, headers) => this.$store.dispatch('modifyPost', { data: fd, headers: headers })
+          .then(function () {
+            return self.$emit('show-modal');
+          })
         //headers default
         let headers = { 'Content-Type': 'multipart/form-data' };
         //objet key values default
@@ -257,83 +251,61 @@ export default {
         }
         //if image selected and description changed
         if (this.imageUrl != null && this.postToModif.description != this.originalPost.description) {
-          console.log('image + description')
+
           field = JSON.stringify(field)
           const fd = new FormData();
           fd.append('image', this.imageUrl);
           fd.append('post', field)
-
-          this.$store.dispatch('modifyPost', { data: fd, headers: headers })
-            .then(function () {
-              return self.$emit('show-modal');
-            })
-
+          modifyPost(fd, headers)
         }
         //if image selected and description not changed
         if (this.imageUrl != null && this.postToModif.description === this.originalPost.description) {
 
-          console.log('image')
           delete field.description
 
           field = JSON.stringify(field)
           const fd = new FormData();
           fd.append('image', this.imageUrl);
           fd.append('post', field);
-          this.$store.dispatch('modifyPost', { data: fd, headers: headers, })
-            .then(function () {
-              return self.$emit('show-modal');
-            })
+          modifyPost(fd, headers)
         }
         //if image deleted and description not changed
         if (this.postToModif.imageUrl === null
           && this.originalPost.imageUrl != this.postToModif.imageUrl
           && this.imageUrl == null && this.postToModif.description === this.originalPost.description) {
-          console.log('image null')
+
           field = { ...field, imageUrl: null, }
           headers = { 'Content-Type': 'application/json' };
-
-          this.$store.dispatch('modifyPost', { data: field, headers: headers })
-            .then(function () {
-              return self.$emit('show-modal');
-            })
+          modifyPost(field, headers)
         }
         //if description changed && no image changed at all
         if (this.postToModif.description != this.originalPost.description
           && this.emptyField.test(this.postToModif.description) == false && this.imageUrl == null
           && this.postToModif.imageUrl === this.originalPost.imageUrl) {
-          console.log('description')
+
           headers = { 'Content-Type': 'application/json' };
 
-          this.$store.dispatch('modifyPost', { data: field, headers: headers })
-            .then(function () {
-              return self.$emit('show-modal');
-            })
+          modifyPost(field, headers)
         }
         //if no description but image is still up
         if (this.emptyField.test(this.postToModif.description) == true
           && this.postToModif.description != this.originalPost.description
           && this.postToModif.imageUrl != null && this.originalPost.imageUrl != null) {
-          console.log('no description')
+
           headers = { 'Content-Type': 'application/json' };
 
-          this.$store.dispatch('modifyPost', { data: field, headers: headers })
-            .then(function () {
-              return self.$emit('show-modal');
-            })
+          modifyPost(field, headers)
         }
+        // if description changed but not empty and image is null
         if (this.postToModif.imageUrl == null
           && this.originalPost.imageUrl != this.postToModif.imageUrl
           && this.imageUrl == null
           && this.postToModif.description != this.originalPost.description
           && this.emptyField.test(this.postToModif.description) == false) {
-          console.log('image null')
+    
           field = { ...field, imageUrl: null, }
           headers = { 'Content-Type': 'application/json' };
-
-          this.$store.dispatch('modifyPost', { data: field, headers: headers })
-            .then(function () {
-              return self.$emit('show-modal');
-            })
+          modifyPost(field, headers)
 
         }
         //reset fields after saving

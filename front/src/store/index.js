@@ -287,7 +287,6 @@ const store = createStore({
         .then(function (response) {
           commit('removeStatus', 'loading-onePost');
           commit('postToModif', response.data);
-          console.log(response.data)
           resolve(response);
         })
         .catch(function (error) {
