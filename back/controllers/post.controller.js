@@ -46,46 +46,52 @@ exports.createPost = (req, res, next) => {
 };
 //put
 exports.modifyPost = (req, res, next) => {
+  const postObject = req.file ? {
+    ...JSON.parse(req.body.post),
+    imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
+  } : { ...req.body };
 
-    const postObject = req.file ? {
-      ...JSON.parse(req.body.post),
-      imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}`
-    } : { ...req.body };
-
-    delete postObject._userId;
-    Post.findOne({ _id: req.params.id })
-      .then((post) => {
-        if (post.userId != req.auth.userId && req.auth.isAdmin === false) {
-          res.status(401).json({ message: 'Not authorized' });
-        } 
-        else {
-          if (post.imageUrl != null && req.file || req.body.imageUrl === null ) {
-            const filename = post.imageUrl.split('/images/')[1];
-            fs.unlink(`images/${filename}`, (err) => {
-              if(err){
-                throw err
-              }else{
-                console.log('succeed')
-              }
-            });
-          } 
-          Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id, })
-            .then(() => {
-              Post.findOne({_id: post._id})
-              .then((postModified) => {
-                res.status(200).json({ message: 'Post modifié !', post: postModified})
-              })
-            })
-            .catch(error => res.status(401).json({ error }));
-        }
-      })
-      .catch((error) => {
-        res.status(400).json({ error });
-      });
-  
+  delete postObject._userId;
+  Post.findOne({ _id: req.params.id })
+    .then((post) => {
+      if (post.userId != req.auth.userId && req.auth.isAdmin === false) {
+        res.status(401).json({ message: 'Not authorized' });
+      }
+      else {
+        Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id, })
+          .then(() => {
+            //sendPost for same use two times
+            const sendPost = () =>
+              Post.findOne({ _id: post._id })
+                .then((postModified) => {
+                  res.status(200).json({ message: 'Post modifié !', post: postModified })
+                })
+                .catch(error => res.status(400).json({ error }))
+            //delete file if post had file
+            if (post.imageUrl != null && req.file || req.body.imageUrl === null) {
+              const filename = post.imageUrl.split('/images/')[1];
+              fs.unlink(`images/${filename}`, () => {
+                sendPost()
+              });
+            } else {
+              sendPost()
+            }
+          })
+          .catch(error => res.status(401).json({ error }));
+      }
+    })
+    .catch((error) => {
+      res.status(400).json({ error });
+    });
 };
 //delete
 exports.deletePost = (req, res, next) => {
+  //const for same two cases
+  const deletePost = () =>
+    Post.deleteOne({ _id: req.params.id })
+      .then(() => res.status(200).json({ message: 'Post supprimé !' }))
+      .catch(error => res.status(400).json({ error }));
+  
   Post.findOne({ _id: req.params.id })
     .then(post => {
       if (post.userId != req.auth.userId && req.auth.isAdmin === false) {
@@ -94,18 +100,12 @@ exports.deletePost = (req, res, next) => {
         if (post.imageUrl) {
           const filename = post.imageUrl.split('/images/')[1];
           fs.unlink(`images/${filename}`, () => {
-            Post.deleteOne({ _id: req.params.id })
-              .then(() => res.status(200).json({ message: 'Post supprimé !' }))
-              .catch(error => res.status(400).json({ error }));
+            deletePost()
           });
         } else {
-
-          Post.deleteOne({ _id: req.params.id })
-            .then(() => res.status(200).json({ message: 'Post supprimé !' }))
-            .catch(error => res.status(400).json({ error }));
+          deletePost()
         }
       }
-
     })
     .catch(error => res.status(500).json({ error }));
 };
