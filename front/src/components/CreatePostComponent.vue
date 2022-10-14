@@ -165,17 +165,19 @@ export default {
   },
   methods: {
     onFileSelected(event) {
-      if(event.target.files[0]['type']!= 'image/jpeg' && event.target.files[0]['type']!= 'image/jpg' &&
-        event.target.files[0]['type']!= 'image/png' && event.target.files[0]['type']!= 'image/gif')
-      {
-        this.$refs.inputFile.value = null;
-        this.$emit('show-modal');
-        return this.$store.commit('addNotification', {type: 'failure', message: 'Fichier image uniquemement'})
-      }
-      else{
-        this.imageUrl = event.target.files[0];
-        this.imagePreview = URL.createObjectURL(this.imageUrl);
-        URL.revokeObjectURL(this.imageUrl); 
+      if (event.target.files[0]) {
+
+        if (event.target.files[0]['type'] != 'image/jpeg' && event.target.files[0]['type'] != 'image/jpg' &&
+          event.target.files[0]['type'] != 'image/png' && event.target.files[0]['type'] != 'image/gif') {
+          this.$refs.inputFile.value = null;
+          this.$emit('show-modal');
+          return this.$store.commit('addNotification', { type: 'failure', message: 'Fichier image uniquemement' })
+        }
+        else {
+          this.imageUrl = event.target.files[0];
+          this.imagePreview = URL.createObjectURL(this.imageUrl);
+          URL.revokeObjectURL(this.imageUrl);
+        }
       }
     },
     //CREATE MODE : PUBLISH

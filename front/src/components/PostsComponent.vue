@@ -128,7 +128,7 @@ export default {
     max-width: 700px;
     width: 100%;
     height: auto;
-    border: solid 1px $primary-color;
+    // border: solid 1px $primary-color;
     border-radius: 5px;
     background-color: #ffffff;
     margin-bottom: 20px;
@@ -279,7 +279,7 @@ export default {
             width: 100%;
             height: 100%;
             max-height: 3000px;
-            object-fit: contain;
+            object-fit: cover;
             border-top: 1px solid $secondary-color;
             border-bottom: 1px solid $secondary-color;
         }
