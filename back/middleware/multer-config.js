@@ -14,6 +14,21 @@ const storage = multer.diskStorage({
         const name = file.originalname.split(' ').join('_');
         const extension = MIME_TYPES[file.mimetype];
         callback(null, name + Date.now() + '.' + extension);
-    }
+    },
 });
-module.exports = multer({storage}).single('image');
+let upload = multer({
+    storage: storage,
+    fileFilter: (req, file, cb) => {
+        if(file.mimetype == "image/png" 
+        || file.mimetype == "image/jpg" 
+        || file.mimetype == "image/gif" 
+        || file.mimetype == "image/jpeg")
+        {
+            cb(null, true);
+        }else {
+            cb(null, false);
+            return cb(new Error('Only .png, .jpg, .gif and .jpeg format are allowed !'));
+        }
+    },
+})
+module.exports = upload.single('image');

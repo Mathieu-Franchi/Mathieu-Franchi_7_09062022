@@ -14,12 +14,8 @@ function checkDescription(value){
 }
 //post
 exports.createPost = (req, res, next) => {
-  if(req.file && req.file.mimetype != 'image/jpeg' && req.file.mimetype != 'image/jpg' &&
-  req.file.mimetype != 'image/png' && req.file.mimetype != 'image/gif')
-  {
-    res.status(400).json({message: 'Format du fichier invalide'})
-  }
-  else if (checkDescription(req.body.description) == false && req.file == undefined ) 
+
+  if (checkDescription(req.body.description) == false && req.file == undefined ) 
   {
     res.status(400).json({ message: 'Veuillez remplir au moins un champ' })
   }
