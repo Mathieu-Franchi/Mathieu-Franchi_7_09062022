@@ -7,6 +7,8 @@ NodeJs - VueJs - MongoDB - Sass
 
 ## -Installation
 * ### Prerequisite :
+Download the code
+
 You must have installed on your machine :
 * Git : https://git-scm.com/downloads
 * Node.js : https://nodejs.org/en/
