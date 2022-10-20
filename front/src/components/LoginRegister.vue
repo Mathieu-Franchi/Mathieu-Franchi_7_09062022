@@ -70,7 +70,7 @@
                             style="padding-right: 66px;" class="form-row__input password__type" type="password"
                             aria-label="Password" placeholder="Mot de passe" />
                             <!-- BUTTON UNMASK PASSWORD -->
-                            <button @click="toggleMaskPassword" class="eye__button" type="button">
+                            <button @click="toggleMaskPassword" class="eye__button" type="button" aria-label="Montrer/cacher le mot de passe">
                                 <FontAwesome v-if="toggleMask" class="fa__eye__mask" aria-hidden="true" icon="fa-solid fa-eye-slash" />
                                 <FontAwesome v-else class="fa__eye" aria-hidden="true" icon="fa-solid fa-eye" />
                             </button>
