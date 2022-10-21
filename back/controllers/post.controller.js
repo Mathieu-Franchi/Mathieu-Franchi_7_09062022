@@ -54,7 +54,7 @@ exports.modifyPost = (req, res, next) => {
         res.status(401).json({ message: 'Not authorized' });
       }
       else {
-        Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id, })
+        Post.updateOne({ _id: req.params.id }, { ...postObject, _id: req.params.id, userId: post.userId })
           .then(() => {
             //sendPost for same use two times
             const sendPost = () =>
