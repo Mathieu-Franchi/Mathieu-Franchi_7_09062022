@@ -10,9 +10,13 @@ const app = express();
 
 // importe mongoose/mongodb
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 // import path : pour accéder au chemin d'un dossier statique (ici sur notre pc)
 const path = require('path');
+app.use(cors({
+  origin: process.env.API,
+}));
 
 // const cookieParser = require('cookie-parser')
 // alternative à express.json
