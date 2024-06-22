@@ -13,10 +13,12 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 // import path : pour accéder au chemin d'un dossier statique (ici sur notre pc)
-const path = require('path');
 app.use(cors({
   origin: process.env.API,
+  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Ajoutez les méthodes HTTP que vous utilisez
+  allowedHeaders: ['Content-Type', 'Authorization'], // Ajoutez les en-têtes que vous utilisez
 }));
+const path = require('path');
 
 // const cookieParser = require('cookie-parser')
 // alternative à express.json
