@@ -40,14 +40,14 @@ mongoose.connect(process.env.DATABASE_URI,
 //Middleware : intercepte pour la sécurité
 app.use(helmet());
 // Middleware  : réponse pour n'importe quelle requête
-app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cross-Origin-Resource-Policy','cross-origin');
-  res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization',
-  'application/x-www-form-urlencoded','multipart/form-data');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
-  next();
-});
+// app.use((req, res, next) => {
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   res.setHeader('Cross-Origin-Resource-Policy','cross-origin');
+//   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization',
+//   'application/x-www-form-urlencoded','multipart/form-data');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+//   next();
+// });
 
 
 //alternative à express.json
