@@ -12,13 +12,14 @@ const app = express();
 const mongoose = require('mongoose');
 // const cors = require('cors');
 
-// import path : pour accéder au chemin d'un dossier statique (ici sur notre pc)
 // app.use(cors({
-//   origin: process.env.API,
-//   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Ajoutez les méthodes HTTP que vous utilisez
-//   allowedHeaders: ['Content-Type', 'Authorization'], // Ajoutez les en-têtes que vous utilisez
-// }));
-const path = require('path');
+  //   origin: process.env.API,
+  //   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Ajoutez les méthodes HTTP que vous utilisez
+  //   allowedHeaders: ['Content-Type', 'Authorization'], // Ajoutez les en-têtes que vous utilisez
+  // }));
+
+  // import path : pour accéder au chemin d'un dossier statique (ici sur notre pc)
+  const path = require('path');
 
 // const cookieParser = require('cookie-parser')
 // alternative à express.json
@@ -41,7 +42,7 @@ mongoose.connect(process.env.DATABASE_URI,
 app.use(helmet());
 //Middleware  : réponse pour n'importe quelle requête
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Origin', process.env.API || '*');
   res.setHeader('Cross-Origin-Resource-Policy','cross-origin');
   res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content, Accept, Content-Type, Authorization',
   'application/x-www-form-urlencoded','multipart/form-data');
