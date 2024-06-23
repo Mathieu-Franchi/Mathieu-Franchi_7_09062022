@@ -10,14 +10,14 @@ const app = express();
 
 // importe mongoose/mongodb
 const mongoose = require('mongoose');
-const cors = require('cors');
+// const cors = require('cors');
 
 // import path : pour accéder au chemin d'un dossier statique (ici sur notre pc)
-app.use(cors({
-  origin: process.env.API,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Ajoutez les méthodes HTTP que vous utilisez
-  allowedHeaders: ['Content-Type', 'Authorization'], // Ajoutez les en-têtes que vous utilisez
-}));
+// app.use(cors({
+//   origin: process.env.API,
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Ajoutez les méthodes HTTP que vous utilisez
+//   allowedHeaders: ['Content-Type', 'Authorization'], // Ajoutez les en-têtes que vous utilisez
+// }));
 const path = require('path');
 
 // const cookieParser = require('cookie-parser')
