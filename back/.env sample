@@ -3,3 +3,7 @@
 DATABASE_URI="mongodb+srv://<name>:<password>@<database_name>.delpt.mongodb.net/<database_collections>?retryWrites=true&w=majority"
 //insert your secret key to decode token 
 TOKEN="<your token>"
+REFRESH_TOKEN="<your refresh token>"
+//example
+PORT="3000"
+API="http:/localhost:3000/api"
